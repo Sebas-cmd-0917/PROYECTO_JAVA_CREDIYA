@@ -1,4 +1,4 @@
-package main.java.com.crediya.ui;
+package com.crediya.ui;
 public class iu {
     
 }

@@ -1,5 +1,5 @@
-package main.java.com.crediya.service;
+package com.crediya.service;
 
-public class service {
+public class Service {
     
 }

@@ -1,4 +1,4 @@
-package main.java.com.crediya.util;
+package com.crediya.util;
 
 public class util {
     

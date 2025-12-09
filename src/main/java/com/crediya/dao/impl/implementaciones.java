@@ -1,4 +1,4 @@
-package main.java.com.crediya.dao.impl.implementaciones;
+package com.crediya.dao.impl;
 
 public class implementaciones {
     
