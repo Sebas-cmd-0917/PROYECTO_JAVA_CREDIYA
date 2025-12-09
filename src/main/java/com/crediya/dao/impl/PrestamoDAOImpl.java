@@ -43,7 +43,7 @@ public class PrestamoDAOImpl implements PrestamoDAO {
 
     public List<Prestamo> listarPorCliente(int clienteId) {
         List<Prestamo> lista = new ArrayList<>();
-        String sqlzo = "SELECT cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado FROM prestamos WHERE cliente_id = ?";
+        String sqlzo = "SELECT cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio estado FROM prestamos WHERE cliente_id = ?";
 
         try (Connection db = ConexionDB.getConnection();
         PreparedStatement stmt = db.prepareStatement(sqlzo)) {
@@ -72,7 +72,7 @@ public class PrestamoDAOImpl implements PrestamoDAO {
 
     @Override
     public Prestamo obtenerPorId(int id) {
-        String sqlzo = "SELECT * FROM prestamos WHERE id = ?";
+        String sqlzo = "SELECT id, cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado  FROM prestamos WHERE id = ?";
         try (Connection db = ConexionDB.getConnection();
             PreparedStatement stmt = db.prepareStatement(sqlzo)){
 
