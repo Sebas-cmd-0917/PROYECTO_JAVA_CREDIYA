@@ -7,9 +7,7 @@ import java.sql.SQLException;
 public class ConexionDB {
     //jdbc:mysql: esto se usa para decirle. ajava que jablaremos una base de datos mysql
     private static final String URL = "jdbc:mysql://localhost:3307/crediya_db";
-    
     private static final String USER = "root"; 
-    
     private static final String PASSWORD = "admin"; 
 
     public static Connection getConnection() {
