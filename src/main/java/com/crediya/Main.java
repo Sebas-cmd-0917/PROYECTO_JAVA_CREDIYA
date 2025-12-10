@@ -1,7 +1,5 @@
 package com.crediya;
 
-import java.sql.Connection;
-import com.crediya.config.ConexionDB;
 import com.crediya.ui.MenuPrincipal;
 
 public class Main {
