@@ -37,7 +37,7 @@ public class PagoDAOImpl implements PagoDAO{
     @Override
     public List<Pago> ListarPagosPorPrestamo(int prestamoId){
         List<Pago> lista = new ArrayList<>();
-        String sqlzo = "SELECT prestamo_id, fecha_pago, monto ";
+        String sqlzo = "SELECT prestamo_id, fecha_pago, monto FROM prestamos WHERE id = ?";
 
             try (Connection db = ConexionDB.getConnection();
                 PreparedStatement stmt = db.prepareStatement(sqlzo)) {
