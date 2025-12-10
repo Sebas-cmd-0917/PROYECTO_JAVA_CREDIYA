@@ -6,7 +6,7 @@ import com.crediya.model.Pago;
 
 public interface PagoDAO {
     void registrarPago(Pago pago);
-    List<Pago> ListarPagosPorPrestamo(int prestamoId); //alcular cuánto se ha pagado
+    List<Pago> ListarPagosPorPrestamo(int prestamoId); //calcular cuánto se ha pagado
 }
 
 
