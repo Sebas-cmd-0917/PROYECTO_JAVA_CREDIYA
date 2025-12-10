@@ -4,6 +4,7 @@ import java.util.Scanner;
 import com.crediya.model.Empleado;
 import com.crediya.dao.impl.EmpleadoDAOImpl;
 import com.crediya.dao.EmpleadoDAO;
+import java.util.List;
 
 public class MenuEmpleado {
 
@@ -51,10 +52,33 @@ public class MenuEmpleado {
                 // Lógica para gestionar préstamos
                 break;
             case 4:
-                System.out.println("Listar Empleados.");
+                System.out.println("\n--- LISTA DE EMPLEADOS ---");
                 // Lógica para listar empleados
-                
-                break;
+                List <Empleado> lista = empleadoDAO.listarTodosEmpleados();
+                if (lista.isEmpty()) {
+                    System.out.println("No hay empleados registrados.");
+                } else {
+                    // 1. IMPRIMIR ENCABEZADOS DE LA TABLA
+                        // %-5s  = Columna de Texto alineado a la Izquierda de 5 espacios
+                        // %-20s = Columna de Texto alineado a la Izquierda de 20 espacios
+                        System.out.printf("%-5s %-20s %-15s %-15s %-25s %-15s\n", 
+                                          "ID", "NOMBRE", "DOC", "ROL", "CORREO", "SALARIO");
+                        
+                        System.out.println("----------------------------------------------------------------------------------------------------");
+
+                        // 2. IMPRIMIR CADA FILA CON EL MISMO FORMATO
+                        for (Empleado e : lista) {
+                            System.out.printf("%-5d %-20s %-15s %-15s %-25s $%,.2f\n", 
+                                    e.getId(),            // %d para números enteros
+                                    e.getNombre(),        // %s para texto
+                                    e.getDocumento(),
+                                    e.getRol(),
+                                    e.getCorreo(),
+                                    e.getSalario());      // %,.2f para dinero (con comas y 2 decimales)
+
+
+            }
+        }
             case 5:
                 System.out.println("Saliendo del menu empleados!");
                 MenuPrincipal miMenu = new MenuPrincipal();
