@@ -16,9 +16,7 @@ public class MenuPrincipal {
         Scanner scanner = new Scanner(System.in);
 
         //Sebas
-        PrestamoDAO prestamoDAO = new PrestamoDAOImpl();
-        GestorPagosService gestorPagosService = new GestorPagosService();
-        CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
+       
 
 
         while(true){
@@ -42,62 +40,20 @@ public class MenuPrincipal {
             case 2:
                 System.out.println("Gestión de Clientes seleccionada.");
                 // Lógica para gestionar clientes
+                
                 break;
             case 3:
                 //Sebas
                 System.out.println("Gestión de Préstamos seleccionada.");
-                try{
-                    System.out.println("ID del cliente: ");
-                    int cId = scanner.nextInt();
-                    System.out.println("ID del empleado");
-                    int eId = scanner.nextInt();
-                    System.out.println("Monto: ");
-                    double monto = scanner.nextDouble();
-                    System.out.println("Interés (%):");
-                    double interes = scanner.nextDouble();
-                    System.out.print("Cuotas: ");
-                    int cuotas = scanner.nextInt();
-                    scanner.nextLine(); // Limpiar buffer
-                    
-                    //Simulacion del credito
-                    calculadoraPrestamosService.imprimirTablaAmortizacion(monto, interes, cuotas);
-
-                    //Preguntar si se quiere guardar el prestamo
-                    System.out.print("¿Desea confirmar el préstamo? (S/N): ");
-                    String confirmacion = scanner.nextLine();
-
-                    if (confirmacion.equalsIgnoreCase("S")) {
-                            Prestamo nuevoP = new Prestamo(cId, eId, monto, interes, cuotas, LocalDate.now(), "ACTIVO");
-                            prestamoDAO.registrarPrestamo(nuevoP);
-                        } else {
-                            System.out.println("Operación cancelada.");
-                        }
-
-                } catch (Exception e) {
-                    System.out.println("❌ Error: Datos inválidos. " + e.getMessage());
-                    scanner.nextLine();
-                }
+                MenuPrestamos menuPres = new MenuPrestamos();
+                menuPres.mostrarMenuPrestamo();
                 break;
             case 4:
                 //Sebas
                 System.out.println("Gestión de Pagos seleccionada.");
-                // Lógica para gestionar pagos
-                try {
-                        System.out.print("ID del Préstamo: ");
-                        int pId = scanner.nextInt();
-                        System.out.print("Monto a abonar: ");
-                        double abono = scanner.nextDouble();
-                        scanner.nextLine();
-
-                        // Llama a Gestor de Pagos (que valida si la deuda no se excede)
-                        Pago nuevoPago = new Pago(pId, LocalDate.now(), abono);
-                        gestorPagosService.registrarAbono(nuevoPago);
-
-                    } catch (Exception e) {
-                        System.out.println("❌ Error: Datos inválidos.");
-                        scanner.nextLine();
-                    }
-                    break;
+                MenuPago menuPago = new MenuPago();
+                menuPago.mostrarMenuPago();
+                break;
             case 5:
                 System.out.println("Saliendo del sistema. ¡Hasta luego!");
                 scanner.close();
