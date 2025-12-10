@@ -21,6 +21,8 @@ public class MenuPrincipal {
             case 1:
                 System.out.println("Gestión de Empleados seleccionada.");
                 // Lógica para gestionar empleados
+                MenuEmpleado menuEmp = new MenuEmpleado();
+                menuEmp.mostrarMenuEmpleado();
                 break;
             case 2:
                 System.out.println("Gestión de Clientes seleccionada.");
