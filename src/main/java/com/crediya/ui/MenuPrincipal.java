@@ -22,14 +22,13 @@ public class MenuPrincipal {
         switch(opcion){
             case 1:
                 System.out.println("Gestión de Empleados seleccionada.");
-                // Lógica para gestionar empleados
                 MenuEmpleado menuEmp = new MenuEmpleado();
                 menuEmp.mostrarMenuEmpleado();
                 break;
             case 2:
                 System.out.println("Gestión de Clientes seleccionada.");
-                // Lógica para gestionar clientes
-                
+                MenuCliente menuCli = new MenuCliente();
+                menuCli.mostarrMenuCliente();
                 break;
             case 3:
                 //Sebas

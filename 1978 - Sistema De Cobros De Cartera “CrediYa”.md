@@ -29,7 +29,7 @@ Requerimientos Generales:
 - Módulo de Préstamos
 - Crear préstamos asociando cliente y empleado.
 - Calcular automáticamente monto total con interés y valor de cuota mensual.
-- Cambiar estado (pendiente / pagado).
+- Cambiar estado (pendiente / pagado). pendiente
 - Persistir en archivo y base de datos.
 - Módulo de Pagos
 - Registrar abonos a préstamos.
