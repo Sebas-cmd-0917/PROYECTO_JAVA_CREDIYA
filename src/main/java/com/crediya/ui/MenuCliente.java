@@ -1,15 +1,13 @@
 package com.crediya.ui;
 
 import java.util.Scanner;
-
-import com.crediya.data.repositories.ClienteDAOImpl;
-import com.crediya.repository.ClienteRepository;
+import com.crediya.service.GestorClienteSrvice;
 import com.crediya.model.Cliente;
 import java.util.List;
 
 public class MenuCliente {
     Scanner scanner = new Scanner(System.in);
-    ClienteRepository clienteDAO = new ClienteDAOImpl();
+    GestorClienteSrvice servicioCliente = new GestorClienteSrvice();
 
     public void mostarrMenuCliente(){
         while (true) {
@@ -64,7 +62,7 @@ public class MenuCliente {
                     String telefono = scanner.nextLine();
 
                     Cliente nuevoCliente = new Cliente( 0, nom, doc, correo, telefono);
-                    clienteDAO.guardarCliente(nuevoCliente);
+                    servicioCliente.registrarCliente(nuevoCliente);
                     System.out.println("✔ Cliente registrado correctamente.");
                 } catch (Exception e) {
                     System.out.println("Error al registrar cliente: " + e.getMessage());
@@ -73,7 +71,7 @@ public class MenuCliente {
     }
 
     private void listarClientes() {
-        List<Cliente> clientes = clienteDAO.listarTodosClientes();
+        List<Cliente> clientes = servicioCliente.obtenerTodos();
         if (clientes.isEmpty()) {
             System.out.println("No hay clientes registrados.");
         } else {

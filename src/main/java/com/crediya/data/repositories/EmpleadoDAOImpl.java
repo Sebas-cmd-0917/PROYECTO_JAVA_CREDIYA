@@ -45,7 +45,7 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
 
     @Override
     public List<Empleado> listarTodosEmpleados() {
-        List<Empleado> listaNegocio = new ArrayList<>();
+        List<Empleado> listaEmpleados= new ArrayList<>();
         String sql = "SELECT * FROM empleados";
 
         try (Connection conexion = ConexionDB.getConnection();
@@ -68,12 +68,12 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
                 modelo.setId(entity.getId()); 
 
                 // C. Agregamos a la lista de negocio
-                listaNegocio.add(modelo);
+                listaEmpleados.add(modelo);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return listaNegocio;
+        return listaEmpleados;
     }
 }
