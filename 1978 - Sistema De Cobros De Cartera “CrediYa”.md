@@ -135,3 +135,13 @@ Entregables
 - Diagrama UML de clases principales.
 - Documento README con descripción general, ejecución y ejemplos.
 - Repositorio en GitHub.
+
+
+
+
+
+Módulo de Préstamos
+- Crear préstamos asociando cliente y empleado.
+- Calcular automáticamente monto total con interés y valor de cuota mensual.
+- Cambiar estado (pendiente / pagado). pendiente
+- Persistir en archivo y base de datos.
