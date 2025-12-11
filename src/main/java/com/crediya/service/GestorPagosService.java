@@ -3,8 +3,8 @@ package com.crediya.service;
 import java.util.List;
 
 import com.crediya.dao.PrestamoDAO;
-import com.crediya.dao.impl.PagoDAOImpl;
 import com.crediya.dao.impl.PrestamoDAOImpl;
+import com.crediya.data.repositories.PagoDAOImpl;
 import com.crediya.model.Pago;
 import com.crediya.model.Prestamo;
 import com.crediya.repository.PagoRepository;

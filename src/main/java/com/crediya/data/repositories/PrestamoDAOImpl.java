@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.crediya.config.ConexionDB;
-import com.crediya.dao.PrestamoDAO;
 import com.crediya.model.Prestamo;
+import com.crediya.repository.PrestamoRepository;
 
-public class PrestamoDAOImpl implements PrestamoDAO {
+public class PrestamoDAOImpl implements PrestamoRepository {
 
     @Override
     public void registrarPrestamo(Prestamo p) {

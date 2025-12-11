@@ -3,8 +3,7 @@ package com.crediya.ui;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-import com.crediya.dao.PrestamoDAO;
-import com.crediya.dao.impl.PrestamoDAOImpl;
+import com.crediya.data.repositories.PrestamoDAOImpl;
 import com.crediya.model.Pago;
 import com.crediya.service.CalculadoraPrestamosService;
 import com.crediya.service.GestorPagosService;
@@ -14,9 +13,7 @@ public class MenuPago {
 
     public void mostrarMenuPago(){
         Scanner scanner = new Scanner(System.in);
-        PrestamoDAO prestamoDAO = new PrestamoDAOImpl();
         GestorPagosService gestorPagosService = new GestorPagosService();
-        CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
 
         // Lógica para gestionar pagos
                 try {

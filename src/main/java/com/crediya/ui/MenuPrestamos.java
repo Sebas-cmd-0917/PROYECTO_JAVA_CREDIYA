@@ -3,15 +3,15 @@ package com.crediya.ui;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-import com.crediya.dao.PrestamoDAO;
-import com.crediya.dao.impl.PrestamoDAOImpl;
+import com.crediya.data.repositories.PrestamoDAOImpl;
 import com.crediya.model.Prestamo;
+import com.crediya.repository.PrestamoRepository;
 import com.crediya.service.CalculadoraPrestamosService;
 import com.crediya.service.GestorPagosService;
 
 public class MenuPrestamos {
     Scanner scanner = new Scanner(System.in);
-    PrestamoDAO prestamoDAO = new PrestamoDAOImpl();
+    PrestamoRepository prestamoRepository = new PrestamoDAOImpl();
     GestorPagosService gestorPagosService = new GestorPagosService();
     CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
     public void mostrarMenuPrestamo() {
@@ -64,7 +64,7 @@ public class MenuPrestamos {
             scanner.nextLine();
 
             Prestamo nuevoP = new Prestamo(cId, eId, monto, interes, cuotas, LocalDate.now(), "ACTIVO");
-            prestamoDAO.registrarPrestamo(nuevoP);
+            prestamoRepository.registrarPrestamo(nuevoP);
 
             System.out.println("✔ Préstamo registrado correctamente.");
 
@@ -104,7 +104,7 @@ public class MenuPrestamos {
 
             if (confirmacion.equalsIgnoreCase("S")) {
                 Prestamo nuevoP = new Prestamo(cId, eId, monto, interes, cuotas, LocalDate.now(), "ACTIVO");
-                prestamoDAO.registrarPrestamo(nuevoP);
+                prestamoRepository.registrarPrestamo(nuevoP);
                 System.out.println("✔ Préstamo registrado correctamente.");
             } else {
                 System.out.println("❌ Registro cancelado. Solo se realizó la simulación.");
