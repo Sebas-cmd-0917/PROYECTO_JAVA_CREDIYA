@@ -8,18 +8,22 @@ import com.crediya.model.Prestamo;
 import com.crediya.repository.PrestamoRepository;
 import com.crediya.service.CalculadoraPrestamosService;
 import com.crediya.service.GestorPagosService;
+import com.crediya.service.PrestamoService;
 
 public class MenuPrestamos {
     Scanner scanner = new Scanner(System.in);
     PrestamoRepository prestamoRepository = new PrestamoDAOImpl();
     GestorPagosService gestorPagosService = new GestorPagosService();
     CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
+    PrestamoService prestamoService = new PrestamoService();
+
     public void mostrarMenuPrestamo() {
         int opcion = -1;
         while (opcion != 0) {
             System.out.println("\n===== 📌 MENÚ DE PRÉSTAMOS =====");
-            System.out.println("1. Registrar préstamo");
+            System.out.println("1. Registrar préstamo (BD + Archivo)");
             System.out.println("2. Simular préstamo");
+            System.out.println("3. Finalizar préstamo (Cambiar a PAGADO)");
             System.out.println("0. Volver");
             System.out.print("Seleccione una opción: ");
 
@@ -32,6 +36,9 @@ public class MenuPrestamos {
                     break;
                 case 2:
                     simularPrestamo();
+                    break;
+                case 3:
+                    cambiarEstadoPrestamo();
                     break;
                 case 0:
                     System.out.println("Volviendo al menú principal...");
@@ -114,5 +121,11 @@ public class MenuPrestamos {
             System.out.println("❌ Error al simular préstamo: " + e.getMessage());
             scanner.nextLine();
         }
+    }
+
+    private void cambiarEstadoPrestamo() {
+        System.out.print("\nIngrese el ID del préstamo a finalizar: ");
+        int pId = scanner.nextInt();
+        prestamoService.finalizarPrestamo(pId);
     }
 }

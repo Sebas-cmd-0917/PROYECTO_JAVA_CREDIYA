@@ -8,4 +8,6 @@ public interface PrestamoRepository {
     void registrarPrestamo(Prestamo prestamo);
     List<Prestamo> listarPorCliente(int clienteId);
     Prestamo obtenerPorId(int id);//verificar pagos
+
+    void actualizarEstado(int prestamo_id, String nuevoEstado); 
 }

@@ -107,4 +107,27 @@ public class PrestamoDAOImpl implements PrestamoRepository {
     }
     return null;
     }
+
+    @Override
+    public void actualizarEstado(int prestamoId, String nuevoEstado){
+        String sqlzo = "UPDATE prestamos SET estado = ? WHERE id = ?";
+
+        try (Connection db = ConexionDB.getConnection();
+            PreparedStatement stmt = db.prepareStatement(sqlzo)){
+
+                stmt.setString(1, nuevoEstado);
+                stmt.setInt(1, prestamoId);
+
+                int filas = stmt.executeUpdate();
+                if (filas > 0) {
+                    System.out.println("✅ Estado del préstamo actualizado a: \" + nuevoEstado");
+                }else {
+                    System.out.println("⚠ No se encontró el préstamo con ID: " + prestamoId);
+                }
+
+        }catch(SQLException e){
+            System.out.println("❌ Error al actualizar estado: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
