@@ -1,4 +1,4 @@
-package com.crediya.dao.impl;
+package com.crediya.data.repositories;
 
 import java.sql.Connection;
 import java.sql.Date;

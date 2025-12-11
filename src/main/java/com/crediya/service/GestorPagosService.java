@@ -2,20 +2,20 @@ package com.crediya.service;
 
 import java.util.List;
 
-import com.crediya.dao.PrestamoDAO;
-import com.crediya.dao.impl.PrestamoDAOImpl;
 import com.crediya.data.repositories.PagoDAOImpl;
+import com.crediya.data.repositories.PrestamoDAOImpl;
 import com.crediya.model.Pago;
 import com.crediya.model.Prestamo;
 import com.crediya.repository.PagoRepository;
+import com.crediya.repository.PrestamoRepository;
 
 public class GestorPagosService {
     private PagoRepository pagoRepository = new PagoDAOImpl();
-    private PrestamoDAO prestamoDAO = new PrestamoDAOImpl();
+    private PrestamoRepository prestamoRepository = new PrestamoDAOImpl();
 
     public void registrarAbono(Pago nuevoPago){
     //Obtener el préstamo
-    Prestamo prestamo = prestamoDAO.obtenerPorId(nuevoPago.getPrestamoId());
+    Prestamo prestamo = prestamoRepository.obtenerPorId(nuevoPago.getPrestamoId());
 
     if (prestamo == null ) {
         System.out.println("Error: El prestamo no existe. ");
