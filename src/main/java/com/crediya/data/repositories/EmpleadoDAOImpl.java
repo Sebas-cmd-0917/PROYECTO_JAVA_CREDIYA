@@ -1,14 +1,15 @@
-package com.crediya.dao.impl;
+package com.crediya.data.repositories;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.crediya.config.ConexionDB;
-import com.crediya.dao.EmpleadoDAO;
 import com.crediya.model.Empleado;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import com.crediya.repository.EmpleadoRepository;
 
-public class EmpleadoDAOImpl implements EmpleadoDAO {
+public class EmpleadoDAOImpl implements EmpleadoRepository{
+   
     @Override
     public void guardarEmpleado(Empleado empleado) {
         String sql = "INSERT INTO empleados (nombre, documento, rol, correo, salario) VALUES (?, ?, ?, ?, ?)";
@@ -55,3 +56,4 @@ public class EmpleadoDAOImpl implements EmpleadoDAO {
         return listarEmpleados;
     }
 }
+

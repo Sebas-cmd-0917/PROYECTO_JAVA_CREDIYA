@@ -2,14 +2,16 @@ package com.crediya.ui;
 
 import java.util.Scanner;
 import com.crediya.model.Empleado;
-import com.crediya.dao.impl.EmpleadoDAOImpl;
-import com.crediya.dao.EmpleadoDAO;
+import com.crediya.repository.EmpleadoRepository;
+import com.crediya.data.repositories.EmpleadoDAOImpl;
 import java.util.List;
 
 public class MenuEmpleado {
+        Scanner scanner = new Scanner(System.in);
+        EmpleadoRepository empleadoDAO = new EmpleadoDAOImpl();
+
 
     public void mostrarMenuEmpleado(){
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("--- Menú Empleados ---");
             System.out.println("1. Crear Empleado");
@@ -21,11 +23,40 @@ public class MenuEmpleado {
             int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
             
-            EmpleadoDAO empleadoDAO = new EmpleadoDAOImpl();
 
             switch(opcion){
             case 1:
-                // Lógica para crear empleado
+                System.out.println("Crear Empleado seleccionado.");
+                crearEmpleado();
+                break;
+            case 2:
+                System.out.println("Modificar Empleado seleccionado.");
+                // Lógica para modificar empleado
+                break;
+            case 3:
+                System.out.println("Gestión de Préstamos seleccionada.");
+                // Lógica para gestionar préstamos
+                break;
+            case 4:
+                System.out.println("\n--- LISTA DE EMPLEADOS ---");
+                listarEmpleados();
+                break;
+                
+            case 5:
+                System.out.println("Saliendo del menu empleados!");
+                MenuPrincipal miMenu = new MenuPrincipal();
+                miMenu.mostrarMenu();
+                return;
+            default:
+                System.out.println("Opción no válida. Por favor, intente de nuevo.");
+            }
+        }
+        // Lógica para mostrar el menú de gestión de empleados
+    }
+
+    private void crearEmpleado() {
+         // Lógica para crear empleado
+         try {
                     System.out.println("\n--- REGISTRAR EMPLEADO ---");
                     System.out.print("Nombre: ");
                     String nom = scanner.nextLine();
@@ -41,19 +72,15 @@ public class MenuEmpleado {
 
                     Empleado nuevoEmp = new Empleado(nom, doc, rol, correo, sal);
                     empleadoDAO.guardarEmpleado(nuevoEmp);
-                
-                break;
-            case 2:
-                System.out.println("Modificar Empleado seleccionado.");
-                // Lógica para modificar empleado
-                break;
-            case 3:
-                System.out.println("Gestión de Préstamos seleccionada.");
-                // Lógica para gestionar préstamos
-                break;
-            case 4:
-                System.out.println("\n--- LISTA DE EMPLEADOS ---");
-                // Lógica para listar empleados
+                    System.out.println("✔ Empleado registrado correctamente.");
+                } catch (Exception e) {
+                    System.out.println("❌ Error al registrar empleado: " + e.getMessage());
+                    scanner.nextLine();
+                }
+    }
+
+    private void listarEmpleados (){
+        // Lógica para listar empleados
                 List <Empleado> lista = empleadoDAO.listarTodosEmpleados();
                 if (lista.isEmpty()) {
                     System.out.println("No hay empleados registrados.");
@@ -79,16 +106,6 @@ public class MenuEmpleado {
 
             }
         }
-            case 5:
-                System.out.println("Saliendo del menu empleados!");
-                MenuPrincipal miMenu = new MenuPrincipal();
-                miMenu.mostrarMenu();
-                return;
-            default:
-                System.out.println("Opción no válida. Por favor, intente de nuevo.");
-            }
-        }
-        // Lógica para mostrar el menú de gestión de empleados
     }
 
 }
