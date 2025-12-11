@@ -1,23 +1,12 @@
 package com.crediya.ui;
 
-import java.time.LocalDate;
 import java.util.Scanner;
 
-import com.crediya.dao.PrestamoDAO;
-import com.crediya.dao.impl.PrestamoDAOImpl;
-import com.crediya.model.Pago;
-import com.crediya.model.Prestamo;
-import com.crediya.service.CalculadoraPrestamosService;
-import com.crediya.service.GestorPagosService;
 
 public class MenuPrincipal {
 
     public void mostrarMenu(){
         Scanner scanner = new Scanner(System.in);
-
-        //Sebas
-       
-
 
         while(true){
         System.out.println("--- Menú Principal ---");

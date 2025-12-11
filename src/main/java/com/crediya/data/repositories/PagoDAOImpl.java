@@ -1,4 +1,4 @@
-package com.crediya.dao.impl;
+package com.crediya.data.repositories;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.crediya.config.ConexionDB;
-import com.crediya.dao.PagoDAO;
 import com.crediya.model.Pago;
+import com.crediya.repository.PagoRepository;
 
-public class PagoDAOImpl implements PagoDAO{
+public class PagoDAOImpl implements PagoRepository{
 
     @Override
     public void registrarPago(Pago pago){

@@ -26,7 +26,6 @@ public class EmpleadoDAOImpl implements EmpleadoDAO {
             System.out.println("Empleado guardado exitosamente.");
             
         } catch (Exception e) {
-            // TODO: handle exception
             e.printStackTrace();
             System.out.println("Error al guardar el empleado.");
         }

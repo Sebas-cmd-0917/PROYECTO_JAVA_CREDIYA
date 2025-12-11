@@ -2,15 +2,15 @@ package com.crediya.service;
 
 import java.util.List;
 
-import com.crediya.dao.PagoDAO;
 import com.crediya.dao.PrestamoDAO;
 import com.crediya.dao.impl.PagoDAOImpl;
 import com.crediya.dao.impl.PrestamoDAOImpl;
 import com.crediya.model.Pago;
 import com.crediya.model.Prestamo;
+import com.crediya.repository.PagoRepository;
 
 public class GestorPagosService {
-    private PagoDAO pagoDAO = new PagoDAOImpl();
+    private PagoRepository pagoRepository = new PagoDAOImpl();
     private PrestamoDAO prestamoDAO = new PrestamoDAOImpl();
 
     public void registrarAbono(Pago nuevoPago){
@@ -25,7 +25,7 @@ public class GestorPagosService {
     double totalDeuda = prestamo.getMonto() + (prestamo.getMonto() * (prestamo.getInteres() / 100));
     
     //Calcular cuánto ha pagado hasta ahora
-    List<Pago> pagosPrevios = pagoDAO.ListarPagosPorPrestamo(prestamo.getClienteId());
+    List<Pago> pagosPrevios = pagoRepository.ListarPagosPorPrestamo(prestamo.getClienteId());
     double totalPagado = 0;
 
     for (Pago p : pagosPrevios) {
@@ -37,7 +37,7 @@ public class GestorPagosService {
     if (nuevoPago.getMonto() > saldoPendiente){
         System.out.println("Error: El abono excede el saldo pendiente. Saldo actual: " + saldoPendiente);
     }else {
-        pagoDAO.registrarPago(nuevoPago);
+        pagoRepository.registrarPago(nuevoPago);
         System.out.println("Abono registrado. Nuevo saldo: " + (saldoPendiente - nuevoPago.getMonto()));
     }
     }
