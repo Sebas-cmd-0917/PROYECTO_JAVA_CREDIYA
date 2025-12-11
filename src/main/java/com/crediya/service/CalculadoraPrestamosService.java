@@ -8,13 +8,15 @@ public class CalculadoraPrestamosService {
         return totalAPagar / cuotas;
     }
 
-    public void imprimirTablaAmortizacion(double monto, double interes, int cuotas){
+    public String imprimirTablaAmortizacion(double monto, double interes, int cuotas){
+        StringBuilder sBuilder = new StringBuilder();
         double cuota = calcularCuotaMensual(monto, interes, cuotas);
-        System.out.println("--- Tabla de Amortización Proyectada ---");
-        System.out.println("Monto: " + monto + " | Interés: " + interes + "%");
+        sBuilder.append("--- Tabla de Amortización Proyectada ---");
+        sBuilder.append("\nMonto: " + monto + " | Interés: " + interes + "%");
         for (int i = 1; i <= cuotas; i++) {
-            System.out.println("Cuota " + i + ": $" + String.format("%.2f", cuota));
+            sBuilder.append("\nCuota " + i + ": $" + String.format("%.2f", cuota));
         }
+        return sBuilder.toString();
     }
     
 }

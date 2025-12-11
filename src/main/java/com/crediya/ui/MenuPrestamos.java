@@ -96,7 +96,7 @@ public class MenuPrestamos {
             scanner.nextLine();
 
             // Mostrar simulación
-            calculadoraPrestamosService.imprimirTablaAmortizacion(monto, interes, cuotas);
+            System.out.println(calculadoraPrestamosService.imprimirTablaAmortizacion(monto, interes, cuotas));
 
             // Preguntar si quiere registrar después de simular
             System.out.print("\n¿Desea registrar este préstamo? (S/N): ");
