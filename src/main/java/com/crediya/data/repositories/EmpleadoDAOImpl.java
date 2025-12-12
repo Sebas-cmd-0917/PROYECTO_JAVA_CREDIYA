@@ -1,10 +1,8 @@
 package com.crediya.data.repositories;
 
 import com.crediya.config.ConexionDB; // O ConexionDB según como lo llamó tu compañero
-import com.crediya.data.entities.ClienteEntity;
 import com.crediya.data.entities.EmpleadoEntity; // Importamos la Entidad
 import com.crediya.data.mapper.EmpeladoMapper;   // Importamos el Mapper
-import com.crediya.model.Cliente;
 import com.crediya.model.Empleado;
 import com.crediya.repository.EmpleadoRepository; // O EmpleadoRepository
 
@@ -80,7 +78,7 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
     }
 
     public Empleado buscarPorDocumentoEmpleado(String documento){
-        String sqlzo = "SELECT id, nombre, documento, rol, correo, salario FROM clientes documento = ?";
+        String sqlzo = "SELECT id, nombre, documento, rol, correo, salario FROM empleados WHERE documento = ?";
         Empleado empleadoEncontrado = null;
 
         try (Connection db = ConexionDB.getConnection();
@@ -107,7 +105,7 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return empleadoEncontrado;
 
     };
 

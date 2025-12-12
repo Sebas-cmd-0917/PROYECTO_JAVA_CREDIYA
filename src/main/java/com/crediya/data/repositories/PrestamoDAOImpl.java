@@ -195,7 +195,7 @@ public class PrestamoDAOImpl implements PrestamoRepository {
             PreparedStatement stmt = db.prepareStatement(sqlzo)){
 
                 stmt.setString(1, nuevoEstado);
-                stmt.setInt(1, prestamoId);
+                stmt.setInt(2, prestamoId);
 
                 int filas = stmt.executeUpdate();
                 if (filas > 0) {

@@ -25,7 +25,7 @@ public class GestorPagosService {
     double totalDeuda = prestamo.getMonto() + (prestamo.getMonto() * (prestamo.getInteres() / 100));
 
     //Calcular cuánto ha pagado hasta ahora
-    List<Pago> pagosPrevios = pagoRepository.ListarPagosPorPrestamo(prestamo.getClienteId());
+    List<Pago> pagosPrevios = pagoRepository.ListarPagosPorPrestamo(prestamo.getId());
     double totalPagado = 0;
 
     for (Pago p : pagosPrevios) {

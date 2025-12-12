@@ -91,7 +91,7 @@ public class ClienteDAOImpl implements ClienteRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return clienteEncontrado;
 
     };
 

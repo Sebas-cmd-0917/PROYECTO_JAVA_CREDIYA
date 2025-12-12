@@ -12,7 +12,20 @@ public class Empleado {
 
     };
 
-    public Empleado(String nombre, String documento, String rol, String correo, double salario) {
+    
+
+    // public Empleado(String nombre, String documento, String rol, String correo, double salario) {
+    //     this.nombre = nombre;
+    //     this.documento = documento;
+    //     this.rol = rol;
+    //     this.correo = correo;
+    //     this.salario = salario;
+    // }
+
+
+
+    public Empleado(int id, String nombre, String documento, String rol, String correo, double salario) {
+        this.id = id;
         this.nombre = nombre;
         this.documento = documento;
         this.rol = rol;
