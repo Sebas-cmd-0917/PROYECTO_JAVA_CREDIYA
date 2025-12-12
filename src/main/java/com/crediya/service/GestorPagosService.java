@@ -46,6 +46,7 @@ public class GestorPagosService {
 
         return prestamoRepository.obtenerPrestamoPorDocumento(documento);
     }
+    
 
 
 }

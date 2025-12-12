@@ -5,6 +5,8 @@ import java.time.LocalDate;
 public class Pago {
     private int id;
     private int prestamoId;
+    private String nombreCliente;
+    private String numDocumento;
     private LocalDate fechaPago;
     private double monto;
 
@@ -24,6 +26,8 @@ public class Pago {
         this.fechaPago = fechaPago;
         this.monto = monto;
     }
+
+    
 
     public int getId() {
         return id;

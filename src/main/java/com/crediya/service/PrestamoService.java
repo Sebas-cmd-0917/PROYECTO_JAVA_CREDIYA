@@ -61,6 +61,10 @@ public class PrestamoService {
        return prestamoRepository.listarPrestamos();
     }
 
+    public List<Prestamo> obtenerPorDocumento(String documento){
+        return prestamoRepository.obtenerPrestamoPorDocumento(documento);
+    }
+
 }
     
 

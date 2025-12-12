@@ -26,12 +26,15 @@ public class MenuPago {
 
             switch (opcion) {
                 case 1:
-                    crearPago();
-                    break;
-                case 2:
                     System.out.print("Ingrese el documento del cliente: ");
                     String doc = scanner.nextLine();
                     verPrestamosPorDocumento(doc);
+                    System.out.println("Sleccione el # de préstamo para abonar:");
+                    crearPago();
+                    break;
+                case 2:
+                   
+                   
                     break;
                 case 3:
                     MenuPrestamos menuPrestamos = new MenuPrestamos();
