@@ -1,59 +1,79 @@
 package com.crediya.data.repositories;
+
+import com.crediya.config.ConexionDB; // O ConexionDB según como lo llamó tu compañero
+import com.crediya.data.entities.EmpleadoEntity; // Importamos la Entidad
+import com.crediya.data.mapper.EmpeladoMapper;   // Importamos el Mapper
+import com.crediya.model.Empleado;
+import com.crediya.repository.EmpleadoRepository; // O EmpleadoRepository
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crediya.config.ConexionDB;
-import com.crediya.model.Empleado;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import com.crediya.repository.EmpleadoRepository;
+public class EmpleadoDAOImpl implements EmpleadoRepository {
 
-public class EmpleadoDAOImpl implements EmpleadoRepository{
-   
+    // Instanciamos el traductor
+    private EmpeladoMapper mapper = new EmpeladoMapper();
+
     @Override
-    public void guardarEmpleado(Empleado empleado) {
+    public void guardarEmpleado(Empleado empleadoModel) {
         String sql = "INSERT INTO empleados (nombre, documento, rol, correo, salario) VALUES (?, ?, ?, ?, ?)";
 
-        try(Connection dbConexion = ConexionDB.getConnection()) {
+        // 1. CONVERSIÓN: Usamos el Mapper para volverlo Entidad
+        EmpleadoEntity entity = mapper.toEntity(empleadoModel);
 
-            PreparedStatement stmt = dbConexion.prepareStatement(sql);
-            stmt.setString(1, empleado.getNombre());
-            stmt.setString(2, empleado.getDocumento());
-            stmt.setString(3, empleado.getRol()); 
-            stmt.setString(4, empleado.getCorreo());
-            stmt.setDouble(5, empleado.getSalario());
+        try (Connection conexion = ConexionDB.getConnection();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
 
-            stmt.executeUpdate();
-            System.out.println("Empleado guardado exitosamente.");
-            
-        } catch (Exception e) {
+            // 2. Usamos los datos de la ENTITY (no del modelo directo)
+            ps.setString(1, entity.getNombre());
+            ps.setString(2, entity.getDocumento());
+            ps.setString(3, entity.getRol());
+            ps.setString(4, entity.getCorreo());
+            ps.setDouble(5, entity.getSalario());
+
+            ps.executeUpdate();
+            System.out.println("✅ Empleado guardado (Arquitectura Capas).");
+
+        } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error al guardar el empleado.");
         }
     }
- 
+
     @Override
     public List<Empleado> listarTodosEmpleados() {
-        List<Empleado> listarEmpleados = new ArrayList<>();
+        List<Empleado> listaEmpleados= new ArrayList<>();
         String sql = "SELECT * FROM empleados";
-        try (Connection dbConexion = ConexionDB.getConnection()) {
-            PreparedStatement stmt = dbConexion.prepareStatement(sql);
-            var rs = stmt.executeQuery();
+
+        try (Connection conexion = ConexionDB.getConnection();
+             PreparedStatement ps = conexion.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) {
-                Empleado emp = new Empleado();
-                emp.setId(rs.getInt("id"));
-                emp.setNombre(rs.getString("nombre"));
-                emp.setDocumento(rs.getString("documento"));
-                emp.setRol(rs.getString("rol"));
-                emp.setCorreo(rs.getString("correo"));
-                emp.setSalario(rs.getDouble("salario"));
-                listarEmpleados.add(emp);
+                // A. Leemos datos de SQL y creamos la ENTITY
+                EmpleadoEntity entity = new EmpleadoEntity();
+                entity.setId(rs.getInt("id"));
+                entity.setNombre(rs.getString("nombre"));
+                entity.setDocumento(rs.getString("documento"));
+                entity.setRol(rs.getString("rol"));
+                entity.setCorreo(rs.getString("correo"));
+                entity.setSalario(rs.getDouble("salario"));
+
+                // B. CONVERSIÓN: Entity -> Model (Usando el Mapper)
+                Empleado modelo = mapper.toDomain(entity);
+                // Asegúrate de pasar el ID si toDomain no lo hizo
+                modelo.setId(entity.getId()); 
+
+                // C. Agregamos a la lista de negocio
+                listaEmpleados.add(modelo);
             }
-        } catch (Exception e) {
+
+        } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error al listar los empleados.");
         }
-        return listarEmpleados;
+        return listaEmpleados;
     }
 }
-

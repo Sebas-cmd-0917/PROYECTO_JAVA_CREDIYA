@@ -2,13 +2,14 @@ package com.crediya.ui;
 
 import java.util.Scanner;
 import com.crediya.model.Empleado;
-import com.crediya.repository.EmpleadoRepository;
-import com.crediya.data.repositories.EmpleadoDAOImpl;
+
+import com.crediya.service.GestorEmpleadoService;
+
 import java.util.List;
 
 public class MenuEmpleado {
         Scanner scanner = new Scanner(System.in);
-        EmpleadoRepository empleadoDAO = new EmpleadoDAOImpl();
+        GestorEmpleadoService servicioEmpleado = new GestorEmpleadoService();
 
 
     public void mostrarMenuEmpleado(){
@@ -71,7 +72,7 @@ public class MenuEmpleado {
                     scanner.nextLine(); 
 
                     Empleado nuevoEmp = new Empleado(nom, doc, rol, correo, sal);
-                    empleadoDAO.guardarEmpleado(nuevoEmp);
+                    servicioEmpleado.registrarEmpleado(nuevoEmp);
                     System.out.println("✔ Empleado registrado correctamente.");
                 } catch (Exception e) {
                     System.out.println("❌ Error al registrar empleado: " + e.getMessage());
@@ -81,7 +82,7 @@ public class MenuEmpleado {
 
     private void listarEmpleados (){
         // Lógica para listar empleados
-                List <Empleado> lista = empleadoDAO.listarTodosEmpleados();
+                List <Empleado> lista = servicioEmpleado.obtenerTodos();
                 if (lista.isEmpty()) {
                     System.out.println("No hay empleados registrados.");
                 } else {
@@ -102,9 +103,12 @@ public class MenuEmpleado {
                                     e.getRol(),
                                     e.getCorreo(),
                                     e.getSalario());      // %,.2f para dinero (con comas y 2 decimales)
+                                    
 
 
             }
+                        System.out.println("----------------------------------------------------------------------------------------------------");
+            
         }
     }
 

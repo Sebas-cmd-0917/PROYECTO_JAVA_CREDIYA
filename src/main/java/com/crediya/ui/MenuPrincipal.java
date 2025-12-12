@@ -14,7 +14,8 @@ public class MenuPrincipal {
         System.out.println("2. Gestionar Clientes");
         System.out.println("3. Gestionar Préstamos (Registrar y Simular)");
         System.out.println("4. Gestionar Pagos (Registrar Abono)");
-        System.out.println("5. Salir");
+        System.out.println("5. Reportes");
+        System.out.println("6. Salir");
         System.out.print("Seleccione una opción: ");
         int opcion = scanner.nextInt();
         scanner.nextLine(); // Consumir el salto de línea
@@ -42,7 +43,7 @@ public class MenuPrincipal {
                 MenuPago menuPago = new MenuPago();
                 menuPago.mostrarMenuPago();
                 break;
-            case 5:
+            case 6:
                 System.out.println("Saliendo del sistema. ¡Hasta luego!");
                 scanner.close();
                 return;
