@@ -11,8 +11,6 @@ public class MenuPago {
 
     public void mostrarMenuPago(){
 
-    
-
         while (true) {
             System.out.println("\n===== 📌 MENÚ DE PAGOS =====");
             System.out.println("1. Registrar pago");
