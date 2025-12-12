@@ -6,7 +6,6 @@ public class Pago {
     private int id;
     private int prestamoId;
     private String nombreCliente;
-    private String numDocumento;
     private LocalDate fechaPago;
     private double monto;
 
@@ -27,10 +26,18 @@ public class Pago {
         this.monto = monto;
     }
 
-    
+
 
     public int getId() {
         return id;
+    }
+
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
     }
 
     public void setId(int id) {

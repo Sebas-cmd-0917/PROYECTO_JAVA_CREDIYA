@@ -19,7 +19,7 @@ public class PagoDAOImpl implements PagoRepository{
 
     @Override
     public void registrarPago(Pago pago){
-        String sqlzo = "INSERT INTO pagos (prestamos_id, fecha_pago, monto) VALUES (?, ?, ?)";
+        String sqlzo = "INSERT INTO pagos (prestamo_id, fecha_pago, monto) VALUES (?, ?, ?)";
         PagoEntity pagoEntity = mapper.toEntity(pago);
 
         try (Connection db = ConexionDB.getConnection();
@@ -41,7 +41,11 @@ public class PagoDAOImpl implements PagoRepository{
     @Override
     public List<Pago> HistoricoDePagos(){
         List<Pago> lista = new ArrayList<>();
-        String sqlzo = "SELECT id, prestamo_id, fecha_pago, monto FROM pagos";
+        String sqlzo = "SELECT p.id, p.prestamo_id, p.fecha_pago, p.monto, " +
+                   "c.nombre AS nombre_cliente " +
+                   "FROM pagos p " +
+                   "INNER JOIN prestamos pr ON p.prestamo_id = pr.id " +
+                   "INNER JOIN clientes c ON pr.cliente_id = c.id";;
 
         try (Connection db = ConexionDB.getConnection();
              PreparedStatement stmt = db.prepareStatement(sqlzo)) {
@@ -58,6 +62,7 @@ public class PagoDAOImpl implements PagoRepository{
 
                 // CORRECCIÓN 3: Usamos el MAPPER para convertir a Modelo de Negocio
                 Pago pagoModel = mapper.toDomain(entity);
+                pagoModel.setNombreCliente(result.getString("nombre_cliente"));
                 
                 lista.add(pagoModel);
             }

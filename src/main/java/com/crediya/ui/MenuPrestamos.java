@@ -39,6 +39,7 @@ public class MenuPrestamos {
             System.out.println("2. Simular préstamo");
             System.out.println("3. Finalizar préstamo (Cambiar a PAGADO)");
             System.out.println("4. Listar préstamos");
+            System.out.println("5. Buscar préstamos por documento");
             System.out.println("0. Volver");
             System.out.print("Seleccione una opción: ");
 
@@ -57,6 +58,11 @@ public class MenuPrestamos {
                     break;
                 case 4:
                     listarPrestamos();
+                    break;
+                case 5:
+                    System.out.print("Ingrese el documento del cliente: ");
+                    String documento = scanner.nextLine();
+                    gestorPagosService.obtenerPrestamoPorDocumento(documento);
                     break;
                 case 0:
                     System.out.println("Volviendo al menú principal...");
@@ -158,6 +164,10 @@ public class MenuPrestamos {
             
         }
     }
+
+  
+
+
 
     // 👉 OPCIÓN 2: Simular préstamo (MODIFICADO POR DOCUMENTO)
     private void simularPrestamo() {
