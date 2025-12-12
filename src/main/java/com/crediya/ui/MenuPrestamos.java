@@ -1,21 +1,22 @@
 package com.crediya.ui;
 
-import java.time.LocalDate;
+
+import java.util.List;
 import java.util.Scanner;
 
-import com.crediya.data.repositories.PrestamoDAOImpl;
+
 import com.crediya.model.Prestamo;
-import com.crediya.repository.PrestamoRepository;
 import com.crediya.service.CalculadoraPrestamosService;
 import com.crediya.service.GestorPagosService;
 import com.crediya.service.PrestamoService;
 
 public class MenuPrestamos {
+
     Scanner scanner = new Scanner(System.in);
-    PrestamoRepository prestamoRepository = new PrestamoDAOImpl();
     GestorPagosService gestorPagosService = new GestorPagosService();
-    CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
     PrestamoService prestamoService = new PrestamoService();
+
+    CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
 
     public void mostrarMenuPrestamo() {
         int opcion = -1;
@@ -24,6 +25,7 @@ public class MenuPrestamos {
             System.out.println("1. Registrar préstamo (BD + Archivo)");
             System.out.println("2. Simular préstamo");
             System.out.println("3. Finalizar préstamo (Cambiar a PAGADO)");
+            System.out.println("4. Listar préstamos");
             System.out.println("0. Volver");
             System.out.print("Seleccione una opción: ");
 
@@ -39,6 +41,9 @@ public class MenuPrestamos {
                     break;
                 case 3:
                     cambiarEstadoPrestamo();
+                    break;
+                case 4:
+                    listarPrestamos();
                     break;
                 case 0:
                     System.out.println("Volviendo al menú principal...");
@@ -70,14 +75,46 @@ public class MenuPrestamos {
             int cuotas = scanner.nextInt();
             scanner.nextLine();
 
-            Prestamo nuevoP = new Prestamo(cId, eId, monto, interes, cuotas, LocalDate.now(), "ACTIVO");
-            prestamoRepository.registrarPrestamo(nuevoP);
+            prestamoService.registrarPrestamo(cId, eId, monto, interes, cuotas);
 
-            System.out.println("✔ Préstamo registrado correctamente.");
 
         } catch (Exception e) {
             System.out.println("❌ Error al registrar préstamo: " + e.getMessage());
             scanner.nextLine();
+        }
+    }
+
+    //listar prestammos
+
+    private void listarPrestamos() {
+        System.out.println("\n--- Lista de Préstamos ---");
+        List <Prestamo> lista = prestamoService.obtenerTodos();
+                if (lista.isEmpty()) {
+                    System.out.println("No hay préstamos registrados.");
+                } else {
+                    // 1. IMPRIMIR ENCABEZADOS DE LA TABLA
+                        // %-5s  = Columna de Texto alineado a la Izquierda de 5 espacios
+                        // %-20s = Columna de Texto alineado a la Izquierda de 20 espacios
+                        System.out.printf("%-5s %-20s %-15s %-15s %-25s %-15s\n", 
+                                          "ID", "ID CLIENTE", "ID EMPLEADO", "$ MONTO", "INTERÉS", "CUOTAS");
+                        
+                        System.out.println("----------------------------------------------------------------------------------------------------");
+
+                        // 2. IMPRIMIR CADA FILA CON EL MISMO FORMATO
+                        for (Prestamo p : lista) {
+                            System.out.printf("%-5d %-20s %-15s $ %-15s %-25s %-15s\n", 
+                                    p.getId(),            // %d para números enteros
+                                    p.getClienteId(),        // %s para texto
+                                    p.getEmpleadoId(),
+                                    p.getMonto(),
+                                    p.getInteres(),
+                                    p.getCuotas());      // %,.2f para dinero (con comas y 2 decimales)
+                                    
+
+
+            }
+                        System.out.println("----------------------------------------------------------------------------------------------------");
+            
         }
     }
 
@@ -110,9 +147,7 @@ public class MenuPrestamos {
             String confirmacion = scanner.nextLine();
 
             if (confirmacion.equalsIgnoreCase("S")) {
-                Prestamo nuevoP = new Prestamo(cId, eId, monto, interes, cuotas, LocalDate.now(), "ACTIVO");
-                prestamoRepository.registrarPrestamo(nuevoP);
-                System.out.println("✔ Préstamo registrado correctamente.");
+                prestamoService.registrarPrestamo(cId, eId, monto, interes, cuotas);
             } else {
                 System.out.println("❌ Registro cancelado. Solo se realizó la simulación.");
             }

@@ -49,6 +49,39 @@ public class PrestamoDAOImpl implements PrestamoRepository {
 
     }
 
+    @Override
+    public List<Prestamo> listarPrestamos() {
+        List<Prestamo> listaModelos = new ArrayList<>();
+        String sqlzo = "SELECT id, cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado FROM prestamos";
+
+        try (Connection db = ConexionDB.getConnection();
+        PreparedStatement stmt = db.prepareStatement(sqlzo)) {
+
+            ResultSet result = stmt.executeQuery(); 
+
+            while (result.next()) {
+                PrestamoEntity entity = new PrestamoEntity();
+                    entity.setId(result.getInt("id"));
+                    entity.setClienteId(result.getInt("cliente_id"));
+                    entity.setEmpleadoId(result.getInt("empleado_id"));
+                    entity.setMonto(result.getDouble("monto"));
+                    entity.setInteres(result.getDouble("interes"));
+                    entity.setCuotas(result.getInt("cuotas"));
+                    entity.setFechaInicio(result.getDate("fecha_inicio").toLocalDate());
+                    entity.setEstado(result.getString("estado"));
+                // Convertir la ENTIDAD a MODELO DE NEGOCIO
+                // El resto del programa solo entenderá 'Prestamo', no 'PrestamoEntity'
+                Prestamo model = mapper.toDomain(entity);
+                listaModelos.add(model);
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaModelos;
+    }
+
+    @Override
     public List<Prestamo> listarPorCliente(int clienteId) {
         List<Prestamo> listaModelos = new ArrayList<>();
         String sqlzo = "SELECT cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio estado FROM prestamos WHERE cliente_id = ?";
