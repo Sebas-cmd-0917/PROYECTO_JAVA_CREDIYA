@@ -52,6 +52,7 @@ public class MenuPrestamos {
                     System.out.println("❌ Opción inválida");
             }
         }
+        
     }
 
     // 👉 OPCIÓN 1: Registrar préstamo sin simulación
