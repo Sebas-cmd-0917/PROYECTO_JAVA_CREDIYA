@@ -1,20 +1,17 @@
 package com.crediya.ui;
 
-import java.time.LocalDate;
 import java.util.Scanner;
 
-import com.crediya.data.repositories.PrestamoDAOImpl;
-import com.crediya.model.Prestamo;
-import com.crediya.repository.PrestamoRepository;
 import com.crediya.service.CalculadoraPrestamosService;
 import com.crediya.service.GestorPagosService;
 import com.crediya.service.PrestamoService;
 
 public class MenuPrestamos {
+
     Scanner scanner = new Scanner(System.in);
-    PrestamoRepository prestamoRepository = new PrestamoDAOImpl();
     GestorPagosService gestorPagosService = new GestorPagosService();
     CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
+
     PrestamoService prestamoService = new PrestamoService();
 
     public void mostrarMenuPrestamo() {
@@ -70,10 +67,8 @@ public class MenuPrestamos {
             int cuotas = scanner.nextInt();
             scanner.nextLine();
 
-            Prestamo nuevoP = new Prestamo(cId, eId, monto, interes, cuotas, LocalDate.now(), "ACTIVO");
-            prestamoRepository.registrarPrestamo(nuevoP);
+            prestamoService.registrarPrestamo(cId, eId, monto, interes, cuotas);
 
-            System.out.println("✔ Préstamo registrado correctamente.");
 
         } catch (Exception e) {
             System.out.println("❌ Error al registrar préstamo: " + e.getMessage());
@@ -110,9 +105,7 @@ public class MenuPrestamos {
             String confirmacion = scanner.nextLine();
 
             if (confirmacion.equalsIgnoreCase("S")) {
-                Prestamo nuevoP = new Prestamo(cId, eId, monto, interes, cuotas, LocalDate.now(), "ACTIVO");
-                prestamoRepository.registrarPrestamo(nuevoP);
-                System.out.println("✔ Préstamo registrado correctamente.");
+                prestamoService.registrarPrestamo(cId, eId, monto, interes, cuotas);
             } else {
                 System.out.println("❌ Registro cancelado. Solo se realizó la simulación.");
             }

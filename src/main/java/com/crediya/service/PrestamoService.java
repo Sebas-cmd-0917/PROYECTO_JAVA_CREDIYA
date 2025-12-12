@@ -40,7 +40,6 @@ public class PrestamoService {
         double totalPagar = cuotaMensual * p.getCuotas();
 
         String linea = String.format("%d;%.2f;%.2f;%.2f;%s;%s", p.getClienteId(), p.getMonto(), p.getInteres(), totalPagar, p.getEstado(), p.getFechaInicio());
-
         try (FileWriter fw = new FileWriter("prestamos.txt", true);
             PrintWriter pw = new PrintWriter(fw)){
                 pw.println(linea);
