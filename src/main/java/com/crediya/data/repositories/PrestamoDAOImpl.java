@@ -20,27 +20,26 @@ public class PrestamoDAOImpl implements PrestamoRepository {
 
     @Override
     public void registrarPrestamo(Prestamo p) {
-        
+
         String sqlzo = "INSERT INTO prestamos (cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
         // Convertir el Modelo (Negocio) a Entidad (Base de Datos)
         // Esto asegura que solo guardamos lo que la entidad permite
         PrestamoEntity prestamoEntity = mapper.toEntity(p);
 
-        try (Connection db = ConexionDB.getConnection(); 
-             PreparedStatement stmt = db.prepareStatement(sqlzo)) {
+        try (Connection db = ConexionDB.getConnection();
+                PreparedStatement stmt = db.prepareStatement(sqlzo)) {
 
-                // PASO 2: Usamos los datos DE LA ENTIDAD para el SQL
-                stmt.setInt(1, prestamoEntity.getClienteId());
-                stmt.setInt(2, prestamoEntity.getEmpleadoId());
-                stmt.setDouble(3, prestamoEntity.getMonto());
-                stmt.setDouble(4, prestamoEntity.getInteres());
-                stmt.setInt(5, prestamoEntity.getCuotas());
-                stmt.setDate(6, Date.valueOf(prestamoEntity.getFechaInicio())); 
-                stmt.setString(7, prestamoEntity.getEstado());
+            // PASO 2: Usamos los datos DE LA ENTIDAD para el SQL
+            stmt.setInt(1, prestamoEntity.getClienteId());
+            stmt.setInt(2, prestamoEntity.getEmpleadoId());
+            stmt.setDouble(3, prestamoEntity.getMonto());
+            stmt.setDouble(4, prestamoEntity.getInteres());
+            stmt.setInt(5, prestamoEntity.getCuotas());
+            stmt.setDate(6, Date.valueOf(prestamoEntity.getFechaInicio()));
+            stmt.setString(7, prestamoEntity.getEstado());
 
-                stmt.executeUpdate();
-                System.out.println("Préstamo registrado exitosamente.");
-
+            stmt.executeUpdate();
+            System.out.println("Préstamo registrado exitosamente.");
 
         } catch (SQLException e) {
             System.out.println(" ❌ Error al registrar préstamo: " + e.getMessage());
@@ -52,39 +51,39 @@ public class PrestamoDAOImpl implements PrestamoRepository {
     @Override
     public List<Prestamo> listarPrestamos() {
         List<Prestamo> listaModelos = new ArrayList<>();
-        String sqlzo = "SELECT p.id, p.cliente_id, p.empleado_id, p.monto, p.interes, p.cuotas, p.fecha_inicio, p.estado, " +
-               "c.nombre AS nombre_cliente, c.documento AS doc_cliente, " +
-               "e.nombre AS nombre_empleado " +
-               "FROM prestamos p " +
-               "INNER JOIN clientes c ON p.cliente_id = c.id " +
-               "INNER JOIN empleados e ON p.empleado_id = e.id";
+        String sqlzo = "SELECT p.id, p.cliente_id, p.empleado_id, p.monto, p.interes, p.cuotas, p.fecha_inicio, p.estado, "
+                +
+                "c.nombre AS nombre_cliente, c.documento AS doc_cliente, " +
+                "e.nombre AS nombre_empleado " +
+                "FROM prestamos p " +
+                "INNER JOIN clientes c ON p.cliente_id = c.id " +
+                "INNER JOIN empleados e ON p.empleado_id = e.id";
 
         try (Connection db = ConexionDB.getConnection();
-        PreparedStatement stmt = db.prepareStatement(sqlzo)) {
+                PreparedStatement stmt = db.prepareStatement(sqlzo)) {
 
-            ResultSet result = stmt.executeQuery(); 
+            ResultSet result = stmt.executeQuery();
 
             while (result.next()) {
                 PrestamoEntity entity = new PrestamoEntity();
-                    entity.setId(result.getInt("id"));
-                    entity.setClienteId(result.getInt("cliente_id"));
-                    entity.setEmpleadoId(result.getInt("empleado_id"));
-                    entity.setMonto(result.getDouble("monto"));
-                    entity.setInteres(result.getDouble("interes"));
-                    entity.setCuotas(result.getInt("cuotas"));
-                    entity.setFechaInicio(result.getDate("fecha_inicio").toLocalDate());
-                    entity.setEstado(result.getString("estado"));
+                entity.setId(result.getInt("id"));
+                entity.setClienteId(result.getInt("cliente_id"));
+                entity.setEmpleadoId(result.getInt("empleado_id"));
+                entity.setMonto(result.getDouble("monto"));
+                entity.setInteres(result.getDouble("interes"));
+                entity.setCuotas(result.getInt("cuotas"));
+                entity.setFechaInicio(result.getDate("fecha_inicio").toLocalDate());
+                entity.setEstado(result.getString("estado"));
                 // Convertir la ENTIDAD a MODELO DE NEGOCIO
                 // El resto del programa solo entenderá 'Prestamo', no 'PrestamoEntity'
                 Prestamo model = mapper.toDomain(entity);
-                
 
                 model.setNombreCliente(result.getString("nombre_cliente"));
                 model.setNumDocumento(result.getString("doc_cliente"));
                 model.setNombreEmpleado(result.getString("nombre_empleado"));
 
                 listaModelos.add(model);
-                
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -95,13 +94,16 @@ public class PrestamoDAOImpl implements PrestamoRepository {
     @Override
     public List<Prestamo> obtenerPrestamoPorDocumento(String documento) {
         List<Prestamo> listaPreDoc = new ArrayList<>();
-        String sqlzo = "SELECT p.id, p.cliente_id, p.empleado_id, p.monto, p.interes, p.cuotas, p.fecha_inicio, p.estado " +
-                       "FROM prestamos p " +
-                       "JOIN clientes c ON p.cliente_id = c.id " +
-                       "WHERE c.documento = ?";
+        String sqlzo = "SELECT p.id, p.cliente_id, p.empleado_id, p.monto, p.interes, p.cuotas, p.fecha_inicio, p.estado, " +
+                 "c.nombre AS nombre_cliente, c.documento AS doc_cliente, " +
+                 "e.nombre AS nombre_empleado " +
+                 "FROM prestamos p " +
+                 "INNER JOIN clientes c ON p.cliente_id = c.id " +
+                 "INNER JOIN empleados e ON p.empleado_id = e.id " +
+                 "WHERE c.documento = ?";
 
         try (Connection db = ConexionDB.getConnection();
-             PreparedStatement stmt = db.prepareStatement(sqlzo)) {
+                PreparedStatement stmt = db.prepareStatement(sqlzo)) {
 
             stmt.setString(1, documento);
             ResultSet result = stmt.executeQuery();
@@ -119,7 +121,13 @@ public class PrestamoDAOImpl implements PrestamoRepository {
 
                 // Convertir la ENTIDAD a MODELO DE NEGOCIO
                 Prestamo model = mapper.toDomain(entity);
+
+                model.setNombreCliente(result.getString("nombre_cliente"));
+                model.setNumDocumento(result.getString("doc_cliente"));
+                model.setNombreEmpleado(result.getString("nombre_empleado"));
+
                 listaPreDoc.add(model);
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -133,44 +141,13 @@ public class PrestamoDAOImpl implements PrestamoRepository {
         String sqlzo = "SELECT cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio estado FROM prestamos WHERE cliente_id = ?";
 
         try (Connection db = ConexionDB.getConnection();
-        PreparedStatement stmt = db.prepareStatement(sqlzo)) {
+                PreparedStatement stmt = db.prepareStatement(sqlzo)) {
 
             stmt.setInt(1, clienteId);
-            ResultSet result = stmt.executeQuery(); 
+            ResultSet result = stmt.executeQuery();
 
             while (result.next()) {
                 PrestamoEntity entity = new PrestamoEntity();
-                    entity.setId(result.getInt("id"));
-                    entity.setClienteId(result.getInt("cliente_id"));
-                    entity.setEmpleadoId(result.getInt("empleado_id"));
-                    entity.setMonto(result.getDouble("monto"));
-                    entity.setInteres(result.getDouble("interes"));
-                    entity.setCuotas(result.getInt("cuotas"));
-                    entity.setFechaInicio(result.getDate("fecha_inicio").toLocalDate());
-                    entity.setEstado(result.getString("estado"));
-                // Convertir la ENTIDAD a MODELO DE NEGOCIO
-                // El resto del programa solo entenderá 'Prestamo', no 'PrestamoEntity'
-                Prestamo model = mapper.toDomain(entity);
-                listaModelos.add(model);
-                
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return listaModelos;
-    }   
-
-    @Override
-    public Prestamo obtenerPorId(int id) {
-        String sqlzo = "SELECT id, cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado FROM prestamos WHERE id = ?";
-        try (Connection db = ConexionDB.getConnection();
-            PreparedStatement stmt = db.prepareStatement(sqlzo)){
-
-        stmt.setInt(1, id);
-        ResultSet result = stmt.executeQuery();
-
-        if (result.next()) {
-            PrestamoEntity entity = new PrestamoEntity();
                 entity.setId(result.getInt("id"));
                 entity.setClienteId(result.getInt("cliente_id"));
                 entity.setEmpleadoId(result.getInt("empleado_id"));
@@ -179,32 +156,63 @@ public class PrestamoDAOImpl implements PrestamoRepository {
                 entity.setCuotas(result.getInt("cuotas"));
                 entity.setFechaInicio(result.getDate("fecha_inicio").toLocalDate());
                 entity.setEstado(result.getString("estado"));
-                return mapper.toDomain(entity);  
+                // Convertir la ENTIDAD a MODELO DE NEGOCIO
+                // El resto del programa solo entenderá 'Prestamo', no 'PrestamoEntity'
+                Prestamo model = mapper.toDomain(entity);
+                listaModelos.add(model);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    }catch (SQLException e){
-        e.printStackTrace();
-    }
-    return null;
+        return listaModelos;
     }
 
     @Override
-    public void actualizarEstado(int prestamoId, String nuevoEstado){
+    public Prestamo obtenerPorId(int id) {
+        String sqlzo = "SELECT id, cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado FROM prestamos WHERE id = ?";
+        try (Connection db = ConexionDB.getConnection();
+                PreparedStatement stmt = db.prepareStatement(sqlzo)) {
+
+            stmt.setInt(1, id);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next()) {
+                PrestamoEntity entity = new PrestamoEntity();
+                entity.setId(result.getInt("id"));
+                entity.setClienteId(result.getInt("cliente_id"));
+                entity.setEmpleadoId(result.getInt("empleado_id"));
+                entity.setMonto(result.getDouble("monto"));
+                entity.setInteres(result.getDouble("interes"));
+                entity.setCuotas(result.getInt("cuotas"));
+                entity.setFechaInicio(result.getDate("fecha_inicio").toLocalDate());
+                entity.setEstado(result.getString("estado"));
+                return mapper.toDomain(entity);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void actualizarEstado(int prestamoId, String nuevoEstado) {
         String sqlzo = "UPDATE prestamos SET estado = ? WHERE id = ?";
 
         try (Connection db = ConexionDB.getConnection();
-            PreparedStatement stmt = db.prepareStatement(sqlzo)){
+                PreparedStatement stmt = db.prepareStatement(sqlzo)) {
 
-                stmt.setString(1, nuevoEstado);
-                stmt.setInt(1, prestamoId);
+            stmt.setString(1, nuevoEstado);
+            stmt.setInt(1, prestamoId);
 
-                int filas = stmt.executeUpdate();
-                if (filas > 0) {
-                    System.out.println("✅ Estado del préstamo actualizado a: \" + nuevoEstado");
-                }else {
-                    System.out.println("⚠ No se encontró el préstamo con ID: " + prestamoId);
-                }
+            int filas = stmt.executeUpdate();
+            if (filas > 0) {
+                System.out.println("✅ Estado del préstamo actualizado a: \" + nuevoEstado");
+            } else {
+                System.out.println("⚠ No se encontró el préstamo con ID: " + prestamoId);
+            }
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("❌ Error al actualizar estado: " + e.getMessage());
             e.printStackTrace();
         }

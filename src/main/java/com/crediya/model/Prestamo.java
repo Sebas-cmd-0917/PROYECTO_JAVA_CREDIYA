@@ -14,6 +14,28 @@ public class Prestamo {
     private int cuotas;
     private LocalDate fechaInicio;
     private String estado;
+    private double totalPagado;
+    private double saldoPendiente;
+
+    public double getTotalPagado() {
+        return totalPagado;
+    }
+
+
+    public void setTotalPagado(double totalPagado) {
+        this.totalPagado = totalPagado;
+    }
+
+
+    public double getSaldoPendiente() {
+        return saldoPendiente;
+    }
+
+
+    public void setSaldoPendiente(double saldoPendiente) {
+        this.saldoPendiente = saldoPendiente;
+    }
+
 
     //Buena practica
     public Prestamo() {

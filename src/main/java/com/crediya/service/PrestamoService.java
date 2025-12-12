@@ -6,8 +6,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.crediya.data.repositories.PrestamoDAOImpl;
+
 import com.crediya.model.Prestamo;
 import com.crediya.repository.PrestamoRepository;
+
 
 public class PrestamoService {
     private final PrestamoRepository prestamoRepository = new PrestamoDAOImpl();
@@ -58,12 +60,18 @@ public class PrestamoService {
     }
 
    public List<Prestamo> obtenerTodos(){
-       return prestamoRepository.listarPrestamos();
+       List<Prestamo> lista = prestamoRepository.listarPrestamos();
+       if (lista.isEmpty()) {
+           System.out.println("No hay préstamos registrados.");
+       }else {
+           for (Prestamo p : lista) {
+               System.out.println(p);
+           }
+       }
+       return lista;
     }
 
-    public List<Prestamo> obtenerPorDocumento(String documento){
-        return prestamoRepository.obtenerPrestamoPorDocumento(documento);
-    }
+    
 
 }
     
