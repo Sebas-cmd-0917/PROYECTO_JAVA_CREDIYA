@@ -52,7 +52,12 @@ public class PrestamoDAOImpl implements PrestamoRepository {
     @Override
     public List<Prestamo> listarPrestamos() {
         List<Prestamo> listaModelos = new ArrayList<>();
-        String sqlzo = "SELECT id, cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado FROM prestamos";
+        String sqlzo = "SELECT p.id, p.cliente_id, p.empleado_id, p.monto, p.interes, p.cuotas, p.fecha_inicio, p.estado, " +
+               "c.nombre AS nombre_cliente, c.documento AS doc_cliente, " +
+               "e.nombre AS nombre_empleado " +
+               "FROM prestamos p " +
+               "INNER JOIN clientes c ON p.cliente_id = c.id " +
+               "INNER JOIN empleados e ON p.empleado_id = e.id";
 
         try (Connection db = ConexionDB.getConnection();
         PreparedStatement stmt = db.prepareStatement(sqlzo)) {
@@ -72,6 +77,12 @@ public class PrestamoDAOImpl implements PrestamoRepository {
                 // Convertir la ENTIDAD a MODELO DE NEGOCIO
                 // El resto del programa solo entenderá 'Prestamo', no 'PrestamoEntity'
                 Prestamo model = mapper.toDomain(entity);
+                
+
+                model.setNombreCliente(result.getString("nombre_cliente"));
+                model.setNumDocumento(result.getString("doc_cliente"));
+                model.setNombreEmpleado(result.getString("nombre_empleado"));
+
                 listaModelos.add(model);
                 
             }
@@ -79,6 +90,41 @@ public class PrestamoDAOImpl implements PrestamoRepository {
             e.printStackTrace();
         }
         return listaModelos;
+    }
+
+    @Override
+    public List<Prestamo> obtenerPrestamoPorDocumento(String documento) {
+        List<Prestamo> listaPreDoc = new ArrayList<>();
+        String sqlzo = "SELECT p.id, p.cliente_id, p.empleado_id, p.monto, p.interes, p.cuotas, p.fecha_inicio, p.estado " +
+                       "FROM prestamos p " +
+                       "JOIN clientes c ON p.cliente_id = c.id " +
+                       "WHERE c.documento = ?";
+
+        try (Connection db = ConexionDB.getConnection();
+             PreparedStatement stmt = db.prepareStatement(sqlzo)) {
+
+            stmt.setString(1, documento);
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                PrestamoEntity entity = new PrestamoEntity();
+                entity.setId(result.getInt("id"));
+                entity.setClienteId(result.getInt("cliente_id"));
+                entity.setEmpleadoId(result.getInt("empleado_id"));
+                entity.setMonto(result.getDouble("monto"));
+                entity.setInteres(result.getDouble("interes"));
+                entity.setCuotas(result.getInt("cuotas"));
+                entity.setFechaInicio(result.getDate("fecha_inicio").toLocalDate());
+                entity.setEstado(result.getString("estado"));
+
+                // Convertir la ENTIDAD a MODELO DE NEGOCIO
+                Prestamo model = mapper.toDomain(entity);
+                listaPreDoc.add(model);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaPreDoc;
     }
 
     @Override

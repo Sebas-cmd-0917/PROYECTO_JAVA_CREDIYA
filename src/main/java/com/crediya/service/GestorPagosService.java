@@ -41,4 +41,11 @@ public class GestorPagosService {
         System.out.println("Abono registrado. Nuevo saldo: " + (saldoPendiente - nuevoPago.getMonto()));
     }
     }
+
+    public List<Prestamo> obtenerPrestamoPorDocumento(String documento){
+
+        return prestamoRepository.obtenerPrestamoPorDocumento(documento);
+    }
+
+
 }

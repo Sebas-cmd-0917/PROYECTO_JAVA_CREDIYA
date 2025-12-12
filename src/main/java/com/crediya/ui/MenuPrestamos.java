@@ -86,7 +86,7 @@ public class MenuPrestamos {
 
     //listar prestammos
 
-    private void listarPrestamos() {
+    public void listarPrestamos() {
         System.out.println("\n--- Lista de Préstamos ---");
         List <Prestamo> lista = prestamoService.obtenerTodos();
                 if (lista.isEmpty()) {
@@ -95,17 +95,19 @@ public class MenuPrestamos {
                     // 1. IMPRIMIR ENCABEZADOS DE LA TABLA
                         // %-5s  = Columna de Texto alineado a la Izquierda de 5 espacios
                         // %-20s = Columna de Texto alineado a la Izquierda de 20 espacios
-                        System.out.printf("%-5s %-20s %-15s %-15s %-25s %-15s\n", 
-                                          "ID", "ID CLIENTE", "ID EMPLEADO", "$ MONTO", "INTERÉS", "CUOTAS");
+                        System.out.printf("%-5s %-10s %-15s %-10s %-10s %-10s %-10s %15s\n", 
+                                          "ID", "ID CLIENTE","NOMBRE CLIENTE","NUM_DOCUMENTO",  "$ MONTO", "INTERÉS", "CUOTAS" ,"NOMBRE_EMPLEADO");
                         
-                        System.out.println("----------------------------------------------------------------------------------------------------");
+                        System.out.println("---------------------------------------------------------------------------------------------------------------------------");
 
                         // 2. IMPRIMIR CADA FILA CON EL MISMO FORMATO
                         for (Prestamo p : lista) {
-                            System.out.printf("%-5d %-20s %-15s $ %-15s %-25s %-15s\n", 
+                            System.out.printf("%-5s %-10s %-15s %-10s %-10s %-10s %-10s %15s\n", 
                                     p.getId(),            // %d para números enteros
-                                    p.getClienteId(),        // %s para texto
-                                    p.getEmpleadoId(),
+                                    p.getClienteId(), 
+                                    p.getNombreCliente(),
+                                    p.getNumDocumento(),
+                                    p.getNombreEmpleado(),      // %s para texto
                                     p.getMonto(),
                                     p.getInteres(),
                                     p.getCuotas());      // %,.2f para dinero (con comas y 2 decimales)
@@ -113,7 +115,7 @@ public class MenuPrestamos {
 
 
             }
-                        System.out.println("----------------------------------------------------------------------------------------------------");
+                        System.out.println("---------------------------------------------------------------------------------------------------------------------------");
             
         }
     }
