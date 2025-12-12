@@ -3,6 +3,7 @@ package com.crediya.service;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.util.List;
 
 import com.crediya.data.repositories.ClienteDAOImpl;
 import com.crediya.data.repositories.EmpleadoDAOImpl;
@@ -63,6 +64,14 @@ public class PrestamoService {
     public void finalizarPrestamo(int prestamoId){
         prestamoRepository.actualizarEstado(prestamoId, "PAGADO");
 
+    }
+
+   public List<Prestamo> obtenerTodos(){
+       return prestamoRepository.listarPrestamos();
+    }
+
+    public List<Prestamo> obtenerPorDocumento(String documento){
+        return prestamoRepository.obtenerPrestamoPorDocumento(documento);
     }
 
 }

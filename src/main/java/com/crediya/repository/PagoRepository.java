@@ -6,5 +6,6 @@ import com.crediya.model.Pago;
 public interface PagoRepository {
     void registrarPago(Pago pago);
     List<Pago> ListarPagosPorPrestamo(int prestamoId);
+    List<Pago> HistoricoDePagos();
 }
 

@@ -1,5 +1,7 @@
 package com.crediya.ui;
 
+
+import java.util.List;
 import java.util.Scanner;
 
 // Importaciones necesarias para buscar
@@ -9,6 +11,8 @@ import com.crediya.model.Cliente;
 import com.crediya.model.Empleado;
 import com.crediya.repository.ClienteRepository;
 import com.crediya.repository.EmpleadoRepository; // <--- NUEVO
+
+import com.crediya.model.Prestamo;
 import com.crediya.service.CalculadoraPrestamosService;
 import com.crediya.service.GestorPagosService;
 import com.crediya.service.PrestamoService;
@@ -23,8 +27,9 @@ public class MenuPrestamos {
     private EmpleadoRepository empleadoRepository = new EmpleadoDAOImpl(); 
 
     GestorPagosService gestorPagosService = new GestorPagosService();
-    CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
     PrestamoService prestamoService = new PrestamoService();
+
+    CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
 
     public void mostrarMenuPrestamo() {
         int opcion = -1;
@@ -33,6 +38,7 @@ public class MenuPrestamos {
             System.out.println("1. Registrar préstamo (BD + Archivo)");
             System.out.println("2. Simular préstamo");
             System.out.println("3. Finalizar préstamo (Cambiar a PAGADO)");
+            System.out.println("4. Listar préstamos");
             System.out.println("0. Volver");
             System.out.print("Seleccione una opción: ");
 
@@ -40,13 +46,26 @@ public class MenuPrestamos {
             scanner.nextLine(); // limpiar buffer
 
             switch (opcion) {
-                case 1: registrarPrestamo(); break;
-                case 2: simularPrestamo(); break;
-                case 3: cambiarEstadoPrestamo(); break;
-                case 0: System.out.println("Volviendo al menú principal..."); break;
-                default: System.out.println("❌ Opción inválida");
+                case 1:
+                    registrarPrestamo();
+                    break;
+                case 2:
+                    simularPrestamo();
+                    break;
+                case 3:
+                    cambiarEstadoPrestamo();
+                    break;
+                case 4:
+                    listarPrestamos();
+                    break;
+                case 0:
+                    System.out.println("Volviendo al menú principal...");
+                    break;
+                default:
+                    System.out.println("❌ Opción inválida");
             }
         }
+        
     }
 
     // 👉 OPCIÓN 1: Registrar préstamo (MODIFICADO POR DOCUMENTO)
@@ -80,6 +99,44 @@ public class MenuPrestamos {
         } catch (Exception e) {
             System.out.println("❌ Error al registrar préstamo: " + e.getMessage());
             scanner.nextLine();
+        }
+    }
+
+
+
+     //listar prestammos
+
+    public void listarPrestamos() {
+        System.out.println("\n--- Lista de Préstamos ---");
+        List <Prestamo> lista = prestamoService.obtenerTodos();
+                if (lista.isEmpty()) {
+                    System.out.println("No hay préstamos registrados.");
+                } else {
+                    // 1. IMPRIMIR ENCABEZADOS DE LA TABLA
+                        // %-5s  = Columna de Texto alineado a la Izquierda de 5 espacios
+                        // %-20s = Columna de Texto alineado a la Izquierda de 20 espacios
+                        System.out.printf("%-5s %-10s %-15s %-10s %-10s %-10s %-10s %15s\n", 
+                                          "#", "ID_CLI","NOMBRE CLIENTE","NUM_DOC",  "$ MONTO", "INTERÉS", "CUOTAS" ,"NOMBRE_EMPLEADO");
+                        
+                        System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+
+                        // 2. IMPRIMIR CADA FILA CON EL MISMO FORMATO
+                        for (Prestamo p : lista) {
+                            System.out.printf("%-5s %-10s %-15s %-10s %-10s %-10s %-10s %10s\n", 
+                                    p.getId(),            // %d para números enteros
+                                    p.getClienteId(), 
+                                    p.getNombreCliente(),
+                                    p.getNumDocumento(),
+                                    p.getMonto(),
+                                    p.getInteres(),
+                                    p.getCuotas(),     // %,.2f para dinero (con comas y 2 decimales)
+                                    p.getNombreEmpleado());    // %s para texto
+                                    
+
+
+            }
+                        System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+            
         }
     }
 

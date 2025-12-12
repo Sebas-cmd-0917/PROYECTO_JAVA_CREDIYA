@@ -39,6 +39,36 @@ public class PagoDAOImpl implements PagoRepository{
     }
 
     @Override
+    public List<Pago> HistoricoDePagos(){
+        List<Pago> lista = new ArrayList<>();
+        String sqlzo = "SELECT id, prestamo_id, fecha_pago, monto FROM pagos";
+
+        try (Connection db = ConexionDB.getConnection();
+             PreparedStatement stmt = db.prepareStatement(sqlzo)) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                // CORRECCIÓN 2: Usamos la ENTIDAD para recibir los datos de la BD
+                PagoEntity entity = new PagoEntity();
+                entity.setId(result.getInt("id"));
+                entity.setPrestamoId(result.getInt("prestamo_id"));
+                entity.setFechaPago(result.getDate("fecha_pago").toLocalDate());
+                entity.setMonto(result.getDouble("monto"));
+
+                // CORRECCIÓN 3: Usamos el MAPPER para convertir a Modelo de Negocio
+                Pago pagoModel = mapper.toDomain(entity);
+                
+                lista.add(pagoModel);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    @Override
     public List<Pago> ListarPagosPorPrestamo(int prestamoId) {
         List<Pago> lista = new ArrayList<>();
         String sqlzo = "SELECT id, prestamo_id, fecha_pago, monto FROM pagos WHERE prestamo_id = ?";

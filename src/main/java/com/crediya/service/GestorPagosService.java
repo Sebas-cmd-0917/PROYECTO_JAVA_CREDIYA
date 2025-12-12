@@ -23,7 +23,7 @@ public class GestorPagosService {
     }
     //Calcular deuda total (Capital + Interes)
     double totalDeuda = prestamo.getMonto() + (prestamo.getMonto() * (prestamo.getInteres() / 100));
-    
+
     //Calcular cuánto ha pagado hasta ahora
     List<Pago> pagosPrevios = pagoRepository.ListarPagosPorPrestamo(prestamo.getClienteId());
     double totalPagado = 0;
@@ -41,4 +41,12 @@ public class GestorPagosService {
         System.out.println("Abono registrado. Nuevo saldo: " + (saldoPendiente - nuevoPago.getMonto()));
     }
     }
+
+    public List<Prestamo> obtenerPrestamoPorDocumento(String documento){
+
+        return prestamoRepository.obtenerPrestamoPorDocumento(documento);
+    }
+    
+
+
 }

@@ -6,6 +6,9 @@ public class Prestamo {
     private int id;
     private int clienteId;
     private int empleadoId;
+    private String nombreCliente;
+    private String numDocumento;
+    private String nombreEmpleado;
     private double monto;
     private double interes;
     private int cuotas;
@@ -40,6 +43,38 @@ public class Prestamo {
         this.cuotas = cuotas;
         this.fechaInicio = fechaInicio;
         this.estado = estado;
+    }
+
+    
+
+
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+
+
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
+    }
+
+
+    public String getNumDocumento() {
+        return numDocumento;
+    }
+
+
+    public void setNumDocumento(String numDocumento) {
+        this.numDocumento = numDocumento;
+    }
+
+
+    public String getNombreEmpleado() {
+        return nombreEmpleado;
+    }
+
+
+    public void setNombreEmpleado(String nombreEmpleado) {
+        this.nombreEmpleado = nombreEmpleado;
     }
 
 
