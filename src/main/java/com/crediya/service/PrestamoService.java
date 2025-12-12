@@ -4,17 +4,26 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 
+import com.crediya.data.repositories.ClienteDAOImpl;
+import com.crediya.data.repositories.EmpleadoDAOImpl;
 import com.crediya.data.repositories.PrestamoDAOImpl;
 import com.crediya.model.Prestamo;
+import com.crediya.repository.ClienteRepository;
+import com.crediya.repository.EmpleadoRepository;
 import com.crediya.repository.PrestamoRepository;
 
 public class PrestamoService {
     private final PrestamoRepository prestamoRepository = new PrestamoDAOImpl();
     private final CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
+    
+    private final ClienteRepository clienteRepository = new ClienteDAOImpl();
+    private final EmpleadoRepository empleadoRepository = new EmpleadoDAOImpl();
 
-    public void registrarPrestamo(int clienteId, int empleadoId, double monto, double interes, int cuotas){
+    public void registrarPrestamo(String clienteDoc, String empleadoDoc, double monto, double interes, int cuotas){
         try {
             if (monto <= 0) throw new Exception("El monto debe ser positivo");
+            var clienteId = clienteRepository.buscarPorDocumentoCliente(clienteDoc).getId();
+            var empleadoId = empleadoRepository.buscarPorDocumentoEmpleado(empleadoDoc).getId();
 
             //model
             Prestamo prestamo = new Prestamo();

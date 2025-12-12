@@ -3,6 +3,7 @@ package com.crediya.data.repositories;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,4 +63,37 @@ public class ClienteDAOImpl implements ClienteRepository {
         }
         return listarClientes;
     }
+
+    public Cliente buscarPorDocumentoCliente(String documento){
+        String sqlzo = "SELECT id, nombre, documento, correo, telefono FROM clientes where documento = ?";
+        Cliente clienteEncontrado = null;
+
+        try (Connection db = ConexionDB.getConnection();
+            PreparedStatement stmt = db.prepareStatement(sqlzo)){
+                
+                stmt.setString(1, documento);
+                ResultSet result = stmt.executeQuery();
+
+                if (result.next()){
+                    ClienteEntity entity = new ClienteEntity();
+                    entity.setId(result.getInt("id"));
+                    entity.setNombre(result.getString("nombre"));
+                    entity.setDocumento(result.getString("documento"));
+                    entity.setCorreo(result.getString("correo"));
+                    entity.setTelefono(result.getString("telefono"));
+
+                    clienteEncontrado = mapper.toDomain(entity);
+                    
+                }else{
+                    System.out.println("Cliente no encontrado ");
+                }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    };
+
+
 }

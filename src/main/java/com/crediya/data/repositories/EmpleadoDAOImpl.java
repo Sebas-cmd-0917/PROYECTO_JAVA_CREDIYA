@@ -1,8 +1,10 @@
 package com.crediya.data.repositories;
 
 import com.crediya.config.ConexionDB; // O ConexionDB según como lo llamó tu compañero
+import com.crediya.data.entities.ClienteEntity;
 import com.crediya.data.entities.EmpleadoEntity; // Importamos la Entidad
 import com.crediya.data.mapper.EmpeladoMapper;   // Importamos el Mapper
+import com.crediya.model.Cliente;
 import com.crediya.model.Empleado;
 import com.crediya.repository.EmpleadoRepository; // O EmpleadoRepository
 
@@ -76,4 +78,37 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
         }
         return listaEmpleados;
     }
+
+    public Empleado buscarPorDocumentoEmpleado(String documento){
+        String sqlzo = "SELECT id, nombre, documento, rol, correo, salario FROM clientes documento = ?";
+        Empleado empleadoEncontrado = null;
+
+        try (Connection db = ConexionDB.getConnection();
+            PreparedStatement stmt = db.prepareStatement(sqlzo)){
+                
+                stmt.setString(1, documento);
+                ResultSet result = stmt.executeQuery();
+
+                if (result.next()){
+                    EmpleadoEntity entity = new EmpleadoEntity();
+                    entity.setId(result.getInt("id"));
+                    entity.setNombre(result.getString("nombre"));
+                    entity.setDocumento(result.getString("documento"));
+                    entity.setRol(result.getString("rol"));
+                    entity.setCorreo(result.getString("correo"));
+                    entity.setSalario(result.getDouble("salario"));
+                    
+                    empleadoEncontrado = mapper.toDomain(entity);
+                    
+                }else{
+                    System.out.println("Empleado no encontrado ");
+                }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    };
+
 }

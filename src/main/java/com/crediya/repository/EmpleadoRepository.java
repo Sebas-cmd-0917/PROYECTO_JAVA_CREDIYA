@@ -8,5 +8,5 @@ public interface EmpleadoRepository {
 
      void guardarEmpleado(Empleado empleado);
     List<Empleado> listarTodosEmpleados();//lista los empleados
-
+    Empleado buscarPorDocumentoEmpleado(String documento);
 }
