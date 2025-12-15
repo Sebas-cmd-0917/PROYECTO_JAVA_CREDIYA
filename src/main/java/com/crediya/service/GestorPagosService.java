@@ -1,7 +1,6 @@
 package com.crediya.service;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import com.crediya.data.repositories.PagoDAOImpl;

@@ -141,7 +141,7 @@ public class PrestamoService {
             throw new IllegalArgumentException(
                     "Error: El documento debe contener solo números y tener mínimo 8 dígitos.");
         }
-        // 1. PRIMERO: Traes la lista "cruda" del repositorio
+        // Traes la lista "cruda" del repositorio
         // (Esto es lo único que hacía tu función antes)
         List<Prestamo> lista = prestamoRepository.obtenerPrestamoPorDocumento(documento);
 
@@ -162,11 +162,11 @@ public class PrestamoService {
                 }
             }
 
-            // C. Calcular el Saldo Final
+            // Calcular el Saldo Final
             double saldoActual = deudaTotal - sumaPagos;
             // --- LÓGICA DE ESTADOS (NUEVO) ---
 
-            // Paso A: Calcular días transcurridos desde que se creó el préstamo
+            //Calcular días transcurridos desde que se creó el préstamo
             long diasTranscurridos = ChronoUnit.DAYS.between(p.getFechaInicio(), LocalDate.now());
 
             // Determinamos cuál DEBERÍA ser el estado actual
@@ -180,16 +180,14 @@ public class PrestamoService {
                 estadoCalculado = EstadoPrestamo.MORA;
             }
 
-            // --- C. Actualización Inteligente ---
+            
 
             // Comparar Enums es seguro con equals o ==
             if (estadoCalculado != p.getEstado()) {
 
-                // 2. CORRECCIÓN: Ahora sí acepta el valor porque es del tipo correcto
+          
                 p.setEstado(estadoCalculado);
 
-                // 3. OJO AQUÍ CON LA BASE DE DATOS:
-                // Tu repositorio seguramente espera un String para el SQL.
                 // Usamos .name() o .toString() para convertir el Enum a texto para la BD.
                 prestamoRepository.actualizarEstado(p.getId(), estadoCalculado.toString());
             }
