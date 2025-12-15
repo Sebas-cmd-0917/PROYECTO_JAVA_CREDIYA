@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.crediya.service.GestorPagosService;
 import com.crediya.model.Prestamo;
+import com.crediya.model.EstadoDeCuenta;
 import com.crediya.model.Pago;
 
 public class MenuPago {
@@ -45,7 +46,7 @@ public class MenuPago {
                         historialDePagos();
                         break;
                     case 5:
-                        verEstadoDeCuenta();
+                        mostrarEstadoDeCuenta();
                         break;
                     case 6:
                         System.out.println("Ingrese el documento del cliente:");
@@ -127,30 +128,107 @@ public class MenuPago {
         System.out.println("+-----+--------------+----------------------+---------------+");
     }
 
-    public void verEstadoDeCuenta() {
-        System.out.println("\n--- GENERAR ESTADO DE CUENTA ---");
+    // public void verEstadoDeCuenta() {
+    // System.out.println("\n--- GENERAR ESTADO DE CUENTA ---");
 
-        // 1. Pedir Cédula para no obligar a memorizar IDs
+    // // 1. Pedir Cédula para no obligar a memorizar IDs
+    // System.out.print("Ingrese Documento del Cliente: ");
+    // String doc = scanner.nextLine();
+
+    // // 2. Buscar préstamos de esa persona (Usando la función que ya tienes)
+    // List<Prestamo> lista = prestamoService.obtenerPrestamoPorDocumento(doc); // O
+    // consultarPrestamosPorCedula
+
+    // if (lista != null && !lista.isEmpty()) {
+
+    // menuPrestamos.verPrestamosPorDocumento(doc);
+
+    // // 3. Pedir el ID específico
+    // System.out.print("\nIngrese el NÚMERO del préstamo a consultar: ");
+    // int idSeleccionado = scanner.nextInt();
+
+    // // 4. ¡GENERAR EL REPORTE!
+    // gestorPagosService.generarEstadoDeCuenta(idSeleccionado);
+
+    // } else {
+    // System.out.println("❌ El cliente no tiene préstamos activos.");
+    // }
+    // }
+
+    public void mostrarEstadoDeCuenta() {
+
+    System.out.println("\n--- GENERAR ESTADO DE CUENTA ---");
+
+       //1. Pedir Cédula para no obligar a memorizar IDs
         System.out.print("Ingrese Documento del Cliente: ");
-        String doc = scanner.nextLine();
+       String doc = scanner.nextLine();
 
         // 2. Buscar préstamos de esa persona (Usando la función que ya tienes)
         List<Prestamo> lista = prestamoService.obtenerPrestamoPorDocumento(doc); // O consultarPrestamosPorCedula
+         if (lista != null && !lista.isEmpty()) {
 
-        if (lista != null && !lista.isEmpty()) {
+             menuPrestamos.verPrestamosPorDocumento(doc);
+    System.out.print("Ingrese el ID del Préstamo: ");
+    int id = scanner.nextInt(); 
+    scanner.nextLine(); // Limpiar buffer
 
-            menuPrestamos.verPrestamosPorDocumento(doc);
+    // LLAMADA AL SERVICIO
+    EstadoDeCuenta reporte = prestamoService.generarReporte(id);
 
-            // 3. Pedir el ID específico
-            System.out.print("\nIngrese el NÚMERO del préstamo a consultar: ");
-            int idSeleccionado = scanner.nextInt();
+    // VALIDACIÓN VISUAL
+    if (reporte == null) {
+        System.out.println("❌ El préstamo con ID " + id + " no existe.");
+        return;
+    }
 
-            // 4. ¡GENERAR EL REPORTE!
-            gestorPagosService.generarEstadoDeCuenta(idSeleccionado);
+    // DESEMPAQUETAR DATOS PARA USARLOS FÁCILMENTE
+    Prestamo p = reporte.getPrestamo();
+    List<Pago> historial = reporte.getListaPagos();
+    double deudaTotal = reporte.getDeudaTotalInicial();
 
-        } else {
-            System.out.println("❌ El cliente no tiene préstamos activos.");
+    // --- IMPRIMIR CABECERA ---
+    System.out.println("\n========================================");
+    System.out.println("       ESTADO DE CUENTA - CREDIYA       ");
+    System.out.println("========================================");
+    System.out.println("Préstamo N°:     " + p.getId());
+    System.out.println("Cliente ID:      " + p.getClienteId());
+    System.out.printf("Fecha Inicio:    %s\n", p.getFechaInicio());
+    System.out.printf("Monto Prestado:  $%,.0f\n", p.getMonto());
+    System.out.printf("Interés (%.1f%%): +$%,.0f\n", p.getInteres(), (p.getMonto() * p.getInteres()/100));
+    System.out.println("----------------------------------------");
+    System.out.printf("DEUDA TOTAL:     $%,.0f\n", deudaTotal);
+    System.out.println("========================================\n");
+
+    // --- IMPRIMIR HISTORIAL (Lógica Visual) ---
+    System.out.println("HISTORIAL DE PAGOS REALIZADOS:");
+    System.out.printf("%-12s %-15s %-15s\n", "FECHA", "MONTO ABONADO", "SALDO RESTANTE");
+    System.out.println("----------------------------------------------");
+
+    if (historial == null || historial.isEmpty()) {
+        System.out.println("   (No se han registrado pagos aún)");
+    } else {
+        // Usamos una variable temporal solo para el efecto visual de la tabla
+        double saldoVisual = deudaTotal; 
+
+        for (Pago pago : historial) {
+            saldoVisual -= pago.getMonto(); // Restamos para mostrar la columna "Saldo Restante"
+            
+            System.out.printf("%-12s $%,-14.0f $%,-14.0f\n",
+                    pago.getFechaPago(),
+                    pago.getMonto(),
+                    saldoVisual);
         }
+    }
+
+    // --- IMPRIMIR RESUMEN FINAL ---
+    System.out.println("----------------------------------------------");
+    System.out.printf("TOTAL PAGADO:    $%,.0f\n", reporte.getTotalPagado());
+    System.out.printf("SALDO PENDIENTE: $%,.0f\n", reporte.getSaldoFinal());
+
+    String estado = (reporte.getSaldoFinal() <= 0) ? "¡PAZ Y SALVO!" : "PENDIENTE";
+    System.out.println("ESTADO ACTUAL:   " + estado);
+    System.out.println("========================================\n");
+}
     }
 
     private void modificarPago() {
