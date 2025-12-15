@@ -10,21 +10,24 @@ import java.util.List;
 
 import com.crediya.data.repositories.ClienteDAOImpl;
 import com.crediya.data.repositories.EmpleadoDAOImpl;
+import com.crediya.data.repositories.PagoDAOImpl;
 import com.crediya.data.repositories.PrestamoDAOImpl;
 import com.crediya.model.Cliente;
 import com.crediya.model.Empleado;
+import com.crediya.model.EstadoPrestamo;
 import com.crediya.model.Prestamo;
 import com.crediya.repository.ClienteRepository;
 import com.crediya.repository.EmpleadoRepository;
+import com.crediya.repository.PagoRepository;
 import com.crediya.repository.PrestamoRepository;
 
 
 public class PrestamoService {
     private final PrestamoRepository prestamoRepository = new PrestamoDAOImpl();
     private final CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
-    
     private final ClienteRepository clienteRepository = new ClienteDAOImpl();
     private final EmpleadoRepository empleadoRepository = new EmpleadoDAOImpl();
+    private final PagoRepository pagoRepository = new PagoDAOImpl();
 
     public void registrarPrestamo(String clienteDoc, String empleadoDoc, double monto, double interes, int cuotas){
         try {
@@ -46,7 +49,7 @@ public class PrestamoService {
             prestamo.setInteres(interes);
             prestamo.setCuotas(cuotas);
             prestamo.setFechaInicio(LocalDate.now());
-            prestamo.setEstado("PENDIENTE");// ESTADO INICIAL
+            prestamo.setEstado(EstadoPrestamo.PENDIENTE);// ESTADO INICIAL
 
             prestamoRepository.registrarPrestamo(prestamo);
 
@@ -131,10 +134,28 @@ public class PrestamoService {
 
     // }
 
-    public void finalizarPrestamo(int prestamoId){
-        prestamoRepository.actualizarEstado(prestamoId, "PAGADO");
+    // public void finalizarPrestamo(int prestamoId){
+    //     Prestamo p = prestamoRepository.obtenerPorId(prestamoId);
 
-    }
+    //     if (p == null){
+    //         System.out.println("Erro: prestamo no encontrado. ");
+    //         return;
+    //     }
+
+    //     if (p.getEstado() == com.crediya.model.EstadoPrestamo.PAGADO ) {
+    //         System.out.println("El prestamo ya se encuentra PAGADO");
+    //         return;
+    //     }
+
+
+    //     double capital = p.getMonto();
+    //     double interes = p.getMonto() * (p.getInteres() / 100);
+    //     double deudaTotal = capital + interes;
+
+    //     List<Pago> pagosRealizados = pagoRepository.ListarPagosPorPrestamo(prestamoId);
+    //     double totalPagado = 0;
+
+    // }
 
    public List<Prestamo> obtenerTodos(){
        List<Prestamo> lista = prestamoRepository.listarPrestamos();

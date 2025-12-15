@@ -217,6 +217,6 @@ public class MenuPrestamos {
         // Aquí seguimos pidiendo ID del préstamo porque es único para el sistema
         System.out.print("\nIngrese el ID del préstamo a finalizar: ");
         int pId = scanner.nextInt();
-        prestamoService.finalizarPrestamo(pId);
+        // prestamoService.finalizarPrestamo(pId);
     }
 }
