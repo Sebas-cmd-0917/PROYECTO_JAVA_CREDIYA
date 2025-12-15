@@ -1,6 +1,5 @@
 package com.crediya.ui;
 
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,11 +19,12 @@ import com.crediya.service.PrestamoService;
 public class MenuPrestamos {
 
     Scanner scanner = new Scanner(System.in);
-    
+
     // 1. INICIALIZAMOS LOS REPOSITORIOS PARA PODER BUSCAR
-    // Antes tenías "private final ... clienteRepo;" sin inicializar (daba error null)
+    // Antes tenías "private final ... clienteRepo;" sin inicializar (daba error
+    // null)
     private ClienteRepository clienteRepository = new ClienteDAOImpl();
-    private EmpleadoRepository empleadoRepository = new EmpleadoDAOImpl(); 
+    private EmpleadoRepository empleadoRepository = new EmpleadoDAOImpl();
 
     GestorPagosService gestorPagosService = new GestorPagosService();
     PrestamoService prestamoService = new PrestamoService();
@@ -32,6 +32,7 @@ public class MenuPrestamos {
     CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
 
     public void mostrarMenuPrestamo() {
+
         int opcion = -1;
         while (opcion != 0) {
             System.out.println("\n===== 📌 MENÚ DE PRÉSTAMOS =====");
@@ -75,7 +76,7 @@ public class MenuPrestamos {
                     System.out.println("❌ Opción inválida");
             }
         }
-        
+
     }
 
     // 👉 OPCIÓN 1: Registrar préstamo (MODIFICADO POR DOCUMENTO)
@@ -89,13 +90,12 @@ public class MenuPrestamos {
 
             Cliente clienteEncontrado = clienteRepository.buscarPorDocumentoCliente(docCliente);
 
-            if (clienteEncontrado == null ) {
+            if (clienteEncontrado == null) {
                 System.out.println("Cliente no encontrado. Debe realizar el registro ");
                 return;
             }
 
             System.out.println("CLiente: " + clienteEncontrado.getNombre());
-        
 
             // --- BUSCAR EMPLEADO ---
             System.out.print("Ingrese Documento del Empleado: ");
@@ -103,13 +103,12 @@ public class MenuPrestamos {
 
             Empleado empleadoEncontrado = empleadoRepository.buscarPorDocumentoEmpleado(docEmpleado);
 
-            if (empleadoEncontrado == null ) {
+            if (empleadoEncontrado == null) {
                 System.out.println("Empleado no encontrado. ");
                 return;
             }
 
             System.out.println("Empleado: " + empleadoEncontrado.getNombre());
-        
 
             // --- PEDIR EL RESTO DE DATOS ---
             System.out.print("Monto: ");
@@ -123,7 +122,7 @@ public class MenuPrestamos {
             scanner.nextLine();
 
             // Usamos los IDs que recuperamos de la búsqueda (cliente.getId())
-            prestamoService.registrarPrestamo(docCliente,docEmpleado, monto, interes, cuotas);
+            prestamoService.registrarPrestamo(docCliente, docEmpleado, monto, interes, cuotas);
 
         } catch (Exception e) {
             System.out.println("❌ Error al registrar préstamo: " + e.getMessage());
@@ -131,41 +130,39 @@ public class MenuPrestamos {
         }
     }
 
-
-
-     //listar prestammos
+    // listar prestammos
 
     public void listarPrestamos() {
         System.out.println("\n--- Lista de Préstamos ---");
-        List <Prestamo> lista = prestamoService.obtenerTodos();
-                if (lista.isEmpty()) {
-                    System.out.println("No hay préstamos registrados.");
-                } else {
-                    // 1. IMPRIMIR ENCABEZADOS DE LA TABLA
-                        // %-5s  = Columna de Texto alineado a la Izquierda de 5 espacios
-                        // %-20s = Columna de Texto alineado a la Izquierda de 20 espacios
-                        System.out.printf("%-5s %-10s %-15s %-10s %-10s %-10s %-10s %15s\n", 
-                                          "#", "ID_CLI","NOMBRE CLIENTE","NUM_DOC",  "$ MONTO", "INTERÉS", "CUOTAS" ,"NOMBRE_EMPLEADO");
-                        
-                        System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+        List<Prestamo> lista = prestamoService.obtenerTodos();
+        if (lista.isEmpty()) {
+            System.out.println("No hay préstamos registrados.");
+        } else {
+            // 1. IMPRIMIR ENCABEZADOS DE LA TABLA
+            // %-5s = Columna de Texto alineado a la Izquierda de 5 espacios
+            // %-20s = Columna de Texto alineado a la Izquierda de 20 espacios
+            System.out.printf("%-5s %-10s %-15s %-10s %-10s %-10s %-10s %15s\n",
+                    "#", "ID_CLI", "NOMBRE CLIENTE", "NUM_DOC", "$ MONTO", "INTERÉS", "CUOTAS", "NOMBRE_EMPLEADO");
 
-                        // 2. IMPRIMIR CADA FILA CON EL MISMO FORMATO
-                        for (Prestamo p : lista) {
-                            System.out.printf("%-5s %-10s %-15s %-10s %-10s %-10s %-10s %10s\n", 
-                                    p.getId(),            // %d para números enteros
-                                    p.getClienteId(), 
-                                    p.getNombreCliente(),
-                                    p.getNumDocumento(),
-                                    p.getMonto(),
-                                    p.getInteres(),
-                                    p.getCuotas(),     // %,.2f para dinero (con comas y 2 decimales)
-                                    p.getNombreEmpleado());    // %s para texto
-                                    
+            System.out.println(
+                    "---------------------------------------------------------------------------------------------------------------------------");
 
+            // 2. IMPRIMIR CADA FILA CON EL MISMO FORMATO
+            for (Prestamo p : lista) {
+                System.out.printf("%-5s %-10s %-15s %-10s %-10s %-10s %-10s %10s\n",
+                        p.getId(), // %d para números enteros
+                        p.getClienteId(),
+                        p.getNombreCliente(),
+                        p.getNumDocumento(),
+                        p.getMonto(),
+                        p.getInteres(),
+                        p.getCuotas(), // %,.2f para dinero (con comas y 2 decimales)
+                        p.getNombreEmpleado()); // %s para texto
 
             }
-                        System.out.println("---------------------------------------------------------------------------------------------------------------------------");
-            
+            System.out.println(
+                    "---------------------------------------------------------------------------------------------------------------------------");
+
         }
     }
 
@@ -181,7 +178,10 @@ public class MenuPrestamos {
             System.out.print("Ingrese Documento del Empleado: ");
             String docEmpleado = scanner.next();
             Empleado empleado = empleadoRepository.buscarPorDocumentoEmpleado(docEmpleado);
-            if (empleado == null) { System.out.println("❌ Empleado no encontrado."); return; }
+            if (empleado == null) {
+                System.out.println("❌ Empleado no encontrado.");
+                return;
+            }
 
             System.out.print("Monto: ");
             double monto = scanner.nextDouble();
@@ -215,41 +215,51 @@ public class MenuPrestamos {
 
     public void verPrestamosPorDocumento(String documento) {
 
-        List<Prestamo> prestamos = gestorPagosService.obtenerPrestamoPorDocumento(documento);
+        try {
 
-        if (prestamos.isEmpty()) {
-            System.out.println("No se encontraron préstamos para el documento: " + documento);
-        } else {
-            // 1. IMPRIMIR ENCABEZADOS DE LA TABLA
-            // %-5s = Columna de Texto alineado a la Izquierda de 5 espacios
-            // %-20s = Columna de Texto alineado a la Izquierda de 20 espacios
-            System.out.printf("%-5s %-8s %-20s %-12s %-15s %-8s %-8s %-20s %-15s %-12s %-15s\n",
-                    "#", "ID_CLI", "CLIENTE", "CEDULA", "MONTO", "%INT", "CUOTAS", "EMPLEADO", "PAGADO", "ESTADO",
-                    "SALDO");
+            List<Prestamo> prestamos = gestorPagosService.obtenerPrestamoPorDocumento(documento);
 
-            System.out.println(
-                    "-------------------------------------------------------------------------------------------------------------------------------------------------------");
+            if (prestamos.isEmpty()) {
+                System.out.println("No se encontraron préstamos para el documento: " + documento);
+            } else {
+                // 1. IMPRIMIR ENCABEZADOS DE LA TABLA
+                // %-5s = Columna de Texto alineado a la Izquierda de 5 espacios
+                // %-20s = Columna de Texto alineado a la Izquierda de 20 espacios
+                System.out.printf("%-5s %-8s %-20s %-12s %-15s %-8s %-8s %-20s %-15s %-12s %-15s\n",
+                        "#", "ID_CLI", "CLIENTE", "CEDULA", "MONTO", "%INT", "CUOTAS", "EMPLEADO", "PAGADO", "ESTADO",
+                        "SALDO");
 
-            // 2. LAS FILAS (Ahora sí coinciden tipos y cantidad)
-            for (Prestamo p : prestamos) {
-                System.out.printf("%-5d %-8d %-20s %-12s $%,-14.0f %-8.1f %-8d %-20s $%,-14.0f %-12s $%,-14.0f\n",
-                        p.getId(), // %d para números enteros
-                        p.getClienteId(),
-                        p.getNombreCliente(),
-                        p.getNumDocumento(),
-                        p.getMonto(),
-                        p.getInteres(),
-                        p.getCuotas(), // %,.2f para dinero (con comas y 2 decimales)
-                        p.getNombreEmpleado(), // %s para texto
-                        p.getTotalPagado(),
-                        p.getEstado(), // Cuánto ha abonado hasta hoy (¡DATO NUEVO!)
-                        p.getSaldoPendiente()); // Cuánto le falta (¡DATO NUEVO!)
+                System.out.println(
+                        "-------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+                // 2. LAS FILAS (Ahora sí coinciden tipos y cantidad)
+                for (Prestamo p : prestamos) {
+                    System.out.printf("%-5d %-8d %-20s %-12s $%,-14.0f %-8.1f %-8d %-20s $%,-14.0f %-12s $%,-14.0f\n",
+                            p.getId(), // %d para números enteros
+                            p.getClienteId(),
+                            p.getNombreCliente(),
+                            p.getNumDocumento(),
+                            p.getMonto(),
+                            p.getInteres(),
+                            p.getCuotas(), // %,.2f para dinero (con comas y 2 decimales)
+                            p.getNombreEmpleado(), // %s para texto
+                            p.getTotalPagado(),
+                            p.getEstado(), // Cuánto ha abonado hasta hoy (¡DATO NUEVO!)
+                            p.getSaldoPendiente()); // Cuánto le falta (¡DATO NUEVO!)
+
+                }
+                System.out.println(
+                        "-------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             }
-            System.out.println(
-                    "-------------------------------------------------------------------------------------------------------------------------------------------------------");
 
+        } catch (IllegalArgumentException e) {
+            // Aquí cae si la validación falla
+            System.out.println("⚠️ " + e.getMessage());
+            // Imprimirá: ⚠️ Error: El documento debe contener solo números y tener mínimo 8
+            // dígitos.
         }
+
     }
 
     private void modificarPrestamo(){
