@@ -17,13 +17,13 @@ public class ConexionDB {
             
             // Intentamos conectar
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("✅ ¡Conexión a Base de Datos EXITOSA!");
+            // System.out.println("✅ ¡Conexión a Base de Datos EXITOSA!");
             
         } catch (ClassNotFoundException e) {
-            System.out.println("❌ Error: No se encontró el Driver de MySQL (Falta el .jar).");
+            // System.out.println("❌ Error: No se encontró el Driver de MySQL (Falta el .jar).");
             e.printStackTrace();
         } catch (SQLException e) {
-            System.out.println("❌ Error de Conexión SQL: Revisa si XAMPP/MySQL está prendido.");
+            // System.out.println("❌ Error de Conexión SQL: Revisa si XAMPP/MySQL está prendido.");
             System.out.println("Mensaje: " + e.getMessage());
         }
         return connection;
