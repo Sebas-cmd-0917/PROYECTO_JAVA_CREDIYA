@@ -1,3 +1,4 @@
+CREATE DATABASE crediya_db;
 USE crediya_db;
 
 

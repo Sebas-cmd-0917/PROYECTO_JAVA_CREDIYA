@@ -37,9 +37,10 @@ public class MenuPrestamos {
             System.out.println("\n===== 📌 MENÚ DE PRÉSTAMOS =====");
             System.out.println("1. Registrar préstamo (BD + Archivo)");
             System.out.println("2. Simular préstamo");
-            System.out.println("3. Finalizar préstamo (Cambiar a PAGADO)");
-            System.out.println("4. Listar préstamos");
-            System.out.println("5. Buscar préstamos por documento");
+            System.out.println("3. Listar préstamos");
+            System.out.println("4. Buscar préstamos por documento");
+            System.out.println("5. Modificar préstamo");
+            System.out.println("6. Eliminar préstamo");
             System.out.println("0. Volver");
             System.out.print("Seleccione una opción: ");
 
@@ -54,15 +55,18 @@ public class MenuPrestamos {
                     simularPrestamo();
                     break;
                 case 3:
-                    cambiarEstadoPrestamo();
-                    break;
-                case 4:
                     listarPrestamos();
                     break;
-                case 5:
+                case 4:
                     System.out.print("Ingrese el documento del cliente: ");
                     String documento = scanner.nextLine();
                     verPrestamosPorDocumento(documento);
+                    break;
+                case 5:
+                    modificarPrestamo();
+                    break;
+                case 6:
+                    eliminarPrestamo();
                     break;
                 case 0:
                     System.out.println("Volviendo al menú principal...");
@@ -165,10 +169,6 @@ public class MenuPrestamos {
         }
     }
 
-  
-
-
-
     // 👉 OPCIÓN 2: Simular préstamo (MODIFICADO POR DOCUMENTO)
     private void simularPrestamo() {
         try {
@@ -213,12 +213,6 @@ public class MenuPrestamos {
         }
     }
 
-    private void cambiarEstadoPrestamo() {
-        // Aquí seguimos pidiendo ID del préstamo porque es único para el sistema
-        System.out.print("\nIngrese el ID del préstamo a finalizar: ");
-        int pId = scanner.nextInt();
-        // prestamoService.finalizarPrestamo(pId);
-    }
     public void verPrestamosPorDocumento(String documento) {
 
         List<Prestamo> prestamos = gestorPagosService.obtenerPrestamoPorDocumento(documento);
@@ -255,6 +249,39 @@ public class MenuPrestamos {
             System.out.println(
                     "-------------------------------------------------------------------------------------------------------------------------------------------------------");
 
+        }
+    }
+
+    private void modificarPrestamo(){
+        System.out.println("\n--- MODIFICAR PRÉSTAMO ---");
+        System.out.print("Ingrese el ID del préstamo a editar: ");
+        int id = scanner.nextInt();
+
+
+        System.out.println("Nuevo monto: ");
+        double monto = scanner.nextDouble();
+
+        System.out.println("Nuevo interes (%): ");
+        double interes = scanner.nextDouble();
+
+        System.out.println("NUevo Cuotas: ");
+        int cuotas = scanner.nextInt();
+
+        prestamoService.actualizarPrestamo(id, monto, interes, cuotas);
+    }
+
+    public void eliminarPrestamo(){
+        System.out.println("\n--- ELIMINAR PRÉSTAMO ---");
+        System.out.print("Ingrese el ID del préstamo a eliminar: ");
+        int id = scanner.nextInt();
+
+        System.out.print("¿Está seguro? Esto es irreversible (S/N): ");
+        String confirmacion = scanner.next();
+
+        if(confirmacion.equalsIgnoreCase("S")){
+            prestamoService.elimarPrestamo(id);
+        }else {
+            System.out.println("Operacion cancelada.");
         }
     }
 }

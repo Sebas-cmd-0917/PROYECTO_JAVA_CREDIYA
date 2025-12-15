@@ -12,7 +12,7 @@ public class MenuPrincipal {
         System.out.println("--- Menú Principal ---");
         System.out.println("1. Gestionar Empleados");
         System.out.println("2. Gestionar Clientes");
-        System.out.println("3. Gestionar Préstamos (Registrar y Simular)");
+        System.out.println("3. Gestionar Préstamos");
         System.out.println("4. Gestionar Pagos (Registrar Abono)");
         System.out.println("5. Reportes");
         System.out.println("6. Salir");

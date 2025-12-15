@@ -10,6 +10,7 @@ public interface PrestamoRepository {
     List<Prestamo> listarPrestamos();
     Prestamo obtenerPorId(int id);//verificar pagos
     List<Prestamo> obtenerPrestamoPorDocumento(String documento);
-
     void actualizarEstado(int prestamo_id, String nuevoEstado); 
+    void actualizarPrestamo(Prestamo prestamo);
+    void elimarPrestamo(int id);
 }

@@ -217,4 +217,49 @@ public class PrestamoDAOImpl implements PrestamoRepository {
             e.printStackTrace();
         }
     }
+
+
+    public void actualizarPrestamo(Prestamo p){
+        String sqlzo = "UPDATE prestamos SET monto = ?, interes = ?, cuotas = ? WHERE id = ?";
+
+        try (Connection db = ConexionDB.getConnection();
+            PreparedStatement stmt = db.prepareStatement(sqlzo)){
+
+                stmt.setDouble(1, p.getMonto());
+                stmt.setDouble(2, p.getInteres());
+                stmt.setInt(3, p.getCuotas());
+                stmt.setInt(4, p.getId());
+
+                int filas = stmt.executeUpdate();
+                if (filas > 0) {
+                    System.out.println("Prestamo actualizado correctamente");
+                }else {
+                    System.out.println("No se encontro prestamo con el Id" + p.getId());
+                }
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar prestamos " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void elimarPrestamo(int id){
+        String sqlzo = "DELETE FROM prestamos WHERE id = ?";
+
+        try (Connection db = ConexionDB.getConnection();
+            PreparedStatement stmt = db.prepareStatement(sqlzo)){
+            
+                stmt.setInt(1, id);
+                
+
+                int filas = stmt.executeUpdate();
+                if (filas > 0 ) {
+                    System.out.println("El prestamo a sido eliminado correctamente. ");
+                }else {
+                    System.out.println("No se encontro prestamos con el ID: " + id);
+                }
+        } catch(SQLException e){
+            System.out.println("Error al eliminar prestamos");
+        }
+    }
 }

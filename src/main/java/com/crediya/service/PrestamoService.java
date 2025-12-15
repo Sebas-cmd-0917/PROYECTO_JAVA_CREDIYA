@@ -15,6 +15,7 @@ import com.crediya.data.repositories.PrestamoDAOImpl;
 import com.crediya.model.Cliente;
 import com.crediya.model.Empleado;
 import com.crediya.model.EstadoPrestamo;
+import com.crediya.model.Pago;
 import com.crediya.model.Prestamo;
 import com.crediya.repository.ClienteRepository;
 import com.crediya.repository.EmpleadoRepository;
@@ -118,46 +119,80 @@ public class PrestamoService {
         }
     }
 
-    // private void guardarEnArchivoTxt(Prestamo p){
-    //     double cuotaMensual = calculadoraPrestamosService.calcularCuotaMensual(p.getMonto(), p.getInteres(), p.getCuotas());
-    //     double totalPagar = cuotaMensual * p.getCuotas();
+  
 
-    //     String linea = String.format("%d;%.2f;%.2f;%.2f;%s;%s", p.getClienteId(), p.getMonto(), p.getInteres(), totalPagar, p.getEstado(), p.getFechaInicio());
-    //     try (FileWriter fw = new FileWriter("prestamos.txt", true);
-    //         PrintWriter pw = new PrintWriter(fw)){
-    //             pw.println(linea);
-    //             System.out.println("📁 Respaldo guardado en 'prestamos.txt'");
-            
-    //     } catch (Exception e) {
-    //         System.out.println("⚠ No se pudo guardar en el archivo de texto: " + e.getMessage());
-    //     }
+     public void finalizarPrestamo(int prestamoId){
+         Prestamo p = prestamoRepository.obtenerPorId(prestamoId);
 
-    // }
+         if (p == null){
+             System.out.println("Erro: prestamo no encontrado. ");
+             return;
+         }
 
-    // public void finalizarPrestamo(int prestamoId){
-    //     Prestamo p = prestamoRepository.obtenerPorId(prestamoId);
-
-    //     if (p == null){
-    //         System.out.println("Erro: prestamo no encontrado. ");
-    //         return;
-    //     }
-
-    //     if (p.getEstado() == com.crediya.model.EstadoPrestamo.PAGADO ) {
-    //         System.out.println("El prestamo ya se encuentra PAGADO");
-    //         return;
-    //     }
+         if (p.getEstado() == com.crediya.model.EstadoPrestamo.PAGADO ) {
+             System.out.println("El prestamo ya se encuentra PAGADO");
+             return;
+         }
 
 
-    //     double capital = p.getMonto();
-    //     double interes = p.getMonto() * (p.getInteres() / 100);
-    //     double deudaTotal = capital + interes;
+         double capital = p.getMonto();
+         double interes = p.getMonto() * (p.getInteres() / 100);
+         double deudaTotal = capital + interes;
 
-    //     List<Pago> pagosRealizados = pagoRepository.ListarPagosPorPrestamo(prestamoId);
-    //     double totalPagado = 0;
+         List<Pago> pagosRealizados = pagoRepository.ListarPagosPorPrestamo(prestamoId);
+         double totalAbonado = 0;
 
-    // }
+         for (Pago unPago : pagosRealizados){
+            totalAbonado += unPago.getMonto();
+         }
 
-   public List<Prestamo> obtenerTodos(){
+         double deudaPendiente = deudaTotal - totalAbonado;
+
+         if (deudaPendiente <= 100){
+            prestamoRepository.actualizarEstado(prestamoId, "PAGADO");
+            System.out.println("Felicitaciones Prestamo finalizado");
+         }else{
+            System.out.printf("No se puede finalizar. El cliente aún debe $%,.0f\n", deudaPendiente);
+            System.out.println("   (Deuda Total: " + deudaTotal + " - Abonado: " + totalAbonado + ")");
+
+
+         }
+    }
+
+     
+    public void actualizarPrestamo(int id, double nuevoMonto, double nuevoInteres, int nuevasCuotas){
+        Prestamo p = prestamoRepository.obtenerPorId(id);
+
+        if (p == null) {
+            System.out.println("El prestamos no exites");
+            return;
+        }
+        if (p.getEstado() != EstadoPrestamo.PENDIENTE){
+            System.out.println("No se puede editar un prestamo que no este PENDIENTE");
+            return;
+        }
+
+        p.setMonto(nuevoMonto);
+        p.setInteres(nuevoInteres);
+        p.setCuotas(nuevasCuotas);
+
+        prestamoRepository.actualizarPrestamo(p);
+    }
+    
+    public void elimarPrestamo(int id){
+        Prestamo p = prestamoRepository.obtenerPorId(id);
+        if(p == null){
+            System.out.println("El prestamo no existe");
+            return;
+        }
+
+        prestamoRepository.elimarPrestamo(id);
+
+    }
+        
+    
+
+    public List<Prestamo> obtenerTodos(){
         return prestamoRepository.listarPrestamos();
     }
 
