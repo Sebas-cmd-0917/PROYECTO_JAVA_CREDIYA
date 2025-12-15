@@ -2,6 +2,7 @@ package com.crediya.ui;
 
 import java.util.Scanner;
 import java.time.LocalDate;
+import java.util.InputMismatchException;
 import java.util.List;
 
 import com.crediya.service.GestorPagosService;
@@ -26,36 +27,42 @@ public class MenuPago {
             System.out.println("6. Ver prestamos por documento");
             System.out.println("0. Volver");
             System.out.print("Seleccione una opción: ");
+            try {
+                int opcion = scanner.nextInt();
+                scanner.nextLine(); // limpiar buffer
 
-            int opcion = scanner.nextInt();
-            scanner.nextLine(); // limpiar buffer
+                switch (opcion) {
+                    case 1:
+                        crearPago();
+                        break;
+                    case 2:
+                        modificarPago();
+                        break;
+                    case 3:
+                        eliminarPago();
+                        break;
+                    case 4:
+                        historialDePagos();
+                        break;
+                    case 5:
+                        verEstadoDeCuenta();
+                        break;
+                    case 6:
+                        System.out.println("Ingrese el documento del cliente:");
+                        String documento = scanner.nextLine();
+                        menuPrestamos.verPrestamosPorDocumento(documento);
+                        break;
+                    case 0:
+                        System.out.println("Volviendo al menú principal...");
+                        return;
+                    default:
+                        System.out.println("❌ Opción inválida");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("❌ Error: Ingresaste una letra o símbolo. Por favor ingresa un NÚMERO.");
 
-            switch (opcion) {
-                case 1:
-                    crearPago();
-                    break;
-                case 2:
-                    modificarPago();
-                    break;
-                case 3:
-                    eliminarPago();
-                    break;
-                case 4:
-                    historialDePagos();
-                    break;
-                case 5:
-                    verEstadoDeCuenta();
-                    break;
-                case 6:
-                    System.out.println("Ingrese el documento del cliente:");
-                    String documento = scanner.nextLine();
-                    menuPrestamos.verPrestamosPorDocumento(documento);
-                    break;
-                case 0:
-                    System.out.println("Volviendo al menú principal...");
-                    return;
-                default:
-                    System.out.println("❌ Opción inválida");
+                // ¡¡MUY IMPORTANTE!!: Limpiar el "basurero" del scanner
+                scanner.nextLine();
             }
 
         }
@@ -241,4 +248,5 @@ public class MenuPago {
         System.out.println("Nueva lista de pagos después de la eliminación:");
         historialDePagos(); // Mostrar la lista actualizada
     }
+
 }

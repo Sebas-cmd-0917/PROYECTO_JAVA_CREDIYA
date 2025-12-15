@@ -66,6 +66,9 @@ public String procesarPago(int idPrestamo, double dineroAbonado) throws Exceptio
 
     public List<Prestamo> obtenerPrestamoPorDocumento(String documento) {
 
+        if (documento == null || !documento.matches("\\d{8,}")) {
+        throw new IllegalArgumentException("Error: El documento debe contener solo números y tener mínimo 8 dígitos.");
+    }
         // 1. PRIMERO: Traes la lista "cruda" del repositorio
     // (Esto es lo único que hacía tu función antes)
     List<Prestamo> lista = prestamoRepo.obtenerPrestamoPorDocumento(documento);
