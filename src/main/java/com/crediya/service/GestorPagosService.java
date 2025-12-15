@@ -61,7 +61,14 @@ public String procesarPago(int idPrestamo, double dineroAbonado) throws Exceptio
     
     // 6. RETORNAR MENSAJE DE ÉXITO (El Service le cuenta al Menu qué pasó)
     double nuevoSaldo = saldoPendiente - dineroAbonado;
-    return "Pago registrado con éxito. Nuevo saldo pendiente: " + nuevoSaldo;
+    if (nuevoSaldo <= 100) {
+            // Llamamos al repositorio para cambiar el estado en la BD
+            prestamoRepo.actualizarEstado(idPrestamo, "PAGADO");
+            
+            return "¡Pago registrado y PRÉSTAMO PAGADO COMPLETAMENTE! (Estado actualizado a PAGADO)";
+        }
+
+        return "Pago registrado con éxito. Nuevo saldo pendiente: " + String.format("$%,.0f", nuevoSaldo);
 }
 
     public List<Prestamo> obtenerPrestamoPorDocumento(String documento) {

@@ -2,7 +2,6 @@ package com.crediya.data.entities;
 
 import java.time.LocalDate;
 
-import com.crediya.model.EstadoPrestamo;
 
 public class PrestamoEntity {
     private int id;
