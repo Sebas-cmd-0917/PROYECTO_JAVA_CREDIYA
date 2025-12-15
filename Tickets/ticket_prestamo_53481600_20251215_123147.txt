@@ -1,0 +1,28 @@
+================================
+        CREDIYA S.A.S.          
+     Nit: 900.123.456-7         
+   Calle Falsa 123, Ciudad      
+================================
+FECHA: 2025-12-15 12:31:47
+TICKET REF: 20251215_123147
+--------------------------------
+DATOS DEL CLIENTE
+NOMBRE: daniel
+DOC:    53481600
+--------------------------------
+ATENDIDO POR:
+ASESOR: Marcela
+================================
+      DETALLE DEL CREDITO       
+--------------------------------
+MONTO PRESTADO:   $15.000.000,00
+TASA INTERES:           2,00%
+PLAZO (MESES):            12
+--------------------------------
+VALOR CUOTA:      $1.275.000,00
+--------------------------------
+TOTAL A PAGAR:    $15.300.000,00
+================================
+   GRACIAS POR SU CONFIANZA     
+     CONSERVE ESTE TICKET       
+================================

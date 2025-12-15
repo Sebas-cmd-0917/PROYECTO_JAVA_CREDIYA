@@ -113,6 +113,15 @@ public String procesarPago(int idPrestamo, double dineroAbonado) throws Exceptio
          }
          return pagoRepo.ListarPagosPorPrestamo(prestamoId);
      }
+     // En GestorPagosService.java
+
+public List<Pago> obtenerPagosPorCliente(String documento) {
+    List<Pago> pagos = pagoRepo.listarPorDocumento(documento);
+    
+    // Opcional: Podrías lanzar una excepción si la lista está vacía si quisieras
+    // pero retornar lista vacía también es válido.
+    return pagos;
+}
 
     public void generarEstadoDeCuenta(int idPrestamo) {
     // 1. Buscar el Préstamo (La Cabecera del reporte)
@@ -181,6 +190,40 @@ public String procesarPago(int idPrestamo, double dineroAbonado) throws Exceptio
     String estadoActual = (saldoFinal <= 0) ? "¡PAZ Y SALVO!" : "PENDIENTE";
     System.out.println("ESTADO ACTUAL:   " + estadoActual);
     System.out.println("========================================\n");
+}
+
+// EN: PagoService.java
+
+public void editarPago(Pago pago) {
+    // Aquí podrías validar cosas antes de enviar (ej: que el monto sea positivo)
+    if (pago.getMonto() < 0) {
+        System.out.println("❌ Error: No se puede actualizar a un monto negativo.");
+        return;
+    }
+
+    boolean exito = pagoRepo.modificarPago(pago);
+    
+    if (exito) {
+        System.out.println("✅ Pago actualizado correctamente.");
+    } else {
+        System.out.println("⚠ No se encontró un pago con ese ID para actualizar.");
+    }
+}
+
+public void borrarPago(int id) {
+    // Podrías validar que el ID sea lógico (mayor a 0)
+    if (id <= 0) {
+        System.out.println("❌ ID inválido.");
+        return;
+    }
+
+    boolean exito = pagoRepo.eliminarPago(id);
+    
+    if (exito) {
+        System.out.println("✅ Pago eliminado del sistema.");
+    } else {
+        System.out.println("⚠ No se pudo eliminar. El ID no existe.");
+    }
 }
 
 

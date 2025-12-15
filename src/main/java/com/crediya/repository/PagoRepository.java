@@ -7,7 +7,8 @@ public interface PagoRepository {
     void registrarPago(Pago pago);
     List<Pago> ListarPagosPorPrestamo(int prestamoId);
     List<Pago> HistoricoDePagos();
-    void modificarPago(Pago pago);
-    void eliminarPago(int idPago);
+    boolean modificarPago(Pago pago);
+    boolean eliminarPago(int idPago);
+    List<Pago> listarPorDocumento(String documentoCliente);
 }
 
