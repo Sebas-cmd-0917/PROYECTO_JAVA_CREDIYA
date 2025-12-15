@@ -2,6 +2,8 @@ package com.crediya.data.entities;
 
 import java.time.LocalDate;
 
+import com.crediya.model.EstadoPrestamo;
+
 public class PrestamoEntity {
     private int id;
     private int clienteId;
@@ -15,6 +17,20 @@ public class PrestamoEntity {
 
     public PrestamoEntity() {
     }
+
+    
+
+    public PrestamoEntity(int clienteId, int empleadoId, double monto, double interes, int cuotas,
+            LocalDate fechaInicio, String estado) {
+        this.clienteId = clienteId;
+        this.empleadoId = empleadoId;
+        this.monto = monto;
+        this.interes = interes;
+        this.cuotas = cuotas;
+        this.fechaInicio = fechaInicio;
+        this.estado = estado;
+    }
+
 
 
     public PrestamoEntity(int id, int clienteId, int empleadoId, double monto, double interes, int cuotas,

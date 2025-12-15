@@ -7,4 +7,5 @@ public interface ClienteRepository {
 
     void guardarCliente(Cliente cliente);
     List<Cliente> listarTodosClientes();//lista los empleados
+    Cliente buscarPorDocumentoCliente(String documento);
 }

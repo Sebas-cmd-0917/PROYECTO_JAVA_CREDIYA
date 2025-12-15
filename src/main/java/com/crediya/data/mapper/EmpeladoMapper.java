@@ -8,6 +8,7 @@ public class EmpeladoMapper {
     public Empleado toDomain(EmpleadoEntity entity){
         if (entity == null) return null;
         return new Empleado(
+            entity.getId(),
             entity.getNombre(), 
             entity.getDocumento(),
             entity.getRol(),

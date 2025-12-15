@@ -71,7 +71,7 @@ public class MenuEmpleado {
                     double sal = scanner.nextDouble();
                     scanner.nextLine(); 
 
-                    Empleado nuevoEmp = new Empleado(nom, doc, rol, correo, sal);
+                    Empleado nuevoEmp = new Empleado(0, nom, doc, rol, correo, sal);
                     servicioEmpleado.registrarEmpleado(nuevoEmp);
                     System.out.println("✔ Empleado registrado correctamente.");
                 } catch (Exception e) {

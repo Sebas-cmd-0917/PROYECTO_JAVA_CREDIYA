@@ -13,7 +13,7 @@ public class Prestamo {
     private double interes;
     private int cuotas;
     private LocalDate fechaInicio;
-    private String estado;
+    private EstadoPrestamo estado;
     private double totalPagado;
     private double saldoPendiente;
 
@@ -44,7 +44,7 @@ public class Prestamo {
 
     //se usa para crear un préstamo NUEVO.
     public Prestamo(int clienteId, int empleadoId, double monto, double interes, int cuotas,
-            LocalDate fechaInicio, String estado) {
+            LocalDate fechaInicio, EstadoPrestamo estado) {
         this.clienteId = clienteId;
         this.empleadoId = empleadoId;
         this.monto = monto;
@@ -56,7 +56,7 @@ public class Prestamo {
 
     //Con este se realiza las consultas, cuando ya este el id asignado
     public Prestamo(int id, int clienteId, int empleadoId, double monto, double interes, int cuotas,
-            LocalDate fechaInicio, String estado) {
+            LocalDate fechaInicio, EstadoPrestamo estado) {
         this.id = id;
         this.clienteId = clienteId;
         this.empleadoId = empleadoId;
@@ -169,12 +169,12 @@ public class Prestamo {
     }
 
 
-    public String getEstado() {
+    public EstadoPrestamo getEstado() {
         return estado;
     }
 
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadoPrestamo estado) {
         this.estado = estado;
     }
 
