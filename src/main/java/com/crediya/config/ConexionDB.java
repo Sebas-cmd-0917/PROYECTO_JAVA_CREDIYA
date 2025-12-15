@@ -23,7 +23,8 @@ public class ConexionDB {
             // System.out.println("❌ Error: No se encontró el Driver de MySQL (Falta el .jar).");
             e.printStackTrace();
         } catch (SQLException e) {
-            // System.out.println("❌ Error de Conexión SQL: Revisa si XAMPP/MySQL está prendido.");
+            // System.out.println("❌ Error de Conexión SQL: Revisa si XAMPP/MySQL está prendido.");4
+            
             System.out.println("Mensaje: " + e.getMessage());
         }
         return connection;
