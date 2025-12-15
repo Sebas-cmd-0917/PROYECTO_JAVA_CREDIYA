@@ -202,14 +202,24 @@ public class MenuPrestamos {
             System.out.print("Ingrese Documento del Cliente: ");
             String docCliente = scanner.next();
 
+            Cliente cliente = clienteRepository.buscarPorDocumentoCliente(docCliente);
+            if (cliente == null) {
+                System.out.println("❌ Cliente no encontrado. Debe registrarlo primero.");
+                return;
+            }
+            System.out.println("✅ Cliente: " + cliente.getNombre().toUpperCase());
+
+
             System.out.print("Ingrese Documento del Empleado: ");
             String docEmpleado = scanner.next();
+            
             Empleado empleado = empleadoRepository.buscarPorDocumentoEmpleado(docEmpleado);
             if (empleado == null) {
                 System.out.println("❌ Empleado no encontrado.");
                 return;
             }
-
+            System.out.println("✅ Atendido por: " + empleado.getNombre().toUpperCase());
+            
             System.out.print("Monto: ");
             double monto = scanner.nextDouble();
 
