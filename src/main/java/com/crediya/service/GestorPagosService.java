@@ -14,67 +14,55 @@ public class GestorPagosService {
     private PagoRepository pagoRepo = new PagoDAOImpl();
     private PrestamoRepository prestamoRepo = new PrestamoDAOImpl();
 
-    // 2. Fase de Pago: Recibe el ID elegido y el Dinero
-    public void procesarPago(int idPrestamo, double dineroAbonado) {
+    // En GestorPagosService.java
 
-        // 1. Buscamos el préstamo
+public String procesarPago(int idPrestamo, double dineroAbonado) throws Exception { 
+    // "throws Exception" avisa que este método puede fallar y el menú debe estar atento
+
+    // 1. Buscamos el préstamo
     Prestamo p = prestamoRepo.obtenerPorId(idPrestamo);
-
     if (p == null) {
-        System.out.println("❌ Error: Préstamo no encontrado.");
-        return;
+        throw new Exception("El préstamo con ID " + idPrestamo + " no existe.");
     }
 
-    // --- AQUÍ ESTÁ EL CAMBIO: DESGLOSE MATEMÁTICO ---
-    
-    // A. Deuda Base (El dinero que le prestaste)
+    // 2. Cálculos Matemáticos (Lógica pura, sin impresiones)
     double capitalBase = p.getMonto();
-
-    // B. El Interés (El dinero extra)
-    // Fórmula: 5.000.000 * (1 / 100) = 50.000
     double valorInteres = capitalBase * (p.getInteres() / 100);
-
-    // C. La Deuda Total (Suma de los dos anteriores)
     double deudaTotal = capitalBase + valorInteres;
 
-    // --- IMPRIMIMOS EL DESGLOSE EN PANTALLA ---
-    System.out.println("\n--- DETALLE DE LA DEUDA ---");
-    System.out.printf("💰 Capital Prestado:  $%,.0f\n", capitalBase);
-    System.out.printf("📈 Intereses (%.1f%%): +$%,.0f\n", p.getInteres(), valorInteres);
-    System.out.println("---------------------------");
-    System.out.printf("TOTAL DEUDA REAL:    $%,.0f\n", deudaTotal);
-    System.out.println("---------------------------\n");
-
-
-    // 2. Calculamos historial (Lo que ya ha pagado antes)
+    // 3. Calculamos historial usando el NUEVO método del repo
     List<Pago> historial = pagoRepo.ListarPagosPorPrestamo(idPrestamo);
+    
     double yaPagado = 0;
     for (Pago pagoViejo : historial) {
         yaPagado += pagoViejo.getMonto();
     }
 
-    System.out.println(historial.size() + " pagos previos encontrados. Total abonado: $" + yaPagado);
-
-    // 3. Calculamos cuánto le falta HOY
     double saldoPendiente = deudaTotal - yaPagado;
 
-    // 4. VALIDACIÓN
-    if (dineroAbonado > saldoPendiente) {
-        System.out.printf("❌ Error: Estás intentando pagar $%,.0f pero solo debes $%,.0f\n", 
-                          dineroAbonado, saldoPendiente);
-    } else {
-        // 5. GUARDAR
-        Pago nuevoPago = new Pago();
-        nuevoPago.setPrestamoId(idPrestamo);
-        nuevoPago.setMonto(dineroAbonado);
-        nuevoPago.setFechaPago(LocalDate.now());
-        
-        pagoRepo.registrarPago(nuevoPago);
-        
-        System.out.println("✅ ¡Abono registrado exitosamente!");
-        System.out.printf("📉 Nuevo Saldo Pendiente: $%,.0f\n", (saldoPendiente - dineroAbonado));
+    // 4. VALIDACIÓN LÓGICA
+    if (dineroAbonado <= 0) {
+         throw new Exception("El monto a pagar debe ser mayor a 0.");
     }
+    
+    // Usamos una pequeña tolerancia (0.01) por si hay decimales locos
+    if (dineroAbonado > (saldoPendiente + 0.01)) { 
+        throw new Exception("Estás intentando pagar " + dineroAbonado + 
+                            " pero el saldo pendiente es solo " + saldoPendiente);
     }
+
+    // 5. GUARDAR (Si pasó todas las validaciones anteriores)
+    Pago nuevoPago = new Pago();
+    nuevoPago.setPrestamoId(idPrestamo);
+    nuevoPago.setMonto(dineroAbonado);
+    nuevoPago.setFechaPago(LocalDate.now()); // O la fecha que quieras
+    
+    pagoRepo.registrarPago(nuevoPago);
+    
+    // 6. RETORNAR MENSAJE DE ÉXITO (El Service le cuenta al Menu qué pasó)
+    double nuevoSaldo = saldoPendiente - dineroAbonado;
+    return "Pago registrado con éxito. Nuevo saldo pendiente: " + nuevoSaldo;
+}
 
     public List<Prestamo> obtenerPrestamoPorDocumento(String documento) {
 
@@ -115,16 +103,16 @@ public class GestorPagosService {
         return pagoRepo.HistoricoDePagos();
     }
 
-    public List<Pago> obtenerPagosPorPrestamo(int prestamoId) {
-        Prestamo p = prestamoRepo.obtenerPorId(prestamoId);
-        if (p == null) {
-            System.out.println("❌ Error: Préstamo no encontrado.");
-            return null;
-        } else {
-            System.out.println("Préstamo encontrado: ID " + p.getId() + ", Monto " + p.getMonto());
-        }
-        return pagoRepo.ListarPagosPorPrestamo(prestamoId);
-    }
+     public List<Pago> obtenerPagosPorPrestamo(int prestamoId) {
+         Prestamo p = prestamoRepo.obtenerPorId(prestamoId);
+         if (p == null) {
+             System.out.println("❌ Error: Préstamo no encontrado.");
+             return null;
+         } else {
+             System.out.println("Préstamo encontrado: ID " + p.getId() + ", Monto " + p.getMonto());
+         }
+         return pagoRepo.ListarPagosPorPrestamo(prestamoId);
+     }
 
     public void generarEstadoDeCuenta(int idPrestamo) {
     // 1. Buscar el Préstamo (La Cabecera del reporte)

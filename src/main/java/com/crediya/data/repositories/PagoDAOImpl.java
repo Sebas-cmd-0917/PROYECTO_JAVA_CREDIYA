@@ -103,4 +103,49 @@ public class PagoDAOImpl implements PagoRepository{
         }
         return lista;
     }
+
+    @Override
+    public void modificarPago(Pago pago) {
+        String sqlzo = "UPDATE pagos SET prestamo_id = ?, fecha_pago = ?, monto = ? WHERE id = ?";
+        PagoEntity pagoEntity = mapper.toEntity(pago);  
+        try (Connection db = ConexionDB.getConnection();
+             PreparedStatement stmt = db.prepareStatement(sqlzo)) {
+
+            stmt.setInt(1, pagoEntity.getPrestamoId());
+            stmt.setDate(2, Date.valueOf(pagoEntity.getFechaPago()));
+            stmt.setDouble(3, pagoEntity.getMonto());
+            stmt.setInt(4, pagoEntity.getId());
+
+            int filasActualizadas = stmt.executeUpdate();
+            if (filasActualizadas > 0) {
+                System.out.println("Pago modificado exitosamente.");
+            } else {
+                System.out.println("No se encontró el pago con ID: " + pagoEntity.getId());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void eliminarPago(int idPago) {
+        String sqlzo = "DELETE FROM pagos WHERE id = ?";
+        try (Connection db = ConexionDB.getConnection();
+             PreparedStatement stmt = db.prepareStatement(sqlzo)) {
+
+            stmt.setInt(1, idPago);
+
+            int filasEliminadas = stmt.executeUpdate();
+            if (filasEliminadas > 0) {
+                System.out.println("Pago eliminado exitosamente.");
+            } else {
+                System.out.println("No se encontró el pago con ID: " + idPago);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error al eliminar el pago", e);
+        }
+    }
 }

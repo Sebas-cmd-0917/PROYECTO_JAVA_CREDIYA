@@ -11,15 +11,18 @@ public class MenuPago {
     Scanner scanner = new Scanner(System.in);
     GestorPagosService gestorPagosService = new GestorPagosService();
     GestorPagosService prestamoService = new GestorPagosService();
+    MenuPrestamos menuPrestamos = new MenuPrestamos();
 
     public void mostrarMenuPago() {
 
         while (true) {
             System.out.println("\n===== 📌 MENÚ DE PAGOS =====");
             System.out.println("1. Registrar pago");
-            System.out.println("2. Ver prestamos por documento");
-            System.out.println("3. Ver estado de cuenta");
+            System.out.println("2. Modificar un pago");
+            System.out.println("3. Eliminar un pago");
             System.out.println("4. Ver historial de pagos");
+            System.out.println("5. Ver estado de cuenta");
+            System.out.println("6. Ver prestamos por documento");
             System.out.println("0. Volver");
             System.out.print("Seleccione una opción: ");
 
@@ -31,15 +34,20 @@ public class MenuPago {
                     crearPago();
                     break;
                 case 2:
-                    System.out.println("Ingrese el documento del cliente:");
-                    String documento = scanner.nextLine();
-                    verPrestamosPorDocumento(documento);
+
                     break;
                 case 3:
-                    verEstadoDeCuenta();
                     break;
                 case 4:
                     historialDePagos();
+                    break;
+                    case 5:
+                    verEstadoDeCuenta();
+                    break;
+                case 6:
+                    System.out.println("Ingrese el documento del cliente:");
+                    String documento = scanner.nextLine();
+                    menuPrestamos.verPrestamosPorDocumento(documento);
                     break;
                 case 0:
                     System.out.println("Volviendo al menú principal...");
@@ -60,48 +68,27 @@ public class MenuPago {
         String cedula = scanner.nextLine();
 
         // 2. LLAMA A LA LISTA (Fase 1)
-        List<Prestamo> misPrestamos = gestorPagosService.obtenerPrestamoPorDocumento(cedula);
+        menuPrestamos.verPrestamosPorDocumento(cedula);
 
-        if (misPrestamos != null && !misPrestamos.isEmpty()) {
+        System.out.println("--- REALIZAR ABONO ---");
+    
+    System.out.print("Ingrese ID del Préstamo: ");
+    int idPrestamo = scanner.nextInt();
+    
+    System.out.print("Ingrese Monto a Abonar: ");
+    double monto = scanner.nextDouble();
 
-            // 3. MUESTRA LA LISTA PARA QUE ELIJA
-            System.out.println("--- Seleccione el Préstamo a Pagar ---");
-            System.out.printf("%-5s %-8s %-20s %-12s %-15s %-8s %-8s %-20s %-15s %-12s %-15s\n",
-                    "#", "ID_CLI", "CLIENTE", "CEDULA", "MONTO", "%INT", "CUOTAS", "EMPLEADO", "PAGADO", "ESTADO",
-                    "SALDO");   
-            System.out.println(
-                    "-------------------------------------------------------------------------------------------------------------------------------------------------------");
-            for (Prestamo p : misPrestamos) {
-                System.out.printf("%-5d %-8d %-20s %-12s $%,-14.0f %-8.1f %-8d %-20s $%,-14.0f %-12s $%,-14.0f\n",
-                        p.getId(), // %d para números enteros
-                        p.getClienteId(),
-                        p.getNombreCliente(),   // %s para texto    
-                        p.getNumDocumento(),
-                        p.getMonto(),
-                        p.getInteres(),
-                        p.getCuotas(), // %,.2f para dinero (con comas y 2 decimales)
-                        p.getNombreEmpleado(),
-                        p.getTotalPagado(),
-                        p.getEstado(), // Cuánto ha abonado hasta hoy (¡DATO NUEVO!)
-                        p.getSaldoPendiente()); // Cuánto le falta (¡DATO NUEVO!)   
-            }
-            System.out.println(
-                    "-------------------------------------------------------------------------------------------------------------------------------------------------------");
-                    
-
-            // 4. PIDE EL ID EXACTO
-            System.out.print("\nEscriba el NÚMERO (ID) del préstamo: ");
-            int idElegido = scanner.nextInt();
-
-            System.out.print("¿Cuánto va a abonar? $");
-            double monto = scanner.nextDouble();
-
-            // 5. LLAMA AL PROCESO DE PAGO (Fase 2)
-            gestorPagosService.procesarPago(idElegido, monto);
-
-        } else {
-            System.out.println("Este cliente no tiene deudas activas.");
-        }
+    try {
+        // Llamamos al servicio y esperamos el mensaje de éxito
+        String resultado = gestorPagosService.procesarPago(idPrestamo, monto);
+        
+        // Si llega aquí, es que todo salió BIEN
+        System.out.println("✅ " + resultado);
+        
+    } catch (Exception e) {
+        // Si algo salió MAL (Préstamo no existe, pago excesivo, etc.), cae aquí
+        System.out.println("❌ ERROR: " + e.getMessage());
+    }
     }
 
     private void historialDePagos() {
@@ -117,45 +104,7 @@ public class MenuPago {
         }
     }
 
-    private void verPrestamosPorDocumento(String documento) {
-
-        List<Prestamo> prestamos = gestorPagosService.obtenerPrestamoPorDocumento(documento);
-
-        if (prestamos.isEmpty()) {
-            System.out.println("No se encontraron préstamos para el documento: " + documento);
-        } else {
-            // 1. IMPRIMIR ENCABEZADOS DE LA TABLA
-            // %-5s = Columna de Texto alineado a la Izquierda de 5 espacios
-            // %-20s = Columna de Texto alineado a la Izquierda de 20 espacios
-            System.out.printf("%-5s %-8s %-20s %-12s %-15s %-8s %-8s %-20s %-15s %-12s %-15s\n",
-                    "#", "ID_CLI", "CLIENTE", "CEDULA", "MONTO", "%INT", "CUOTAS", "EMPLEADO", "PAGADO", "ESTADO",
-                    "SALDO");
-
-            System.out.println(
-                    "-------------------------------------------------------------------------------------------------------------------------------------------------------");
-
-            // 2. LAS FILAS (Ahora sí coinciden tipos y cantidad)
-            for (Prestamo p : prestamos) {
-                System.out.printf("%-5d %-8d %-20s %-12s $%,-14.0f %-8.1f %-8d %-20s $%,-14.0f %-12s $%,-14.0f\n",
-                        p.getId(), // %d para números enteros
-                        p.getClienteId(),
-                        p.getNombreCliente(),
-                        p.getNumDocumento(),
-                        p.getMonto(),
-                        p.getInteres(),
-                        p.getCuotas(), // %,.2f para dinero (con comas y 2 decimales)
-                        p.getNombreEmpleado(), // %s para texto
-                        p.getTotalPagado(),
-                        p.getEstado(), // Cuánto ha abonado hasta hoy (¡DATO NUEVO!)
-                        p.getSaldoPendiente()); // Cuánto le falta (¡DATO NUEVO!)
-
-            }
-            System.out.println(
-                    "-------------------------------------------------------------------------------------------------------------------------------------------------------");
-
-
-        }
-    }
+    
 
     public void verEstadoDeCuenta() {
         System.out.println("\n--- GENERAR ESTADO DE CUENTA ---");
@@ -169,7 +118,7 @@ public class MenuPago {
 
         if (lista != null && !lista.isEmpty()) {
 
-            verPrestamosPorDocumento(doc);
+           menuPrestamos.verPrestamosPorDocumento(doc);
 
             // 3. Pedir el ID específico
             System.out.print("\nIngrese el NÚMERO del préstamo a consultar: ");

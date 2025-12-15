@@ -60,15 +60,7 @@ public class PrestamoService {
     }
 
    public List<Prestamo> obtenerTodos(){
-       List<Prestamo> lista = prestamoRepository.listarPrestamos();
-       if (lista.isEmpty()) {
-           System.out.println("No hay préstamos registrados.");
-       }else {
-           for (Prestamo p : lista) {
-               System.out.println(p);
-           }
-       }
-       return lista;
+        return prestamoRepository.listarPrestamos();
     }
 
     

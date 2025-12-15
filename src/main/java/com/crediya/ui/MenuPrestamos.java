@@ -49,7 +49,7 @@ public class MenuPrestamos {
                 case 5:
                     System.out.print("Ingrese el documento del cliente: ");
                     String documento = scanner.nextLine();
-                    gestorPagosService.obtenerPrestamoPorDocumento(documento);
+                    verPrestamosPorDocumento(documento);
                     break;
                 case 0:
                     System.out.println("Volviendo al menú principal...");
@@ -173,5 +173,44 @@ public class MenuPrestamos {
         System.out.print("\nIngrese el ID del préstamo a finalizar: ");
         int pId = scanner.nextInt();
         prestamoService.finalizarPrestamo(pId);
+    }
+
+    public void verPrestamosPorDocumento(String documento) {
+
+        List<Prestamo> prestamos = gestorPagosService.obtenerPrestamoPorDocumento(documento);
+
+        if (prestamos.isEmpty()) {
+            System.out.println("No se encontraron préstamos para el documento: " + documento);
+        } else {
+            // 1. IMPRIMIR ENCABEZADOS DE LA TABLA
+            // %-5s = Columna de Texto alineado a la Izquierda de 5 espacios
+            // %-20s = Columna de Texto alineado a la Izquierda de 20 espacios
+            System.out.printf("%-5s %-8s %-20s %-12s %-15s %-8s %-8s %-20s %-15s %-12s %-15s\n",
+                    "#", "ID_CLI", "CLIENTE", "CEDULA", "MONTO", "%INT", "CUOTAS", "EMPLEADO", "PAGADO", "ESTADO",
+                    "SALDO");
+
+            System.out.println(
+                    "-------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+            // 2. LAS FILAS (Ahora sí coinciden tipos y cantidad)
+            for (Prestamo p : prestamos) {
+                System.out.printf("%-5d %-8d %-20s %-12s $%,-14.0f %-8.1f %-8d %-20s $%,-14.0f %-12s $%,-14.0f\n",
+                        p.getId(), // %d para números enteros
+                        p.getClienteId(),
+                        p.getNombreCliente(),
+                        p.getNumDocumento(),
+                        p.getMonto(),
+                        p.getInteres(),
+                        p.getCuotas(), // %,.2f para dinero (con comas y 2 decimales)
+                        p.getNombreEmpleado(), // %s para texto
+                        p.getTotalPagado(),
+                        p.getEstado(), // Cuánto ha abonado hasta hoy (¡DATO NUEVO!)
+                        p.getSaldoPendiente()); // Cuánto le falta (¡DATO NUEVO!)
+
+            }
+            System.out.println(
+                    "-------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+        }
     }
 }
