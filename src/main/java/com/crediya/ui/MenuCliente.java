@@ -49,7 +49,7 @@ public class MenuCliente {
         }
     }
 
-    private void crearCliente(){
+    public void crearCliente(){
          try {
                     System.out.println("\n--- REGISTRAR CLIENTE ---");
                     System.out.print("Nombre: ");

@@ -54,18 +54,25 @@ public class GestorPagosService {
                     " pero el saldo pendiente es solo " + saldoPendiente);
         }
 
-        // 5. GUARDAR (Si pasó todas las validaciones anteriores)
-        Pago nuevoPago = new Pago();
-        nuevoPago.setPrestamoId(idPrestamo);
-        nuevoPago.setMonto(dineroAbonado);
-        nuevoPago.setFechaPago(LocalDate.now()); // O la fecha que quieras
+    // 5. GUARDAR (Si pasó todas las validaciones anteriores)
+    Pago nuevoPago = new Pago();
+    nuevoPago.setPrestamoId(idPrestamo);
+    nuevoPago.setMonto(dineroAbonado);
+    nuevoPago.setFechaPago(LocalDate.now()); // O la fecha que quieras
+    
+    pagoRepo.registrarPago(nuevoPago);
+    
+    // 6. RETORNAR MENSAJE DE ÉXITO (El Service le cuenta al Menu qué pasó)
+    double nuevoSaldo = saldoPendiente - dineroAbonado;
+    if (nuevoSaldo <= 100) {
+            // Llamamos al repositorio para cambiar el estado en la BD
+            prestamoRepo.actualizarEstado(idPrestamo, "PAGADO");
+            
+            return "¡Pago registrado y PRÉSTAMO PAGADO COMPLETAMENTE! (Estado actualizado a PAGADO)";
+        }
 
-        pagoRepo.registrarPago(nuevoPago);
-
-        // 6. RETORNAR MENSAJE DE ÉXITO (El Service le cuenta al Menu qué pasó)
-        double nuevoSaldo = saldoPendiente - dineroAbonado;
-        return "Pago registrado con éxito. Nuevo saldo pendiente: " + nuevoSaldo;
-    }
+        return "Pago registrado con éxito. Nuevo saldo pendiente: " + String.format("$%,.0f", nuevoSaldo);
+}
 
     public List<Prestamo> obtenerPrestamoPorDocumento(String documento) {
 

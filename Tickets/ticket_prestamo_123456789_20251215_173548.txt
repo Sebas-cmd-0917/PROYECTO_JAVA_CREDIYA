@@ -1,0 +1,28 @@
+================================
+        CREDIYA S.A.S.          
+     Nit: 900.123.456-7         
+   Calle Falsa 123, Ciudad      
+================================
+FECHA: 2025-12-15 17:35:48
+TICKET REF: 20251215_173548
+--------------------------------
+DATOS DEL CLIENTE
+NOMBRE: Victor Samur
+DOC:    123456789
+--------------------------------
+ATENDIDO POR:
+ASESOR: Laura Albarracin
+================================
+      DETALLE DEL CREDITO       
+--------------------------------
+MONTO PRESTADO:   $1,000,000.00
+TASA INTERES:           2.00%
+PLAZO (MESES):            15
+--------------------------------
+VALOR CUOTA:      $ 68,000.00
+--------------------------------
+TOTAL A PAGAR:    $1,020,000.00
+================================
+   GRACIAS POR SU CONFIANZA     
+     CONSERVE ESTE TICKET       
+================================

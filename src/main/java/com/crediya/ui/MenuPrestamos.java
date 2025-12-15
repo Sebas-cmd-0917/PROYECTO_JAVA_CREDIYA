@@ -5,12 +5,11 @@ import java.util.Scanner;
 
 // Importaciones necesarias para buscar
 import com.crediya.data.repositories.ClienteDAOImpl;
-import com.crediya.data.repositories.EmpleadoDAOImpl; // <--- NUEVO
+import com.crediya.data.repositories.EmpleadoDAOImpl; 
 import com.crediya.model.Cliente;
 import com.crediya.model.Empleado;
 import com.crediya.repository.ClienteRepository;
-import com.crediya.repository.EmpleadoRepository; // <--- NUEVO
-
+import com.crediya.repository.EmpleadoRepository;
 import com.crediya.model.Prestamo;
 import com.crediya.service.CalculadoraPrestamosService;
 import com.crediya.service.GestorPagosService;
@@ -86,31 +85,57 @@ public class MenuPrestamos {
 
             // --- BUSCAR CLIENTE ---
             System.out.print("Ingrese Documento del Cliente: ");
-            String docCliente = scanner.next(); // <--- Leemos String
+            String docCliente = scanner.next(); 
+            scanner.nextLine(); // Limpiar buffer por si acaso usamos nextLine luego
 
             Cliente clienteEncontrado = clienteRepository.buscarPorDocumentoCliente(docCliente);
 
+            // --- SUBMENÚ DE REDIRECCIÓN ---
             if (clienteEncontrado == null) {
-                System.out.println("Cliente no encontrado. Debe realizar el registro ");
-                return;
+                System.out.println("❌ Cliente no encontrado.");
+                System.out.println("   1. Registrar nuevo cliente ahora");
+                System.out.println("   0. Cancelar y volver");
+                System.out.print("   Seleccione una opción: ");
+                
+                int opcionSub = scanner.nextInt();
+                scanner.nextLine(); // Limpiar buffer
+
+                if (opcionSub == 1) {
+                    // Llamamos al registro del otro menú
+                    MenuCliente menuCli = new MenuCliente();
+                    menuCli.crearCliente();
+                    
+                    // Volvemos a intentar el préstamo desde el inicio (Recursividad)
+                    System.out.println("\n🔄 Retomando préstamo...");
+                    registrarPrestamo(); 
+                    return; 
+                } else {
+                    System.out.println("Registro cancelado.");
+                    return;
+                }
             }
 
-            System.out.println("CLiente: " + clienteEncontrado.getNombre());
+            // Si pasa, mostramos el nombre
+            System.out.println("✅ Cliente: " + clienteEncontrado.getNombre().toUpperCase());
+
 
             // --- BUSCAR EMPLEADO ---
             System.out.print("Ingrese Documento del Empleado: ");
             String docEmpleado = scanner.next();
+            scanner.nextLine(); // Limpiar buffer
 
             Empleado empleadoEncontrado = empleadoRepository.buscarPorDocumentoEmpleado(docEmpleado);
 
             if (empleadoEncontrado == null) {
-                System.out.println("Empleado no encontrado. ");
+                System.out.println("❌ Empleado no encontrado.");
                 return;
             }
 
-            System.out.println("Empleado: " + empleadoEncontrado.getNombre());
+            System.out.println("✅ Empleado: " + empleadoEncontrado.getNombre().toUpperCase());
+
 
             // --- PEDIR EL RESTO DE DATOS ---
+            // Usamos tus métodos de lectura para evitar errores
             System.out.print("Monto: ");
             double monto = scanner.nextDouble();
 
@@ -119,16 +144,18 @@ public class MenuPrestamos {
 
             System.out.print("Cuotas: ");
             int cuotas = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); 
 
-            // Usamos los IDs que recuperamos de la búsqueda (cliente.getId())
+            // Registramos
             prestamoService.registrarPrestamo(docCliente, docEmpleado, monto, interes, cuotas);
+            System.out.println("✅ ¡Préstamo registrado exitosamente!");
 
         } catch (Exception e) {
             System.out.println("❌ Error al registrar préstamo: " + e.getMessage());
             scanner.nextLine();
         }
     }
+
 
     // listar prestammos
 
@@ -280,18 +307,34 @@ public class MenuPrestamos {
         prestamoService.actualizarPrestamo(id, monto, interes, cuotas);
     }
 
-    public void eliminarPrestamo(){
+    // ESTE ES EL MÉTODO "MESERO" (UI)
+    private void eliminarPrestamo() {
         System.out.println("\n--- ELIMINAR PRÉSTAMO ---");
+        
+        // 1. Pedimos el dato al usuario
         System.out.print("Ingrese el ID del préstamo a eliminar: ");
         int id = scanner.nextInt();
+        scanner.nextLine(); // Limpiar buffer
 
-        System.out.print("¿Está seguro? Esto es irreversible (S/N): ");
-        String confirmacion = scanner.next();
+        // 2. Confirmamos por seguridad
+        System.out.print("¿Está seguro? (S/N): ");
+        String confirmacion = scanner.nextLine();
 
-        if(confirmacion.equalsIgnoreCase("S")){
-            prestamoService.elimarPrestamo(id);
-        }else {
-            System.out.println("Operacion cancelada.");
+        if (confirmacion.equalsIgnoreCase("S")) {
+            try {
+                // 3. AQUÍ LLAMAMOS A TU SERVICIO (La conexión mágica)
+                // Nota: Tu servicio tiene un pequeño error de tipeo "elimar", 
+                // así que lo llamamos tal cual lo tienes escrito allá.
+                prestamoService.eliminarPrestamo(id); 
+                
+                System.out.println("✅ Préstamo eliminado correctamente.");
+            } catch (Exception e) {
+                // Si el servicio dice "No se puede eliminar porque ya está pagado", cae aquí.
+                System.out.println("❌ Error: " + e.getMessage());
+            }
+        } else {
+            System.out.println("⚠ Operación cancelada.");
         }
     }
+
 }

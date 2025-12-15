@@ -2,6 +2,7 @@ package com.crediya.service;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,6 +34,11 @@ public class PrestamoService {
     public void registrarPrestamo(String clienteDoc, String empleadoDoc, double monto, double interes, int cuotas){
         try {
             if (monto <= 0) throw new Exception("El monto debe ser positivo");
+            if (monto < 50000) throw new Exception("El monto mínimo es de $50.000");
+            if (monto > 20000000) throw new Exception("El monto máximo es de $20.000.000 por políticas de riesgo.");
+            if (interes <= 0 || interes > 10) throw new Exception("El interés debe estar entre 0.1% y 10%.");
+            if (cuotas < 1 || cuotas > 72) throw new Exception("El plazo debe ser entre 1 y 72 cuotas.");
+
             var clienteId = clienteRepository.buscarPorDocumentoCliente(clienteDoc);
             var empleadoId = empleadoRepository.buscarPorDocumentoEmpleado(empleadoDoc);
 
@@ -54,8 +60,7 @@ public class PrestamoService {
 
             prestamoRepository.registrarPrestamo(prestamo);
 
-            // guardarEnArchivoTxt(prestamo);
-
+            guardarEnArchivoTxt(prestamo);
             generarTicketPOS(prestamo, clienteId, empleadoId);
 
         } catch (Exception e) {
@@ -158,7 +163,6 @@ public class PrestamoService {
 
          }
     }
-
      
     public void actualizarPrestamo(int id, double nuevoMonto, double nuevoInteres, int nuevasCuotas){
         Prestamo p = prestamoRepository.obtenerPorId(id);
@@ -179,25 +183,55 @@ public class PrestamoService {
         prestamoRepository.actualizarPrestamo(p);
     }
     
-    public void elimarPrestamo(int id){
-        Prestamo p = prestamoRepository.obtenerPorId(id);
-        if(p == null){
-            System.out.println("El prestamo no existe");
-            return;
+    public void eliminarPrestamo(int id) throws Exception {
+    Prestamo p = prestamoRepository.obtenerPorId(id);
+    if (p == null) throw new Exception("El préstamo no existe.");
+
+    // Validación de seguridad:
+    if (p.getEstado() == EstadoPrestamo.PAGADO) {
+        throw new Exception("No se puede eliminar un préstamo que ya fue PAGADO. Queda como histórico.");
+    }
+    // Si tuvieras lógica de abonos parciales, deberías validar que TotalPagado sea 0.
+
+    prestamoRepository.eliminarPrestamo(id);
+    }
+    
+    // Método para guardar en el archivo maestro 
+    private void guardarEnArchivoTxt(Prestamo p) {
+    // Formato: ID;CLIENTE_ID;MONTO;INTERES;CUOTAS;FECHA;ESTADO
+        String linea = String.format("%d;%d;%.2f;%.2f;%d;%s;%s",
+                p.getId(), p.getClienteId(), p.getMonto(), p.getInteres(),
+                p.getCuotas(), p.getFechaInicio(), p.getEstado());
+
+        try (FileWriter fw = new FileWriter("prestamos.txt", true); 
+             PrintWriter pw = new PrintWriter(fw)) {
+            pw.println(linea);
+        } catch (IOException e) {
+            System.err.println("⚠ Advertencia: No se pudo guardar en el archivo de texto: " + e.getMessage());
         }
-
-        prestamoRepository.elimarPrestamo(id);
-
     }
         
-    
+    // Devuelve solo los préstamos pendientes usando Java Streams
+    public List<Prestamo> filtrarPrestamosPendientes() {
+        List<Prestamo> todos = prestamoRepository.listarPrestamos();
+        return todos.stream()
+                    .filter(p -> p.getEstado() == EstadoPrestamo.PENDIENTE)
+                    .toList(); 
+    }
+
+    // Devuelve préstamos mayores a cierto monto
+    public List<Prestamo> filtrarPorMontoMayorA(double montoMinimo) {
+        return prestamoRepository.listarPrestamos().stream()
+                    .filter(p -> p.getMonto() >= montoMinimo)
+                    .toList();
+    }
 
     public List<Prestamo> obtenerTodos(){
         return prestamoRepository.listarPrestamos();
     }
 
     
-
 }
+
     
 

@@ -12,5 +12,5 @@ public interface PrestamoRepository {
     List<Prestamo> obtenerPrestamoPorDocumento(String documento);
     void actualizarEstado(int prestamo_id, String nuevoEstado); 
     void actualizarPrestamo(Prestamo prestamo);
-    void elimarPrestamo(int id);
+    void eliminarPrestamo(int id);
 }

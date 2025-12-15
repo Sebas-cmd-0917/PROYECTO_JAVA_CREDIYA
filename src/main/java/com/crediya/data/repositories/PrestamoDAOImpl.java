@@ -243,7 +243,7 @@ public class PrestamoDAOImpl implements PrestamoRepository {
     }
 
     @Override
-    public void elimarPrestamo(int id){
+    public void eliminarPrestamo(int id){
         String sqlzo = "DELETE FROM prestamos WHERE id = ?";
 
         try (Connection db = ConexionDB.getConnection();
@@ -258,8 +258,13 @@ public class PrestamoDAOImpl implements PrestamoRepository {
                 }else {
                     System.out.println("No se encontro prestamos con el ID: " + id);
                 }
-        } catch(SQLException e){
-            System.out.println("Error al eliminar prestamos");
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1451) {
+                throw new RuntimeException("No se puede eliminar: El préstamo tiene PAGOS registrados. Elimine los pagos primero.");
+            } else {
+                // Cualquier otro error SQL
+                throw new RuntimeException("Error SQL al eliminar: " + e.getMessage());
+            }
         }
     }
 }
