@@ -244,7 +244,7 @@ public class MenuPrestamos {
 
         try {
 
-            List<Prestamo> prestamos = gestorPagosService.obtenerPrestamoPorDocumento(documento);
+            List<Prestamo> prestamos = prestamoService.obtenerPrestamoPorDocumento(documento);
 
             if (prestamos.isEmpty()) {
                 System.out.println("No se encontraron préstamos para el documento: " + documento);

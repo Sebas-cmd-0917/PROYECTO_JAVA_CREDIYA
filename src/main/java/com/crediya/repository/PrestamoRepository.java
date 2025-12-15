@@ -1,7 +1,6 @@
 package com.crediya.repository;
 
 import java.util.List;
-
 import com.crediya.model.Prestamo;
 
 public interface PrestamoRepository {
@@ -13,4 +12,5 @@ public interface PrestamoRepository {
     void actualizarEstado(int prestamo_id, String nuevoEstado); 
     void actualizarPrestamo(Prestamo prestamo);
     void eliminarPrestamo(int id);
+    
 }

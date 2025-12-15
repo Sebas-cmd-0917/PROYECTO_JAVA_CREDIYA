@@ -163,7 +163,7 @@ public boolean modificarPago(Pago pago) {
 
     // En PagoDAOImpl.java
 
-@Override
+    @Override
 public List<Pago> listarPorDocumento(String documento) {
     List<Pago> lista = new ArrayList<>();
     
@@ -195,4 +195,5 @@ public List<Pago> listarPorDocumento(String documento) {
     }
     return lista; // Retornamos la lista (vacía o con datos)
 }
+
 }

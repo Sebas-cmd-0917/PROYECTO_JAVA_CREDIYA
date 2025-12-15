@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import com.crediya.data.repositories.ClienteDAOImpl;
@@ -15,6 +16,7 @@ import com.crediya.data.repositories.PagoDAOImpl;
 import com.crediya.data.repositories.PrestamoDAOImpl;
 import com.crediya.model.Cliente;
 import com.crediya.model.Empleado;
+import com.crediya.model.EstadoDeCuenta;
 import com.crediya.model.EstadoPrestamo;
 import com.crediya.model.Pago;
 import com.crediya.model.Prestamo;
@@ -30,6 +32,7 @@ public class PrestamoService {
     private final ClienteRepository clienteRepository = new ClienteDAOImpl();
     private final EmpleadoRepository empleadoRepository = new EmpleadoDAOImpl();
     private final PagoRepository pagoRepository = new PagoDAOImpl();
+    // private final EstadoDeCuenta reporteEstadoCuenta = new EstadoDeCuenta(null, null, 0, 0, 0);
 
     public void registrarPrestamo(String clienteDoc, String empleadoDoc, double monto, double interes, int cuotas){
         try {
@@ -123,6 +126,86 @@ public class PrestamoService {
             System.out.println("⚠ No se pudo generar el ticket: " + ex.getMessage());
         }
     }
+
+        public List<Prestamo> obtenerPrestamoPorDocumento(String documento) {
+
+        if (documento == null || !documento.matches("\\d{8,}")) {
+            throw new IllegalArgumentException(
+                    "Error: El documento debe contener solo números y tener mínimo 8 dígitos.");
+        }
+        // 1. PRIMERO: Traes la lista "cruda" del repositorio
+        // (Esto es lo único que hacía tu función antes)
+        List<Prestamo> lista = prestamoRepository.obtenerPrestamoPorDocumento(documento);
+
+        // 2. AHORA: Le inyectamos los cálculos a cada préstamo
+        for (Prestamo p : lista) {
+
+            // A. Calcular Deuda Total (Capital + Interés)
+            double interesDecimal = p.getInteres() / 100;
+            double deudaTotal = p.getMonto() + (p.getMonto() * interesDecimal);
+
+            // B. Ir a la tabla PAGOS y sumar lo que ha abonado este préstamo
+            List<Pago> historial = pagoRepository.ListarPagosPorPrestamo(p.getId());
+            double sumaPagos = 0;
+
+            if (historial != null) {
+                for (Pago unPago : historial) {
+                    sumaPagos += unPago.getMonto();
+                }
+            }
+
+            // C. Calcular el Saldo Final
+            double saldoActual = deudaTotal - sumaPagos;
+            // --- LÓGICA DE ESTADOS (NUEVO) ---
+
+            // Paso A: Calcular días transcurridos desde que se creó el préstamo
+            long diasTranscurridos = ChronoUnit.DAYS.between(p.getFechaInicio(), LocalDate.now());
+
+            // Paso B: Determinar el estado
+            String nuevoEstado = "PENDIENTE"; // Estado por defecto
+
+            if (saldoActual <= 0) {
+                nuevoEstado = "PAGADO";
+            } else if (diasTranscurridos > 30) {
+                nuevoEstado = "EN MORA";
+            }
+
+            // D. Guardar los datos en el objeto para mostrarlos
+            p.setTotalPagado(sumaPagos);
+            p.setSaldoPendiente(saldoActual);
+            // p.setEstado(nuevoEstado);
+        }
+
+        // 3. FINALMENTE: Entregas la lista ya calculada y lista para mostrar
+        return lista;
+    }
+    public EstadoDeCuenta generarReporte(int idPrestamo) {
+    // 1. Buscar Datos
+    Prestamo p = prestamoRepository.obtenerPorId(idPrestamo);
+    if (p == null) {
+        return null; // Retornamos null para indicar que no existe
+    }
+    List<Pago> historial = pagoRepository.ListarPagosPorPrestamo(idPrestamo);
+
+    // 2. Cálculos Matemáticos
+    double capital = p.getMonto();
+    double interesDecimal = p.getInteres() / 100;
+    double montoInteres = capital * interesDecimal;
+    double deudaTotalInicial = capital + montoInteres;
+
+    double totalPagado = 0;
+    if (historial != null) {
+        for (Pago pago : historial) {
+            totalPagado += pago.getMonto();
+        }
+    }
+    
+    double saldoFinal = deudaTotalInicial - totalPagado;
+
+    // 3. Empaquetar todo y devolverlo
+    return new EstadoDeCuenta(p, historial, deudaTotalInicial, totalPagado, saldoFinal);
+}
+    
 
   
 

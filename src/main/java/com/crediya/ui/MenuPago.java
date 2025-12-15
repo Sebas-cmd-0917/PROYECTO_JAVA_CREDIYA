@@ -6,6 +6,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 
 import com.crediya.service.GestorPagosService;
+import com.crediya.service.PrestamoService;
 import com.crediya.model.Prestamo;
 import com.crediya.model.EstadoDeCuenta;
 import com.crediya.model.Pago;
@@ -13,7 +14,7 @@ import com.crediya.model.Pago;
 public class MenuPago {
     Scanner scanner = new Scanner(System.in);
     GestorPagosService gestorPagosService = new GestorPagosService();
-    GestorPagosService prestamoService = new GestorPagosService();
+    PrestamoService prestamoService = new PrestamoService();
     MenuPrestamos menuPrestamos = new MenuPrestamos();
 
     public void mostrarMenuPago() {

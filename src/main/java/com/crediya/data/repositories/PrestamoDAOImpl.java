@@ -135,6 +135,7 @@ public class PrestamoDAOImpl implements PrestamoRepository {
         return listaPreDoc;
     }
 
+
     @Override
     public List<Prestamo> listarPorCliente(int clienteId) {
         List<Prestamo> listaModelos = new ArrayList<>();
