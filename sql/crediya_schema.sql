@@ -1,4 +1,5 @@
 CREATE DATABASE crediya_db;
+
 USE crediya_db;
 
 
@@ -76,3 +77,7 @@ CREATE TABLE pagos (
  FOREIGN KEY (prestamo_id) REFERENCES prestamos(id)
 
 );
+
+-- Registrar administrador por defecto
+INSERT INTO empleados (nombre, documento, rol, correo, salario) 
+VALUES ('Super Admin', '00000000', 'ADMIN', 'admin@admin.com', 5000000);
