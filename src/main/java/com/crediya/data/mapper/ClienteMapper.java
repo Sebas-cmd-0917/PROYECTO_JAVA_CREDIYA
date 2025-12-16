@@ -11,8 +11,8 @@ public class ClienteMapper {
             entity.getId(),
             entity.getNombre(), 
             entity.getDocumento(),
-            entity.getTelefono(),
-            entity.getCorreo()
+            entity.getCorreo(),
+            entity.getTelefono()
         );
        
     }

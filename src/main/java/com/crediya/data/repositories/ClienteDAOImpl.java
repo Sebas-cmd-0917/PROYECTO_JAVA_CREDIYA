@@ -95,5 +95,62 @@ public class ClienteDAOImpl implements ClienteRepository {
 
     };
 
+    //modificar cliente
+    @Override
+    public void actualizarCliente(Cliente clienteModel) {
+        String sql = "UPDATE clientes SET nombre = ?, documento = ?, correo = ?, telefono = ? WHERE id = ?";
+
+        // Convertimos el modelo de negocio a entidad para sacar los datos
+        ClienteEntity entity = mapper.toEntity(clienteModel);
+
+        try (Connection db = ConexionDB.getConnection();
+             PreparedStatement stmt = db.prepareStatement(sql)) {
+
+            // Asignamos los nuevos valores
+            stmt.setString(1, entity.getNombre());
+            stmt.setString(2, entity.getDocumento());
+            stmt.setString(3, entity.getCorreo());
+            stmt.setString(4, entity.getTelefono());
+            
+            // EL MÁS IMPORTANTE: El ID para saber a quién actualizar
+            stmt.setInt(5, entity.getId());
+
+            int filasAfectadas = stmt.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("Cliente modificado exitosamente.");
+            } else {
+                System.out.println("No se encontró el cliente con ID: " + entity.getId());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al modificar el cliente.");
+        }
+    }
+
+    @Override
+    public void eliminarCliente(int idCliente) {
+        String sql = "DELETE FROM clientes WHERE id = ?";
+
+        try (Connection db = ConexionDB.getConnection();
+             PreparedStatement stmt = db.prepareStatement(sql)) {
+
+            stmt.setInt(1, idCliente);
+
+            int filasAfectadas = stmt.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("Cliente eliminado exitosamente.");
+            } else {
+                System.out.println("No se pudo eliminar. El cliente con ID " + idCliente + " no existe.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al eliminar el cliente.");
+        }
+    }
+
 
 }

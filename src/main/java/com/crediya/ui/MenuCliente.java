@@ -28,9 +28,11 @@ public class MenuCliente {
                 case 2:
                     System.out.println("Modificar Cliente seleccionado.");
                     // Lógica para modificar cliente
+                    modificarCliente();
                     break;
                 case 3:
                     System.out.println("Eliminar Cliente seleccionado.");
+                    eliminarCliente();
                     // Lógica para eliminar cliente     
                     break;
                 case 4:
@@ -87,11 +89,85 @@ public class MenuCliente {
                 clte.getDocumento(),
                 clte.getCorreo(),
                 clte.getTelefono());      // %,.2f para dinero (con comas y 2 decimales)
-                System.out.println("----------------------------------------------------------------------------------------");
+                
 
 
             }
+            System.out.println("----------------------------------------------------------------------------------------");
         }
+    }
+
+    // --- MENÚ MODIFICAR (CON TRUCO DE ENTER) ---
+    private void modificarCliente() {
+        listarClientes(); // Mostrar lista para ver el ID
+        System.out.print("\nIngrese el ID del cliente a modificar: ");
+        
+        try {
+            int id = Integer.parseInt(scanner.nextLine());
+            Cliente actual = servicioCliente.buscarClientePorId(id);
+
+            if (actual == null) {
+                System.out.println("❌ Cliente no encontrado.");
+                return;
+            }
+
+            System.out.println("--- EDICIÓN (Presione ENTER para mantener el valor actual) ---");
+
+            String nuevoNombre = pedirDato("Nombre (" + actual.getNombre() + "): ", actual.getNombre());
+            String nuevoDoc = pedirDato("Documento (" + actual.getDocumento() + "): ", actual.getDocumento());
+            String nuevoCorreo = pedirDato("Correo (" + actual.getCorreo() + "): ", actual.getCorreo());
+            String nuevoTel = pedirDato("Teléfono (" + actual.getTelefono() + "): ", actual.getTelefono());
+
+            servicioCliente.actualizarCliente(id, nuevoNombre, nuevoDoc, nuevoCorreo, nuevoTel);
+            // El mensaje de éxito ya sale del DAO, o puedes ponerlo aquí
+            
+        } catch (NumberFormatException e) {
+            System.out.println("❌ El ID debe ser un número.");
+        } catch (Exception e) {
+            System.out.println("❌ Error: " + e.getMessage());
+        }
+    }
+
+    // --- MENÚ ELIMINAR (CON CONFIRMACIÓN) ---
+    private void eliminarCliente() {
+        listarClientes();
+        System.out.print("\nIngrese el ID del cliente a eliminar: ");
+
+        try {
+            int id = Integer.parseInt(scanner.nextLine());
+            Cliente aBorrar = servicioCliente.buscarClientePorId(id);
+
+            if (aBorrar == null) {
+                System.out.println("❌ El cliente no existe.");
+                return;
+            }
+
+            // Confirmación de seguridad
+            System.out.println("⚠️ ¿Está seguro de eliminar a " + aBorrar.getNombre() + "?");
+            System.out.print("Escriba 'SI' para confirmar: ");
+            String confirmacion = scanner.nextLine();
+
+            if (confirmacion.equalsIgnoreCase("SI")) {
+                servicioCliente.borrarCliente(id);
+            } else {
+                System.out.println("Operación cancelada.");
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("❌ El ID debe ser un número.");
+        } catch (Exception e) {
+            System.out.println("❌ Error: " + e.getMessage());
+        }
+    }
+
+    // Método Helper para la lógica de "Presionar Enter"
+    private String pedirDato(String mensaje, String valorActual) {
+        System.out.print(mensaje);
+        String entrada = scanner.nextLine();
+        if (entrada.trim().isEmpty()) {
+            return valorActual; // Si no escribe nada, devuelve el viejo
+        }
+        return entrada; // Si escribe algo, devuelve lo nuevo
     }
 }
     
