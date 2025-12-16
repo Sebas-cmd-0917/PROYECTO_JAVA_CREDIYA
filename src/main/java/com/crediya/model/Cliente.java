@@ -1,64 +1,31 @@
 package com.crediya.model;
 
-public class Cliente {
-    private int id;
-    private String nombre;
-    private String documento;
-    private String correo;
+// 1. 'extends' significa que Cliente HEREDA de Persona
+public class Cliente extends Persona {
+    
+    // Solo declaramos lo que NO está en Persona
     private String telefono;
 
-    public Cliente(){
-
+    public Cliente() {
+        super(); // Llama al constructor vacío de Persona
     }
 
     public Cliente(int id, String nombre, String documento, String correo, String telefono) {
-        this.id = id;
-        this.nombre = nombre;
-        this.documento = documento;
-        this.correo = correo;
+        // 2. 'super(...)' envía los datos comunes a la clase padre para que ella los guarde
+        super(id, nombre, documento, correo);
+        
+        // Nosotros solo nos encargamos del dato específico
         this.telefono = telefono;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(String documento) {
-        this.documento = documento;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
+    // Solo necesitamos Getters/Setters de telefono
+    // (Los de nombre, documento, etc., ya los heredamos "gratis")
     
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
     
+    @Override
+    public String toString() {
+        return "Cliente [id=" + id + ", nombre=" + nombre + ", telefono=" + telefono + "]";
+    }
 }
-
