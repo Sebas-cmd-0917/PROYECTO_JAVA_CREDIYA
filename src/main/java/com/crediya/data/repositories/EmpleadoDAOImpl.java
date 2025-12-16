@@ -20,7 +20,7 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
 
     @Override
     public void guardarEmpleado(Empleado empleadoModel) {
-        String sql = "INSERT INTO empleados (nombre, documento, rol, correo, salario) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO  empleados (nombre, documento, rol, correo, salario) VALUES (?, ?, ?, ?, ?)";
 
         // 1. CONVERSIÓN: Usamos el Mapper para volverlo Entidad
         EmpleadoEntity entity = mapper.toEntity(empleadoModel);
@@ -108,5 +108,63 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
         return empleadoEncontrado;
 
     };
+
+    @Override
+    public void modificarEmpleado(Empleado empleadoModel) {
+        // SQL para actualizar todos los campos basándonos en el ID
+        String sql = "UPDATE empleados SET nombre = ?, documento = ?, rol = ?, correo = ?, salario = ? WHERE id = ?";
+
+        // 1. CONVERSIÓN: Modelo -> Entidad (Para mantener la arquitectura)
+        EmpleadoEntity entity = mapper.toEntity(empleadoModel);
+
+        try (Connection conexion = ConexionDB.getConnection();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+            // 2. Asignamos los nuevos valores desde la entidad
+            ps.setString(1, entity.getNombre());
+            ps.setString(2, entity.getDocumento());
+            ps.setString(3, entity.getRol());
+            ps.setString(4, entity.getCorreo());
+            ps.setDouble(5, entity.getSalario());
+            
+            // 3. ¡IMPORTANTE! El ID va al final (para el WHERE)
+            ps.setInt(6, entity.getId());
+
+            int filasAfectadas = ps.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("✅ Empleado modificado exitosamente.");
+            } else {
+                System.out.println("⚠️ No se encontró el empleado con ID: " + entity.getId());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("❌ Error al modificar el empleado.");
+        }
+    }
+
+    @Override
+    public void eliminarEmpleado(int idEmpleado) {
+        String sql = "DELETE FROM empleados WHERE id = ?";
+
+        try (Connection conexion = ConexionDB.getConnection();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+            ps.setInt(1, idEmpleado);
+
+            int filasAfectadas = ps.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("✅ Empleado eliminado exitosamente.");
+            } else {
+                System.out.println("⚠️ No se pudo eliminar. El empleado con ID " + idEmpleado + " no existe.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("❌ Error al eliminar el empleado.");
+        }
+    }
 
 }
