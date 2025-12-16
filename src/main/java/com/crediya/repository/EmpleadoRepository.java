@@ -11,4 +11,5 @@ public interface EmpleadoRepository {
     Empleado buscarPorDocumentoEmpleado(String documento);
     void modificarEmpleado(Empleado empleado);
     void eliminarEmpleado(int idEmpleado);
+    Empleado buscarPorCorreo(String correo);
 }

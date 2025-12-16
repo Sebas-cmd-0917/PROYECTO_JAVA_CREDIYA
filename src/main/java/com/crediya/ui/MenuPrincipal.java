@@ -3,7 +3,17 @@ package com.crediya.ui;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.crediya.model.Empleado;
+
 public class MenuPrincipal {
+
+    // VARIABLE CLAVE: Aquí guardamos quién inició sesión
+    private Empleado usuarioActivo;
+
+    // CONSTRUCTOR: Obligamos a que nos pasen el usuario al crear el menú
+    public MenuPrincipal(Empleado usuario) {
+        this.usuarioActivo = usuario;
+    }
 
     public void mostrarMenu() {
         Scanner scanner = new Scanner(System.in);
@@ -11,8 +21,16 @@ public class MenuPrincipal {
         int opcion = 0;
 
         while (continuar) {
-            System.out.println("--- Menú Principal ---");
-            System.out.println("1. Gestionar Empleados");
+            System.out.println("\n--- Menú Principal ---");
+            System.out.println("Usuario: " + usuarioActivo.getNombre()); // Mostramos quién es
+
+            // Visualmente mostramos el candado (Opcional)
+            if (esAdmin()) {
+                System.out.println("1. Gestionar Empleados (ADMIN)");
+            } else {
+                System.out.println("1. 🔒 Gestionar Empleados (Bloqueado)");
+            }
+
             System.out.println("2. Gestionar Clientes");
             System.out.println("3. Gestionar Préstamos (Registrar y Simular)");
             System.out.println("4. Gestionar Pagos (Registrar Abono)");
@@ -68,5 +86,12 @@ public class MenuPrincipal {
 
         }
     }
-
+    // Método auxiliar para no repetir la validación del correo
+    private boolean esAdmin() {
+        // Opción A: Validar por correo exacto (Como pediste)
+        return usuarioActivo.getCorreo().equalsIgnoreCase("admin@admin.com");
+        
+        // Opción B (Más profesional): Validar por Rol
+        // return usuarioActivo.getRol().equalsIgnoreCase("ADMIN");
+    }
 }

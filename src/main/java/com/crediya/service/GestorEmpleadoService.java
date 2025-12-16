@@ -72,4 +72,17 @@ public class GestorEmpleadoService {
             throw new Exception("El salario no puede ser negativo.");
         }
     }
+
+   public Empleado iniciarSesion(String correo) throws Exception {
+    // 1. Buscamos en la BD usando el método que creamos en el DAO
+    Empleado empleadoEncontrado = empleadoRepo.buscarPorCorreo(correo);
+
+    // 2. Si es null, significa que ese correo no existe
+    if (empleadoEncontrado == null) {
+        throw new Exception("Usuario no encontrado o correo incorrecto.");
+    }
+
+    // 3. Si existe, lo devolvemos al Main para que le de permiso
+    return empleadoEncontrado;
+}
 }
