@@ -208,7 +208,7 @@ public class PrestamoDAOImpl implements PrestamoRepository {
 
             int filas = stmt.executeUpdate();
             if (filas > 0) {
-                System.out.println("✅ Estado del préstamo actualizado a: \" + nuevoEstado");
+                System.out.println("✅ Estado del préstamo actualizado a: " + nuevoEstado);
             } else {
                 System.out.println("⚠ No se encontró el préstamo con ID: " + prestamoId);
             }

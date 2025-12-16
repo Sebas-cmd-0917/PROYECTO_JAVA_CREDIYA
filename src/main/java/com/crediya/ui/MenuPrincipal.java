@@ -47,6 +47,11 @@ public class MenuPrincipal {
                         MenuPago menuPago = new MenuPago();
                         menuPago.mostrarMenuPago();
                         break;
+                    case 5:
+                        System.out.println("Módulo de Reportes seleccionado.");
+                        MenuReportes menuRep = new MenuReportes();
+                        menuRep.mostrarMenu();
+                        break;
                     case 6:
                         System.out.println("Saliendo del sistema. ¡Hasta luego!");
                         scanner.close();
