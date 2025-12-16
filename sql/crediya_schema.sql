@@ -1,3 +1,6 @@
+docker start mysql_container
+docker exec -it mysql_container mysql -h localhost -u root -p
+
 CREATE DATABASE crediya_db;
 
 USE crediya_db;
