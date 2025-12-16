@@ -12,8 +12,10 @@ public class Main {
         GestorEmpleadoService authService = new GestorEmpleadoService();
         
         while (true) {
-            System.out.println("Bienvenido a CrediYa SEYMA");
-            System.out.println("=== INICIO DE SESIÓN ===");
+            System.out.println("Bienvenido a CrediYa MAYSE");
+            System.out.println("--------- INICIO DE SESIÓN ------------");
+            System.out.println("Por favor, ingrese sus credenciales.");
+            System.out.println("---------------------------------------");
             System.out.print("Correo: ");
             String correo = scanner.nextLine();
             

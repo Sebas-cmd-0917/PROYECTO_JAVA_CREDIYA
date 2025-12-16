@@ -9,9 +9,9 @@ public class MenuCliente {
     Scanner scanner = new Scanner(System.in);
     GestorClienteSrvice servicioCliente = new GestorClienteSrvice();
 
-    public void mostarrMenuCliente(){
+    public void mostarrMenuCliente() {
         while (true) {
-             System.out.println("--- Menú Clientes ---");
+            System.out.println("\n===== 📌 MENÚ DE CLIENTES =====");
             System.out.println("1. Crear Cliente");
             System.out.println("2. Modificar Cliente");
             System.out.println("3. Eliminar Cliente");
@@ -33,7 +33,7 @@ public class MenuCliente {
                 case 3:
                     System.out.println("Eliminar Cliente seleccionado.");
                     eliminarCliente();
-                    // Lógica para eliminar cliente     
+                    // Lógica para eliminar cliente
                     break;
                 case 4:
                     System.out.println("\n--- LISTA DE CLIENTES ---");
@@ -45,29 +45,29 @@ public class MenuCliente {
                 default:
                     break;
             }
-            
+
         }
     }
 
-    public void crearCliente(){
-         try {
-                    System.out.println("\n--- REGISTRAR CLIENTE ---");
-                    System.out.print("Nombre: ");
-                    String nom = scanner.nextLine();
-                    System.out.print("Documento: ");
-                    String doc = scanner.nextLine();
-                    System.out.print("Correo: ");
-                    String correo = scanner.nextLine();
-                    System.out.print("Telefono: ");
-                    String telefono = scanner.nextLine();
+    public void crearCliente() {
+        try {
+            System.out.println("\n--- REGISTRAR CLIENTE ---");
+            System.out.print("Nombre: ");
+            String nom = scanner.nextLine();
+            System.out.print("Documento: ");
+            String doc = scanner.nextLine();
+            System.out.print("Correo: ");
+            String correo = scanner.nextLine();
+            System.out.print("Telefono: ");
+            String telefono = scanner.nextLine();
 
-                    Cliente nuevoCliente = new Cliente( 0, nom, doc, correo, telefono);
-                    servicioCliente.registrarCliente(nuevoCliente);
-                    System.out.println("✔ Cliente registrado correctamente.");
-                } catch (Exception e) {
-                    System.out.println("Error al registrar cliente: " + e.getMessage());
-                    scanner.nextLine();
-                }
+            Cliente nuevoCliente = new Cliente(0, nom, doc, correo, telefono);
+            servicioCliente.registrarCliente(nuevoCliente);
+            System.out.println("✔ Cliente registrado correctamente.");
+        } catch (Exception e) {
+            System.out.println("Error al registrar cliente: " + e.getMessage());
+            scanner.nextLine();
+        }
     }
 
     private void listarClientes() {
@@ -75,23 +75,23 @@ public class MenuCliente {
         if (clientes.isEmpty()) {
             System.out.println("No hay clientes registrados.");
         } else {
-            System.out.printf("%-5s %-20s %-15s %-25s %-15s\n", 
-                                          "ID", "NOMBRE", "DOC", "CORREO", "TELEFONO");
-                        
-                        System.out.println("----------------------------------------------------------------------------------------");
+            System.out.printf("%-5s %-20s %-15s %-25s %-15s\n",
+                    "ID", "NOMBRE", "DOC", "CORREO", "TELEFONO");
+
+            System.out.println(
+                    "----------------------------------------------------------------------------------------");
 
             for (Cliente clte : clientes) {
-                System.out.printf("%-5d %-20s %-15s %-25s %-15s\n", 
-                clte.getId(),            // %d para números enteros
-                clte.getNombre(),        // %s para texto
-                clte.getDocumento(),
-                clte.getCorreo(),
-                clte.getTelefono());      // %,.2f para dinero (con comas y 2 decimales)
-                
-
+                System.out.printf("%-5d %-20s %-15s %-25s %-15s\n",
+                        clte.getId(), // %d para números enteros
+                        clte.getNombre(), // %s para texto
+                        clte.getDocumento(),
+                        clte.getCorreo(),
+                        clte.getTelefono()); // %,.2f para dinero (con comas y 2 decimales)
 
             }
-            System.out.println("----------------------------------------------------------------------------------------");
+            System.out.println(
+                    "----------------------------------------------------------------------------------------");
         }
     }
 
@@ -99,7 +99,7 @@ public class MenuCliente {
     private void modificarCliente() {
         listarClientes(); // Mostrar lista para ver el ID
         System.out.print("\nIngrese el ID del cliente a modificar: ");
-        
+
         try {
             int id = Integer.parseInt(scanner.nextLine());
             Cliente actual = servicioCliente.buscarClientePorId(id);
@@ -118,7 +118,7 @@ public class MenuCliente {
 
             servicioCliente.actualizarCliente(id, nuevoNombre, nuevoDoc, nuevoCorreo, nuevoTel);
             // El mensaje de éxito ya sale del DAO, o puedes ponerlo aquí
-            
+
         } catch (NumberFormatException e) {
             System.out.println("❌ El ID debe ser un número.");
         } catch (Exception e) {
@@ -168,4 +168,3 @@ public class MenuCliente {
         return entrada; // Si escribe algo, devuelve lo nuevo
     }
 }
-    

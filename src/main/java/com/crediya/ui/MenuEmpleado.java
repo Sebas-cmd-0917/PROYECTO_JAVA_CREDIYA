@@ -14,7 +14,7 @@ public class MenuEmpleado {
 
     public void mostrarMenuEmpleado() {
         while (true) {
-            System.out.println("--- Menú Empleados ---");
+            System.out.println("\n===== 📌 MENÚ DE EMPLEADOS =====");
             System.out.println("1. Crear Empleado");
             System.out.println("2. Modificar Empleado");
             System.out.println("3. Eliminar Empleado");

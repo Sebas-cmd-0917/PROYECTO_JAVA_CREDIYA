@@ -21,7 +21,10 @@ public class MenuPrincipal {
         int opcion = 0;
 
         while (continuar) {
-            System.out.println("\n--- Menú Principal ---");
+            System.out.println("---------------------------------------------");
+            System.out.println("\n             MENÚ PRINCIPAL                ");
+            System.out.println("---------------------------------------------");
+
             System.out.println("Usuario: " + usuarioActivo.getNombre()); // Mostramos quién es
 
             // Visualmente mostramos el candado (Opcional)
@@ -44,29 +47,45 @@ public class MenuPrincipal {
 
                 switch (opcion) {
                     case 1:
-                        System.out.println("Gestión de Empleados seleccionada.");
-                        MenuEmpleado menuEmp = new MenuEmpleado();
-                        menuEmp.mostrarMenuEmpleado();
-                        break;
+                        if (!esAdmin()) {
+                            System.out.println("❌ Acceso denegado. Módulo exclusivo para ADMIN.");
+                            break;
+                        } else {
+                            System.out.println("Gestión de Empleados seleccionada ADMIN.");
+                            MenuEmpleado menuEmp = new MenuEmpleado();
+                            menuEmp.mostrarMenuEmpleado();
+                            break;
+                        }
+
                     case 2:
+                        System.out.println("--------------------------------");
                         System.out.println("Gestión de Clientes seleccionada.");
+                        System.out.println("--------------------------------");
                         MenuCliente menuCli = new MenuCliente();
                         menuCli.mostarrMenuCliente();
                         break;
                     case 3:
                         // Sebas
+                        System.out.println("--------------------------------");
                         System.out.println("Gestión de Préstamos seleccionada.");
+                        System.out.println("--------------------------------");
                         MenuPrestamos menuPres = new MenuPrestamos();
                         menuPres.mostrarMenuPrestamo();
                         break;
                     case 4:
                         // Sebas
-                        System.out.println("Gestión de Pagos seleccionada.");
+                        System.out.println("--------------------------------");
+                        System.out.println(" Gestión de Pagos seleccionada  ");
+                        System.out.println("--------------------------------");
+
                         MenuPago menuPago = new MenuPago();
                         menuPago.mostrarMenuPago();
                         break;
                     case 5:
+                        System.out.println("--------------------------------");
                         System.out.println("Módulo de Reportes seleccionado.");
+                        System.out.println("--------------------------------");
+
                         MenuReportes menuRep = new MenuReportes();
                         menuRep.mostrarMenu();
                         break;
@@ -75,7 +94,7 @@ public class MenuPrincipal {
                         scanner.close();
                         return;
                     default:
-                        System.out.println("Opción no válida. Por favor, intente de nuevo.");
+                        System.out.println("❌ Opción no válida. Por favor, intente de nuevo.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("❌ Error: Ingresaste una letra o símbolo. Por favor ingresa un NÚMERO.");
@@ -86,11 +105,12 @@ public class MenuPrincipal {
 
         }
     }
+
     // Método auxiliar para no repetir la validación del correo
     private boolean esAdmin() {
         // Opción A: Validar por correo exacto (Como pediste)
         return usuarioActivo.getCorreo().equalsIgnoreCase("admin@admin.com");
-        
+
         // Opción B (Más profesional): Validar por Rol
         // return usuarioActivo.getRol().equalsIgnoreCase("ADMIN");
     }
