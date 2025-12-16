@@ -1,12 +1,10 @@
 package com.crediya.service;
 
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.IOException;
 import java.util.List;
 
 import com.crediya.data.repositories.ClienteDAOImpl;
 import com.crediya.model.Cliente;
+import com.crediya.util.ArchivoTextoUtil;
 import com.crediya.util.Validador;
 
 public class GestorClienteSrvice { 
@@ -25,7 +23,18 @@ public class GestorClienteSrvice {
 
         // 3. Persistencia
         clienteRepo.guardarCliente(cliente);
-        guardarEnArchivoTxt(cliente);
+        
+        // 3.1 --- GUARDADO BONITO EN TXT UNIFICADO ---
+        String[] etiquetas = {"ID (AUTO)", "NOMBRE", "DOCUMENTO", "CORREO", "TELÉFONO"};
+        String[] valores = {
+            String.valueOf(cliente.getId()), // Probablemente sea 0 hasta que la BD lo asigne
+            cliente.getNombre(),
+            cliente.getDocumento(),
+            cliente.getCorreo(),
+            cliente.getTelefono()
+        };
+
+        ArchivoTextoUtil.guardarRegistroBonito("CLIENTE", etiquetas, valores);
     }
 
     public void actualizarCliente(int id, String nombre, String doc, String correo, String tel) throws Exception {
@@ -63,12 +72,4 @@ public class GestorClienteSrvice {
             throw new Exception("❌ Teléfono inválido (7-12 dígitos numéricos).");
     }
 
-    private void guardarEnArchivoTxt(Cliente c) {
-        try (FileWriter fw = new FileWriter("clientes.txt", true);
-             PrintWriter pw = new PrintWriter(fw)) {
-            pw.println(c.getId() + ";" + c.getNombre() + ";" + c.getDocumento() + ";" + c.getCorreo() + ";" + c.getTelefono());
-        } catch (IOException e) {
-            System.out.println("⚠ No se pudo guardar en TXT.");
-        }
-    }
 }

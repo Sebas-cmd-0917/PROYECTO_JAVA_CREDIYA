@@ -3,25 +3,25 @@
      Nit: 900.123.456-7         
    Calle Falsa 123, Ciudad      
 ================================
-FECHA: 2025-12-15 17:35:48
-TICKET REF: 20251215_173548
+FECHA: 2025-12-15 21:46:07
+TICKET REF: 20251215_214607
 --------------------------------
 DATOS DEL CLIENTE
-NOMBRE: Victor Samur
-DOC:    123456789
+NOMBRE: Joan Jaimes
+DOC:    1005330744
 --------------------------------
 ATENDIDO POR:
-ASESOR: Laura Albarracin
+ASESOR: Joan Jaimes
 ================================
       DETALLE DEL CREDITO       
 --------------------------------
-MONTO PRESTADO:   $1,000,000.00
-TASA INTERES:           2.00%
-PLAZO (MESES):            15
+MONTO PRESTADO:   $2,000,000.00
+TASA INTERES:           3.00%
+PLAZO (MESES):            10
 --------------------------------
-VALOR CUOTA:      $ 68,000.00
+VALOR CUOTA:      $206,000.00
 --------------------------------
-TOTAL A PAGAR:    $1,020,000.00
+TOTAL A PAGAR:    $2,060,000.00
 ================================
    GRACIAS POR SU CONFIANZA     
      CONSERVE ESTE TICKET       
