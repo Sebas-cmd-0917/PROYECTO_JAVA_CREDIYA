@@ -1,12 +1,10 @@
 package com.crediya.service;
 
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.IOException;
 import java.util.List;
 
 import com.crediya.data.repositories.EmpleadoDAOImpl;
 import com.crediya.model.Empleado;
+import com.crediya.util.ArchivoTextoUtil;
 import com.crediya.util.Validador;
 
 public class GestorEmpleadoService {
@@ -22,7 +20,20 @@ public class GestorEmpleadoService {
         }
 
         empleadoRepo.guardarEmpleado(empleado);
-        guardarEnArchivoTxt(empleado);
+
+        // 3. --- GUARDADO BONITO EN TXT UNIFICADO ---
+        String[] etiquetas = {"ID (AUTO)", "NOMBRE", "DOCUMENTO", "ROL", "CORREO", "SALARIO"};
+        String[] valores = {
+            String.valueOf(empleado.getId()),
+            empleado.getNombre(),
+            empleado.getDocumento(),
+            empleado.getRol(),
+            empleado.getCorreo(),
+            String.format("$%,.2f", empleado.getSalario()) // Formato moneda para que se vea bien
+        };
+
+        ArchivoTextoUtil.guardarRegistroBonito("EMPLEADO", etiquetas, valores);
+        
     }
 
     public void actualizarEmpleado(int id, String nombre, String doc, String rol, String correo, double salario) throws Exception {
@@ -61,17 +72,6 @@ public class GestorEmpleadoService {
     }
 
 
-
-
-
-    private void guardarEnArchivoTxt(Empleado e) {
-        try (FileWriter fw = new FileWriter("empleados.txt", true);
-             PrintWriter pw = new PrintWriter(fw)) {
-            pw.println(e.getId() + ";" + e.getNombre() + ";" + e.getDocumento() + ";" + e.getRol() + ";" + e.getCorreo() + ";" + e.getSalario());
-        } catch (IOException ex) {
-            System.out.println("⚠ Error guardando TXT.");
-        }
-    }
 
 
    public Empleado iniciarSesion(String correo) throws Exception {
