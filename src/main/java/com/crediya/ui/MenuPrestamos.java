@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 // Importaciones necesarias para buscar
 import com.crediya.data.repositories.ClienteDAOImpl;
-import com.crediya.data.repositories.EmpleadoDAOImpl; 
+import com.crediya.data.repositories.EmpleadoDAOImpl;
 import com.crediya.model.Cliente;
 import com.crediya.model.Empleado;
 import com.crediya.repository.ClienteRepository;
@@ -85,7 +85,7 @@ public class MenuPrestamos {
 
             // --- BUSCAR CLIENTE ---
             System.out.print("Ingrese Documento del Cliente: ");
-            String docCliente = scanner.next(); 
+            String docCliente = scanner.next();
             scanner.nextLine(); // Limpiar buffer por si acaso usamos nextLine luego
 
             Cliente clienteEncontrado = clienteRepository.buscarPorDocumentoCliente(docCliente);
@@ -96,7 +96,7 @@ public class MenuPrestamos {
                 System.out.println("   1. Registrar nuevo cliente ahora");
                 System.out.println("   0. Cancelar y volver");
                 System.out.print("   Seleccione una opción: ");
-                
+
                 int opcionSub = scanner.nextInt();
                 scanner.nextLine(); // Limpiar buffer
 
@@ -104,11 +104,11 @@ public class MenuPrestamos {
                     // Llamamos al registro del otro menú
                     MenuCliente menuCli = new MenuCliente();
                     menuCli.crearCliente();
-                    
+
                     // Volvemos a intentar el préstamo desde el inicio (Recursividad)
                     System.out.println("\n🔄 Retomando préstamo...");
-                    registrarPrestamo(); 
-                    return; 
+                    registrarPrestamo();
+                    return;
                 } else {
                     System.out.println("Registro cancelado.");
                     return;
@@ -117,7 +117,6 @@ public class MenuPrestamos {
 
             // Si pasa, mostramos el nombre
             System.out.println("✅ Cliente: " + clienteEncontrado.getNombre().toUpperCase());
-
 
             // --- BUSCAR EMPLEADO ---
             System.out.print("Ingrese Documento del Empleado: ");
@@ -133,7 +132,6 @@ public class MenuPrestamos {
 
             System.out.println("✅ Empleado: " + empleadoEncontrado.getNombre().toUpperCase());
 
-
             // --- PEDIR EL RESTO DE DATOS ---
             // Usamos tus métodos de lectura para evitar errores
             System.out.print("Monto: ");
@@ -144,7 +142,7 @@ public class MenuPrestamos {
 
             System.out.print("Cuotas: ");
             int cuotas = scanner.nextInt();
-            scanner.nextLine(); 
+            scanner.nextLine();
 
             // Registramos
             prestamoService.registrarPrestamo(docCliente, docEmpleado, monto, interes, cuotas);
@@ -156,11 +154,17 @@ public class MenuPrestamos {
         }
     }
 
-
     // listar prestammos
 
     public void listarPrestamos() {
-        System.out.println("\n--- Lista de Préstamos ---");
+
+        System.out.println(
+                "---------------------------------------------------------------------------------------------------------------------------");
+        System.out.println(
+                "\n---                                         Lista de Préstamos.                                                       ---");
+        System.out.println(
+                "---------------------------------------------------------------------------------------------------------------------------");
+
         List<Prestamo> lista = prestamoService.obtenerTodos();
         if (lista.isEmpty()) {
             System.out.println("No hay préstamos registrados.");
@@ -168,28 +172,26 @@ public class MenuPrestamos {
             // 1. IMPRIMIR ENCABEZADOS DE LA TABLA
             // %-5s = Columna de Texto alineado a la Izquierda de 5 espacios
             // %-20s = Columna de Texto alineado a la Izquierda de 20 espacios
-            System.out.printf("%-5s %-10s %-15s %-10s %-10s %-10s %-10s %15s\n",
-                    "#", "ID_CLI", "NOMBRE CLIENTE", "NUM_DOC", "$ MONTO", "INTERÉS", "CUOTAS", "NOMBRE_EMPLEADO");
+            System.out.printf("%-5s %-10s %-15s %-10s %-15s %-10s %-10s %-15s\n",
+                    "#", "ID_CLI", "NOMBRE CLIENTE", "NUM_DOC", "$ MONTO", "INTERÉS", "CUOTAS", "EMPLEADO");
 
             System.out.println(
-                    "---------------------------------------------------------------------------------------------------------------------------");
+                    "-------------------------------------------------------------------------------------------------------------");
 
-            // 2. IMPRIMIR CADA FILA CON EL MISMO FORMATO
+            // 2. FILAS (Aquí está la corrección clave)
             for (Prestamo p : lista) {
-                System.out.printf("%-5s %-10s %-15s %-10s %-10s %-10s %-10s %10s\n",
-                        p.getId(), // %d para números enteros
-                        p.getClienteId(),
-                        p.getNombreCliente(),
-                        p.getNumDocumento(),
-                        p.getMonto(),
-                        p.getInteres(),
-                        p.getCuotas(), // %,.2f para dinero (con comas y 2 decimales)
-                        p.getNombreEmpleado()); // %s para texto
-
+                System.out.printf("%-5d %-10d %-15s %-10s $%,-14.0f %-10.1f %-10d %-15s\n",
+                        p.getId(), // %d para enteros (ID)
+                        p.getClienteId(), // %d para enteros
+                        p.getNombreCliente(), // %s para texto
+                        p.getNumDocumento(), // %s para texto
+                        p.getMonto(), // <--- ¡CORREGIDO! Usamos $%,-14.0f para dinero
+                        p.getInteres(), // %.1f para 1 decimal
+                        p.getCuotas(), // %d para enteros
+                        p.getNombreEmpleado());// %s para texto
             }
             System.out.println(
-                    "---------------------------------------------------------------------------------------------------------------------------");
-
+                    "-------------------------------------------------------------------------------------------------------------");
         }
     }
 
@@ -209,17 +211,16 @@ public class MenuPrestamos {
             }
             System.out.println("✅ Cliente: " + cliente.getNombre().toUpperCase());
 
-
             System.out.print("Ingrese Documento del Empleado: ");
             String docEmpleado = scanner.next();
-            
+
             Empleado empleado = empleadoRepository.buscarPorDocumentoEmpleado(docEmpleado);
             if (empleado == null) {
                 System.out.println("❌ Empleado no encontrado.");
                 return;
             }
             System.out.println("✅ Atendido por: " + empleado.getNombre().toUpperCase());
-            
+
             System.out.print("Monto: ");
             double monto = scanner.nextDouble();
 
@@ -299,12 +300,11 @@ public class MenuPrestamos {
 
     }
 
-    private void modificarPrestamo(){
+    private void modificarPrestamo() {
         System.out.println("\n--- MODIFICAR PRÉSTAMO ---");
         listarPrestamos();
         System.out.print("Ingrese el ID del préstamo a editar: ");
         int id = scanner.nextInt();
-
 
         System.out.println("Nuevo monto: ");
         double monto = scanner.nextDouble();
@@ -322,7 +322,7 @@ public class MenuPrestamos {
     private void eliminarPrestamo() {
         System.out.println("\n--- ELIMINAR PRÉSTAMO ---");
         listarPrestamos();
-        
+
         // 1. Pedimos el dato al usuario
         System.out.print("Ingrese el ID del préstamo a eliminar: ");
         int id = scanner.nextInt();
@@ -335,10 +335,10 @@ public class MenuPrestamos {
         if (confirmacion.equalsIgnoreCase("S")) {
             try {
                 // 3. AQUÍ LLAMAMOS A TU SERVICIO (La conexión mágica)
-                // Nota: Tu servicio tiene un pequeño error de tipeo "elimar", 
+                // Nota: Tu servicio tiene un pequeño error de tipeo "elimar",
                 // así que lo llamamos tal cual lo tienes escrito allá.
-                prestamoService.eliminarPrestamo(id); 
-                
+                prestamoService.eliminarPrestamo(id);
+
                 System.out.println("✅ Préstamo eliminado correctamente.");
             } catch (Exception e) {
                 // Si el servicio dice "No se puede eliminar porque ya está pagado", cae aquí.
