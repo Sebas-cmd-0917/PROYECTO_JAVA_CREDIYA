@@ -11,13 +11,13 @@ public class MenuCliente {
 
     public void mostarrMenuCliente() {
         while (true) {
-            System.out.println("\n===== 📌 MENÚ DE CLIENTES =====");
-            System.out.println("1. Crear Cliente");
-            System.out.println("2. Modificar Cliente");
-            System.out.println("3. Eliminar Cliente");
-            System.out.println("4. Listar Clientes");
-            System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.println("\n===== 👥 MENÚ DE CLIENTES =====");
+            System.out.println("1. 👤 Registrar Cliente");
+            System.out.println("2. ✏️  Modificar Cliente");
+            System.out.println("3. 🗑️  Eliminar Cliente");
+            System.out.println("4. 📋 Listar Clientes");
+            System.out.println("0. 🔙 Volver");
+            System.out.print("👉 Seleccione una opción: ");
             int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
 

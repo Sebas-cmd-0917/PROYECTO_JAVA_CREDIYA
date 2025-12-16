@@ -20,15 +20,15 @@ public class MenuPago {
     public void mostrarMenuPago() {
 
         while (true) {
-            System.out.println("\n===== 📌 MENÚ DE PAGOS =====");
-            System.out.println("1. Registrar pago");
-            System.out.println("2. Modificar un pago");
-            System.out.println("3. Eliminar un pago");
-            System.out.println("4. Ver historial de pagos");
-            System.out.println("5. Ver estado de cuenta");
-            System.out.println("6. Ver prestamos por documento");
-            System.out.println("0. Volver");
-            System.out.print("Seleccione una opción: ");
+            System.out.println("\n===== 💰 MENÚ DE PAGOS =====");
+            System.out.println("1. 💸 Registrar Pago");
+            System.out.println("2. ✏️  Modificar Pago");
+            System.out.println("3. 🗑️  Eliminar Pago");
+            System.out.println("4. 📜 Ver Historial de Pagos");
+            System.out.println("5. 📊 Ver Estado de Cuenta");
+            System.out.println("6. 🔎 Ver Préstamos por Documento");
+            System.out.println("0. 🔙 Volver");
+            System.out.print("👉 Seleccione una opción: ");
             try {
                 int opcion = scanner.nextInt();
                 scanner.nextLine(); // limpiar buffer

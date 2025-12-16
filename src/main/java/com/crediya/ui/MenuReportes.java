@@ -14,13 +14,12 @@ public class MenuReportes {
         int opcion = -1;
         while (opcion != 0) {
             System.out.println("\n===== 📊 MÓDULO DE REPORTES E INDICADORES =====");
-            System.out.println("1. Reporte de Préstamos ACTIVOS (Pendientes)");
-            System.out.println("2. Reporte de Clientes en MORA (Riesgo)");
-            System.out.println("3. Histórico de Préstamos PAGADOS");
-            System.out.println("4. Resumen Financiero General");
-            System.out.println("0. Volver");
-            System.out.print("Seleccione una opción: ");
-
+            System.out.println("1. ⏳ Reporte de Préstamos ACTIVOS (Pendientes)");
+            System.out.println("2. 🚨 Reporte de Clientes en MORA (Riesgo)");
+            System.out.println("3. ✅ Histórico de Préstamos PAGADOS");
+            System.out.println("4. 📈 Resumen Financiero General");
+            System.out.println("0. 🔙 Volver al Menú Principal");
+            System.out.print("👉 Seleccione una opción: ");
             try {
                 opcion = Integer.parseInt(scanner.nextLine());
 

@@ -14,13 +14,13 @@ public class MenuEmpleado {
 
     public void mostrarMenuEmpleado() {
         while (true) {
-            System.out.println("\n===== 📌 MENÚ DE EMPLEADOS =====");
-            System.out.println("1. Crear Empleado");
-            System.out.println("2. Modificar Empleado");
-            System.out.println("3. Eliminar Empleado");
-            System.out.println("4. Listar Empleados");
-            System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.println("\n===== 👔 MENÚ DE EMPLEADOS =====");
+            System.out.println("1. 🆕 Registrar Empleado");
+            System.out.println("2. ✏️  Modificar Empleado");
+            System.out.println("3. 🗑️  Eliminar Empleado");
+            System.out.println("4. 📋 Listar Empleados");
+            System.out.println("0. 🔙 Volver");
+            System.out.print("👉 Seleccione una opción: ");
             int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
 

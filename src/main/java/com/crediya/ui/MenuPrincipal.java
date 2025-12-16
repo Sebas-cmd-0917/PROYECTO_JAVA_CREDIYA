@@ -21,25 +21,23 @@ public class MenuPrincipal {
         int opcion = 0;
 
         while (continuar) {
-            System.out.println("---------------------------------------------");
-            System.out.println("\n             MENÚ PRINCIPAL                ");
-            System.out.println("---------------------------------------------");
-
-            System.out.println("Usuario: " + usuarioActivo.getNombre()); // Mostramos quién es
-
+            System.out.println("\n===== 🏦 MENÚ PRINCIPAL - CREDIYA =====");
+            System.out.println("👤 Usuario: " + usuarioActivo.getNombre() + " | Rol: " + usuarioActivo.getRol());
+            System.out.println("---------------------------------------");
             // Visualmente mostramos el candado (Opcional)
             if (esAdmin()) {
-                System.out.println("1. Gestionar Empleados (ADMIN)");
+                System.out.println("1. 👔 Gestionar Empleados (ADMIN)");
             } else {
                 System.out.println("1. 🔒 Gestionar Empleados (Bloqueado)");
             }
 
-            System.out.println("2. Gestionar Clientes");
-            System.out.println("3. Gestionar Préstamos (Registrar y Simular)");
-            System.out.println("4. Gestionar Pagos (Registrar Abono)");
-            System.out.println("5. Reportes");
-            System.out.println("6. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.println("2. 👥 Gestionar Clientes");
+            System.out.println("3. 💰 Gestionar Préstamos");
+            System.out.println("4. 💸 Gestionar Pagos");
+            System.out.println("5. 📊 Reportes e Indicadores");
+            System.out.println("6. 🚪 Salir del Sistema");
+            System.out.println("---------------------------------------");
+            System.out.print("👉 Seleccione una opción: ");
 
             try {
                 opcion = scanner.nextInt();

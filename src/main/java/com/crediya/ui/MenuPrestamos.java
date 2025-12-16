@@ -185,7 +185,7 @@ public class MenuPrestamos {
                         p.getClienteId(), // %d para enteros
                         p.getNombreCliente(), // %s para texto
                         p.getNumDocumento(), // %s para texto
-                        p.getMonto(), // <--- ¡CORREGIDO! Usamos $%,-14.0f para dinero
+                        p.getMonto(), //  Usamos $%,-14.0f para dinero
                         p.getInteres(), // %.1f para 1 decimal
                         p.getCuotas(), // %d para enteros
                         p.getNombreEmpleado());// %s para texto
