@@ -21,12 +21,13 @@ public class GestorClienteSrvice {
 
         if (existente != null) {
             throw new Exception("Error: Ya existe un cliente registrado con el documento " + cliente.getDocumento());
-            
+
         }
 
         // 3. VALIDACIÓN DE NOMBRE
-        if (cliente.getNombre() == null || cliente.getNombre().trim().isEmpty()) {
-            throw new Exception("El nombre del cliente es obligatorio.");
+        if (cliente.getNombre() == null || !cliente.getNombre().matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$")) {
+            throw new Exception("El nombre no es válido (no use números ni símbolos).");
+
         }
 
         if (cliente.getNombre().length() < 3) {
