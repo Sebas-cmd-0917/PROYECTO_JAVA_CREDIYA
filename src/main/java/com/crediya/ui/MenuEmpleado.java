@@ -19,7 +19,7 @@ public class MenuEmpleado {
             System.out.println("2. Modificar Empleado");
             System.out.println("3. Eliminar Empleado");
             System.out.println("4. Listar Empleados");
-            System.out.println("5. Salir");
+            System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
@@ -43,7 +43,7 @@ public class MenuEmpleado {
                         listarEmpleados();
                         break;
 
-                    case 5:
+                    case 0:
                         System.out.println("Saliendo del menu empleados!");
                         return;
                     default:

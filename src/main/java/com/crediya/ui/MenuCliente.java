@@ -16,7 +16,7 @@ public class MenuCliente {
             System.out.println("2. Modificar Cliente");
             System.out.println("3. Eliminar Cliente");
             System.out.println("4. Listar Clientes");
-            System.out.println("5. Salir");
+            System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
@@ -39,7 +39,7 @@ public class MenuCliente {
                     System.out.println("\n--- LISTA DE CLIENTES ---");
                     listarClientes();
                     break;
-                case 5:
+                case 0:
                     System.out.println("Saliendo del menu clientes!");
                     return;
                 default:

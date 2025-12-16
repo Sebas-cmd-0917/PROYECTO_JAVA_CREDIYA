@@ -301,6 +301,7 @@ public class MenuPrestamos {
 
     private void modificarPrestamo(){
         System.out.println("\n--- MODIFICAR PRÉSTAMO ---");
+        listarPrestamos();
         System.out.print("Ingrese el ID del préstamo a editar: ");
         int id = scanner.nextInt();
 
@@ -320,6 +321,7 @@ public class MenuPrestamos {
     // ESTE ES EL MÉTODO "MESERO" (UI)
     private void eliminarPrestamo() {
         System.out.println("\n--- ELIMINAR PRÉSTAMO ---");
+        listarPrestamos();
         
         // 1. Pedimos el dato al usuario
         System.out.print("Ingrese el ID del préstamo a eliminar: ");
