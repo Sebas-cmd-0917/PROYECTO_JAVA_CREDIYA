@@ -44,10 +44,16 @@ public class MenuPrincipal {
 
                 switch (opcion) {
                     case 1:
-                        System.out.println("Gestión de Empleados seleccionada.");
-                        MenuEmpleado menuEmp = new MenuEmpleado();
-                        menuEmp.mostrarMenuEmpleado();
-                        break;
+                        if (!esAdmin()) {
+                            System.out.println("❌ Acceso denegado. Módulo exclusivo para ADMIN.");
+                            break;
+                        } else {
+                            System.out.println("Gestión de Empleados seleccionada ADMIN.");
+                            MenuEmpleado menuEmp = new MenuEmpleado();
+                            menuEmp.mostrarMenuEmpleado();
+                            break;
+                        }
+
                     case 2:
                         System.out.println("Gestión de Clientes seleccionada.");
                         MenuCliente menuCli = new MenuCliente();
@@ -86,11 +92,12 @@ public class MenuPrincipal {
 
         }
     }
+
     // Método auxiliar para no repetir la validación del correo
     private boolean esAdmin() {
         // Opción A: Validar por correo exacto (Como pediste)
         return usuarioActivo.getCorreo().equalsIgnoreCase("admin@admin.com");
-        
+
         // Opción B (Más profesional): Validar por Rol
         // return usuarioActivo.getRol().equalsIgnoreCase("ADMIN");
     }
