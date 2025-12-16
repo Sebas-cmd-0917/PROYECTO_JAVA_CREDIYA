@@ -2,7 +2,7 @@ package com.crediya.data.repositories;
 
 import com.crediya.config.ConexionDB; // O ConexionDB según como lo llamó tu compañero
 import com.crediya.data.entities.EmpleadoEntity; // Importamos la Entidad
-import com.crediya.data.mapper.EmpeladoMapper;   // Importamos el Mapper
+import com.crediya.data.mapper.EmpeladoMapper; // Importamos el Mapper
 import com.crediya.model.Empleado;
 import com.crediya.repository.EmpleadoRepository; // O EmpleadoRepository
 
@@ -26,7 +26,7 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
         EmpleadoEntity entity = mapper.toEntity(empleadoModel);
 
         try (Connection conexion = ConexionDB.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+                PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             // 2. Usamos los datos de la ENTITY (no del modelo directo)
             ps.setString(1, entity.getNombre());
@@ -45,12 +45,12 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
 
     @Override
     public List<Empleado> listarTodosEmpleados() {
-        List<Empleado> listaEmpleados= new ArrayList<>();
+        List<Empleado> listaEmpleados = new ArrayList<>();
         String sql = "SELECT * FROM empleados";
 
         try (Connection conexion = ConexionDB.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conexion.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 // A. Leemos datos de SQL y creamos la ENTITY
@@ -65,7 +65,7 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
                 // B. CONVERSIÓN: Entity -> Model (Usando el Mapper)
                 Empleado modelo = mapper.toDomain(entity);
                 // Asegúrate de pasar el ID si toDomain no lo hizo
-                modelo.setId(entity.getId()); 
+                modelo.setId(entity.getId());
 
                 // C. Agregamos a la lista de negocio
                 listaEmpleados.add(modelo);
@@ -77,30 +77,30 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
         return listaEmpleados;
     }
 
-    public Empleado buscarPorDocumentoEmpleado(String documento){
+    public Empleado buscarPorDocumentoEmpleado(String documento) {
         String sqlzo = "SELECT id, nombre, documento, rol, correo, salario FROM empleados WHERE documento = ?";
         Empleado empleadoEncontrado = null;
 
         try (Connection db = ConexionDB.getConnection();
-            PreparedStatement stmt = db.prepareStatement(sqlzo)){
-                
-                stmt.setString(1, documento);
-                ResultSet result = stmt.executeQuery();
+                PreparedStatement stmt = db.prepareStatement(sqlzo)) {
 
-                if (result.next()){
-                    EmpleadoEntity entity = new EmpleadoEntity();
-                    entity.setId(result.getInt("id"));
-                    entity.setNombre(result.getString("nombre"));
-                    entity.setDocumento(result.getString("documento"));
-                    entity.setRol(result.getString("rol"));
-                    entity.setCorreo(result.getString("correo"));
-                    entity.setSalario(result.getDouble("salario"));
-                    
-                    empleadoEncontrado = mapper.toDomain(entity);
-                    
-                }else{
-                    System.out.println("Empleado no encontrado ");
-                }
+            stmt.setString(1, documento);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next()) {
+                EmpleadoEntity entity = new EmpleadoEntity();
+                entity.setId(result.getInt("id"));
+                entity.setNombre(result.getString("nombre"));
+                entity.setDocumento(result.getString("documento"));
+                entity.setRol(result.getString("rol"));
+                entity.setCorreo(result.getString("correo"));
+                entity.setSalario(result.getDouble("salario"));
+
+                empleadoEncontrado = mapper.toDomain(entity);
+
+            } else {
+                System.out.println("Empleado no encontrado ");
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -118,7 +118,7 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
         EmpleadoEntity entity = mapper.toEntity(empleadoModel);
 
         try (Connection conexion = ConexionDB.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+                PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             // 2. Asignamos los nuevos valores desde la entidad
             ps.setString(1, entity.getNombre());
@@ -126,7 +126,7 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
             ps.setString(3, entity.getRol());
             ps.setString(4, entity.getCorreo());
             ps.setDouble(5, entity.getSalario());
-            
+
             // 3. ¡IMPORTANTE! El ID va al final (para el WHERE)
             ps.setInt(6, entity.getId());
 
@@ -149,7 +149,7 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
         String sql = "DELETE FROM empleados WHERE id = ?";
 
         try (Connection conexion = ConexionDB.getConnection();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+                PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setInt(1, idEmpleado);
 
@@ -165,6 +165,33 @@ public class EmpleadoDAOImpl implements EmpleadoRepository {
             e.printStackTrace();
             System.out.println("❌ Error al eliminar el empleado.");
         }
+    }
+
+    // Se crea para validar el correo del empleado
+    @Override
+    public Empleado buscarPorCorreo(String correo) {
+        String sql = "SELECT * FROM empleados WHERE correo = ?";
+        try (Connection db = ConexionDB.getConnection();
+                PreparedStatement stmt = db.prepareStatement(sql)) {
+
+            stmt.setString(1, correo);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                EmpleadoEntity entity = new EmpleadoEntity();
+                entity.setId(rs.getInt("id"));
+                entity.setNombre(rs.getString("nombre"));
+                entity.setDocumento(rs.getString("documento"));
+                entity.setRol(rs.getString("rol")); // <--- ¡ESTO ES LO IMPORTANTE!
+                entity.setCorreo(rs.getString("correo"));
+                entity.setSalario(rs.getDouble("salario"));
+
+                return mapper.toDomain(entity);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Si no lo encuentra, retorna null
     }
 
 }

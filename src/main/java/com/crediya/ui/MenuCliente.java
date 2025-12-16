@@ -41,8 +41,6 @@ public class MenuCliente {
                     break;
                 case 5:
                     System.out.println("Saliendo del menu clientes!");
-                    MenuPrincipal miMenu = new MenuPrincipal();
-                    miMenu.mostrarMenu();
                     return;
                 default:
                     break;

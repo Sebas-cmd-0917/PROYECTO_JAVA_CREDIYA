@@ -32,14 +32,20 @@ public class GestorEmpleadoService {
         empleadoRepo.modificarEmpleado(e);
     }
 
-    public void borrarEmpleado(int id) throws Exception {
-        if (id <= 0) throw new Exception("❌ ID inválido.");
-        empleadoRepo.eliminarEmpleado(id);
-    }
 
     public List<Empleado> obtenerTodos() {
         return empleadoRepo.listarTodosEmpleados();
     }
+
+
+    // --- ELIMINAR ---
+    public void borrarEmpleado(int id) throws Exception {
+        if (id <= 0) throw new Exception("ID inválido.");
+        // Aquí podrías validar: si el empleado tiene préstamos asignados, no borrarlo.
+        empleadoRepo.eliminarEmpleado(id);
+    }
+
+
 
     public Empleado buscarPorId(int id) {
         return empleadoRepo.listarTodosEmpleados().stream()
@@ -54,6 +60,10 @@ public class GestorEmpleadoService {
         if (e.getSalario() < 0) throw new Exception("❌ El salario no puede ser negativo.");
     }
 
+
+
+
+
     private void guardarEnArchivoTxt(Empleado e) {
         try (FileWriter fw = new FileWriter("empleados.txt", true);
              PrintWriter pw = new PrintWriter(fw)) {
@@ -62,4 +72,18 @@ public class GestorEmpleadoService {
             System.out.println("⚠ Error guardando TXT.");
         }
     }
+
+
+   public Empleado iniciarSesion(String correo) throws Exception {
+    // 1. Buscamos en la BD usando el método que creamos en el DAO
+    Empleado empleadoEncontrado = empleadoRepo.buscarPorCorreo(correo);
+
+    // 2. Si es null, significa que ese correo no existe
+    if (empleadoEncontrado == null) {
+        throw new Exception("Usuario no encontrado o correo incorrecto.");
+    }
+
+    // 3. Si existe, lo devolvemos al Main para que le de permiso
+    return empleadoEncontrado;
+}
 }

@@ -45,8 +45,6 @@ public class MenuEmpleado {
 
                     case 5:
                         System.out.println("Saliendo del menu empleados!");
-                        MenuPrincipal miMenu = new MenuPrincipal();
-                        miMenu.mostrarMenu();
                         return;
                     default:
                         System.out.println("Opción no válida. Por favor, intente de nuevo.");
