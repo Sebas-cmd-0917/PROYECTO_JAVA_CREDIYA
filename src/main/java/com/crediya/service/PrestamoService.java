@@ -37,25 +37,37 @@ public class PrestamoService {
     public void registrarPrestamo(String clienteDoc, String empleadoDoc, double monto, double interes, int cuotas) {
         try {
             // 1. Validaciones de Formato (Documentos)
-            if (!Validador.esNumericoYLongitud(clienteDoc, 5, 15)) 
+            if (!Validador.esNumericoYLongitud(clienteDoc, 5, 15))
                 throw new Exception("❌ El documento del cliente no es válido.");
-            if (!Validador.esNumericoYLongitud(empleadoDoc, 5, 15)) 
+            if (!Validador.esNumericoYLongitud(empleadoDoc, 5, 15))
                 throw new Exception("❌ El documento del empleado no es válido.");
 
+            // --- NUEVA VALIDACIÓN: AUTO-PRÉSTAMO (CONFLICTO DE INTERÉS) ---
+            if (clienteDoc.equals(empleadoDoc)) {
+                throw new Exception("⛔ ERROR DE ÉTICA: No puedes registrar un préstamo a tu propio nombre.");
+            }
+
             // 2. Reglas de Negocio Financieras
-            if (monto <= 0) throw new Exception("El monto debe ser positivo");
-            if (monto < 50000) throw new Exception("El monto mínimo es de $50.000");
-            if (monto > 20000000) throw new Exception("El monto máximo es de $20.000.000 por políticas de riesgo.");
-            
-            if (interes <= 0 || interes > 10) throw new Exception("El interés debe estar entre 0.1% y 10%.");
-            if (cuotas < 1 || cuotas > 72) throw new Exception("El plazo debe ser entre 1 y 72 cuotas.");
+            if (monto <= 0)
+                throw new Exception("El monto debe ser positivo");
+            if (monto < 50000)
+                throw new Exception("El monto mínimo es de $50.000");
+            if (monto > 20000000)
+                throw new Exception("El monto máximo es de $20.000.000 por políticas de riesgo.");
+
+            if (interes <= 0 || interes > 10)
+                throw new Exception("El interés debe estar entre 0.1% y 10%.");
+            if (cuotas < 1 || cuotas > 72)
+                throw new Exception("El plazo debe ser entre 1 y 72 cuotas.");
 
             // 3. Validar Existencia en BD
             var cliente = clienteRepository.buscarPorDocumentoCliente(clienteDoc);
-            if (cliente == null) throw new Exception("❌ Cliente no encontrado con documento: " + clienteDoc);
-            
+            if (cliente == null)
+                throw new Exception("❌ Cliente no encontrado con documento: " + clienteDoc);
+
             var empleado = empleadoRepository.buscarPorDocumentoEmpleado(empleadoDoc);
-            if (empleado == null) throw new Exception("❌ Empleado no encontrado con documento: " + empleadoDoc);
+            if (empleado == null)
+                throw new Exception("❌ Empleado no encontrado con documento: " + empleadoDoc);
 
             // 4. Crear Modelo
             Prestamo prestamo = new Prestamo();
@@ -89,9 +101,11 @@ public class PrestamoService {
         }
 
         String fechaHora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-        String nombreArchivo = nombreCarpeta + File.separator + "ticket_prestamo_" + c.getDocumento() + "_" + fechaHora + ".txt";
+        String nombreArchivo = nombreCarpeta + File.separator + "ticket_prestamo_" + c.getDocumento() + "_" + fechaHora
+                + ".txt";
 
-        double cuotaMensual = calculadoraPrestamosService.calcularCuotaMensual(p.getMonto(), p.getInteres(), p.getCuotas());
+        double cuotaMensual = calculadoraPrestamosService.calcularCuotaMensual(p.getMonto(), p.getInteres(),
+                p.getCuotas());
         double totalPagar = cuotaMensual * p.getCuotas();
 
         try (FileWriter fw = new FileWriter(nombreArchivo); PrintWriter pw = new PrintWriter(fw)) {
@@ -153,7 +167,7 @@ public class PrestamoService {
             }
 
             double saldoActual = deudaTotal - sumaPagos;
-            
+
             // Actualización automática de estados (MORA / PAGADO)
             long diasTranscurridos = ChronoUnit.DAYS.between(p.getFechaInicio(), LocalDate.now());
             EstadoPrestamo estadoCalculado = p.getEstado();
@@ -177,8 +191,9 @@ public class PrestamoService {
 
     public EstadoDeCuenta generarReporte(int idPrestamo) {
         Prestamo p = prestamoRepository.obtenerPorId(idPrestamo);
-        if (p == null) return null;
-        
+        if (p == null)
+            return null;
+
         List<Pago> historial = pagoRepository.ListarPagosPorPrestamo(idPrestamo);
 
         double capital = p.getMonto();
@@ -229,7 +244,8 @@ public class PrestamoService {
 
     public void eliminarPrestamo(int id) throws Exception {
         Prestamo p = prestamoRepository.obtenerPorId(id);
-        if (p == null) throw new Exception("El préstamo no existe.");
+        if (p == null)
+            throw new Exception("El préstamo no existe.");
         if (p.getEstado() == EstadoPrestamo.PAGADO) {
             throw new Exception("No se puede eliminar un préstamo PAGADO (Histórico).");
         }
@@ -243,7 +259,7 @@ public class PrestamoService {
                 p.getCuotas(), p.getFechaInicio(), p.getEstado());
 
         try (FileWriter fw = new FileWriter("prestamos.txt", true);
-             PrintWriter pw = new PrintWriter(fw)) {
+                PrintWriter pw = new PrintWriter(fw)) {
             pw.println(linea);
         } catch (IOException e) {
             System.err.println("⚠ Advertencia: No se pudo guardar en prestamos.txt: " + e.getMessage());
@@ -251,7 +267,7 @@ public class PrestamoService {
     }
 
     // =============================================================
-    //   MÉTODOS DE REPORTES (Streams & Lambdas)
+    // MÉTODOS DE REPORTES (Streams & Lambdas)
     // =============================================================
 
     public List<Prestamo> filtrarPrestamosPendientes() {
@@ -265,9 +281,9 @@ public class PrestamoService {
                 .filter(p -> p.getMonto() >= montoMinimo)
                 .toList();
     }
-    
+
     // Estos son los nuevos métodos para el MenuReportes.java
-    
+
     public List<Prestamo> reportePrestamosEnMora() {
         return prestamoRepository.listarPrestamos().stream()
                 .filter(p -> p.getEstado() == EstadoPrestamo.MORA)
@@ -279,7 +295,7 @@ public class PrestamoService {
                 .filter(p -> p.getEstado() == EstadoPrestamo.PAGADO)
                 .toList();
     }
-    
+
     public List<Prestamo> reportePrestamosPorMontoMayorA(double monto) {
         return filtrarPorMontoMayorA(monto); // Reutilizamos
     }
