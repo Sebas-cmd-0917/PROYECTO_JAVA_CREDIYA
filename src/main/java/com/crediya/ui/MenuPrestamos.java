@@ -34,15 +34,15 @@ public class MenuPrestamos {
 
         int opcion = -1;
         while (opcion != 0) {
-            System.out.println("\n===== 📌 MENÚ DE PRÉSTAMOS =====");
-            System.out.println("1. Registrar préstamo (BD + Archivo)");
-            System.out.println("2. Simular préstamo");
-            System.out.println("3. Listar préstamos");
-            System.out.println("4. Buscar préstamos por documento");
-            System.out.println("5. Modificar préstamo");
-            System.out.println("6. Eliminar préstamo");
-            System.out.println("0. Volver");
-            System.out.print("Seleccione una opción: ");
+            System.out.println("\n===== 💰 MENÚ DE PRÉSTAMOS =====");
+            System.out.println("1. 🆕 Registrar Préstamo");
+            System.out.println("2. 🧮 Simular Cuotas");
+            System.out.println("3. 📋 Listar Préstamos");
+            System.out.println("4. 🔎 Buscar por Documento");
+            System.out.println("5. ✏️  Modificar Préstamo");
+            System.out.println("6. 🗑️  Eliminar Préstamo");
+            System.out.println("0. 🔙 Volver");
+            System.out.print("👉 Seleccione una opción: ");
 
             opcion = scanner.nextInt();
             scanner.nextLine(); // limpiar buffer
