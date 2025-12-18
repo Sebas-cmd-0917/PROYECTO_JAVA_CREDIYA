@@ -11,14 +11,14 @@ import java.util.List;
 import com.crediya.config.ConexionDB;
 import com.crediya.data.entities.PagoEntity;
 import com.crediya.data.mapper.PagoMapper;
-import com.crediya.model.Pago;
+import com.crediya.model.PagoExamen;
 import com.crediya.repository.PagoRepository;
 
-public class PagoDAOImpl implements PagoRepository {
+public class PagoExamenImpl implements PagoRepository {
     private final PagoMapper mapper = new PagoMapper();
 
     @Override
-    public void registrarPago(Pago pago) {
+    public void registrarPago(PagoExamen pago) {
         String sqlzo = "INSERT INTO pagos (prestamo_id, fecha_pago, monto) VALUES (?, ?, ?)";
         PagoEntity pagoEntity = mapper.toEntity(pago);
 
@@ -39,8 +39,8 @@ public class PagoDAOImpl implements PagoRepository {
     }
 
     @Override
-    public List<Pago> HistoricoDePagos() {
-        List<Pago> lista = new ArrayList<>();
+    public List<PagoExamen> HistoricoDePagos() {
+        List<PagoExamen> lista = new ArrayList<>();
         String sqlzo = "SELECT p.id, p.prestamo_id, p.fecha_pago, p.monto, " +
                 "c.nombre AS nombre_cliente " +
                 "FROM pagos p " +
@@ -62,7 +62,7 @@ public class PagoDAOImpl implements PagoRepository {
                 entity.setMonto(result.getDouble("monto"));
 
                 // CORRECCIÓN 3: Usamos el MAPPER para convertir a Modelo de Negocio
-                Pago pagoModel = mapper.toDomain(entity);
+                PagoExamen pagoModel = mapper.toDomain(entity);
                 pagoModel.setNombreCliente(result.getString("nombre_cliente"));
 
                 lista.add(pagoModel);
@@ -75,8 +75,8 @@ public class PagoDAOImpl implements PagoRepository {
     }
 
     @Override
-    public List<Pago> ListarPagosPorPrestamo(int prestamoId) {
-        List<Pago> lista = new ArrayList<>();
+    public List<PagoExamen> ListarPagosPorPrestamo(int prestamoId) {
+        List<PagoExamen> lista = new ArrayList<>();
         String sqlzo = "SELECT id, prestamo_id, fecha_pago, monto FROM pagos WHERE prestamo_id = ?";
 
         try (Connection db = ConexionDB.getConnection();
@@ -94,7 +94,7 @@ public class PagoDAOImpl implements PagoRepository {
                 entity.setMonto(result.getDouble("monto"));
 
                 // CORRECCIÓN 3: Usamos el MAPPER para convertir a Modelo de Negocio
-                Pago pagoModel = mapper.toDomain(entity);
+                PagoExamen pagoModel = mapper.toDomain(entity);
 
                 lista.add(pagoModel);
             }
@@ -106,7 +106,7 @@ public class PagoDAOImpl implements PagoRepository {
     }
 
    @Override
-public boolean modificarPago(Pago pago) {
+public boolean modificarPago(PagoExamen pago) {
     // 1. CORRECCIÓN EN EL SQL: Quitamos 'prestamo_id = ?'
     // Solo actualizamos fecha y monto, respetando a qué préstamo pertenece.
     String sqlzo = "UPDATE pagos SET fecha_pago = ?, monto = ? WHERE id = ?";
@@ -164,8 +164,8 @@ public boolean modificarPago(Pago pago) {
     // En PagoDAOImpl.java
 
     @Override
-public List<Pago> listarPorDocumento(String documento) {
-    List<Pago> lista = new ArrayList<>();
+public List<PagoExamen> listarPorDocumento(String documento) {
+    List<PagoExamen> lista = new ArrayList<>();
     
     // Hacemos JOIN para llegar desde Pagos -> Prestamos -> Clientes
     String sql = "SELECT p.*, c.nombre as nombre_cliente " +
@@ -181,7 +181,7 @@ public List<Pago> listarPorDocumento(String documento) {
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
-            Pago p = new Pago();
+            PagoExamen p = new PagoExamen();
             p.setId(rs.getInt("id"));
             p.setMonto(rs.getDouble("monto"));
             p.setFechaPago(rs.getDate("fecha_pago").toLocalDate());

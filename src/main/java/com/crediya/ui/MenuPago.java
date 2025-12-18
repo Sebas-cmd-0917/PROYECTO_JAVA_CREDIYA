@@ -5,15 +5,15 @@ import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.List;
 
-import com.crediya.service.GestorPagosService;
+import com.crediya.service.GestorPagosServiceEXamen;
 import com.crediya.service.PrestamoService;
 import com.crediya.model.Prestamo;
 import com.crediya.model.EstadoDeCuenta;
-import com.crediya.model.Pago;
+import com.crediya.model.PagoExamen;
 
 public class MenuPago {
     Scanner scanner = new Scanner(System.in);
-    GestorPagosService gestorPagosService = new GestorPagosService();
+    GestorPagosServiceEXamen gestorPagosService = new GestorPagosServiceEXamen();
     PrestamoService prestamoService = new PrestamoService();
     MenuPrestamos menuPrestamos = new MenuPrestamos();
 
@@ -104,7 +104,7 @@ public class MenuPago {
 
     private void historialDePagos() {
         System.out.println("\n--- HISTORIAL DE PAGOS ---");
-        List<Pago> historial = gestorPagosService.obtenerHistorialDePagos(); // Tu función
+        List<PagoExamen> historial = gestorPagosService.obtenerHistorialDePagos(); // Tu función
 
         // 1. Línea superior (El techo de la tabla)
         System.out.println("+-----+--------------+----------------------+---------------+");
@@ -117,7 +117,7 @@ public class MenuPago {
         System.out.println("+-----+--------------+----------------------+---------------+");
 
         // 4. Los Datos
-        for (Pago p : historial) {
+        for (PagoExamen p : historial) {
             System.out.printf("| %-3d | %-12s | %-20s | $%,12.0f |\n",
                     p.getId(), // ID (número pequeño)
                     p.getFechaPago(), // Fecha (ancho 12)
@@ -184,7 +184,7 @@ public class MenuPago {
 
     // DESEMPAQUETAR DATOS PARA USARLOS FÁCILMENTE
     Prestamo p = reporte.getPrestamo();
-    List<Pago> historial = reporte.getListaPagos();
+    List<PagoExamen> historial = reporte.getListaPagos();
     double deudaTotal = reporte.getDeudaTotalInicial();
 
     // --- IMPRIMIR CABECERA ---
@@ -211,7 +211,7 @@ public class MenuPago {
         // Usamos una variable temporal solo para el efecto visual de la tabla
         double saldoVisual = deudaTotal; 
 
-        for (Pago pago : historial) {
+        for (PagoExamen pago : historial) {
             saldoVisual -= pago.getMonto(); // Restamos para mostrar la columna "Saldo Restante"
             
             System.out.printf("%-12s $%,-14.0f $%,-14.0f\n",
@@ -240,7 +240,7 @@ public class MenuPago {
         String documento = scanner.nextLine(); // <--- ¡AQUÍ ESTÁ!
 
         // 2. Buscamos los pagos de esa persona
-        List<Pago> resultados = gestorPagosService.obtenerPagosPorCliente(documento);
+        List<PagoExamen> resultados = gestorPagosService.obtenerPagosPorCliente(documento);
 
         // 3. Validamos si encontró algo
         if (resultados.isEmpty()) {
@@ -254,7 +254,7 @@ public class MenuPago {
         System.out.printf("| %-3s | %-12s | %-20s | %-13s |\n", "ID", "FECHA", "CLIENTE", "MONTO");
         System.out.println("+-----+--------------+----------------------+---------------+");
 
-        for (Pago p : resultados) {
+        for (PagoExamen p : resultados) {
             System.out.printf("| %-3d | %-12s | %-20s | $%,12.0f |\n",
                     p.getId(), p.getFechaPago(), p.getNombreCliente(), p.getMonto());
         }
@@ -270,7 +270,7 @@ public class MenuPago {
         scanner.nextLine();
 
         // 7. Empaquetamos y enviamos
-        Pago pagoModificado = new Pago();
+        PagoExamen pagoModificado = new PagoExamen();
         pagoModificado.setId(idPago);
         pagoModificado.setMonto(nuevoMonto);
         pagoModificado.setFechaPago(LocalDate.now());
@@ -286,7 +286,7 @@ public class MenuPago {
         String documento = scanner.nextLine(); // <--- Aquí pedimos la cédula
 
         // 2. Buscamos los pagos de esa persona
-        List<Pago> resultados = gestorPagosService.obtenerPagosPorCliente(documento);
+        List<PagoExamen> resultados = gestorPagosService.obtenerPagosPorCliente(documento);
 
         // 3. Validamos si hay algo que mostrar
         if (resultados.isEmpty()) {
@@ -300,7 +300,7 @@ public class MenuPago {
         System.out.printf("| %-3s | %-12s | %-20s | %-13s |\n", "ID", "FECHA", "CLIENTE", "MONTO");
         System.out.println("+-----+--------------+----------------------+---------------+");
 
-        for (Pago p : resultados) {
+        for (PagoExamen p : resultados) {
             System.out.printf("| %-3d | %-12s | %-20s | $%,12.0f |\n",
                     p.getId(),
                     p.getFechaPago(),

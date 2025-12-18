@@ -12,13 +12,14 @@ import java.util.List;
 
 import com.crediya.data.repositories.ClienteDAOImpl;
 import com.crediya.data.repositories.EmpleadoDAOImpl;
-import com.crediya.data.repositories.PagoDAOImpl;
+import com.crediya.data.repositories.PagoExamenImpl;
 import com.crediya.data.repositories.PrestamoDAOImpl;
 import com.crediya.model.Cliente;
 import com.crediya.model.Empleado;
 import com.crediya.model.EstadoDeCuenta;
 import com.crediya.model.EstadoPrestamo;
-import com.crediya.model.Pago;
+import com.crediya.model.PagoExamen;
+import com.crediya.model.PagoExamen;
 import com.crediya.model.Prestamo;
 import com.crediya.repository.ClienteRepository;
 import com.crediya.repository.EmpleadoRepository;
@@ -31,7 +32,7 @@ public class PrestamoService {
     private final CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
     private final ClienteRepository clienteRepository = new ClienteDAOImpl();
     private final EmpleadoRepository empleadoRepository = new EmpleadoDAOImpl();
-    private final PagoRepository pagoRepository = new PagoDAOImpl();
+    private final PagoRepository pagoRepository = new PagoExamenImpl();
 
     // --- REGISTRAR PRÉSTAMO ---
     public void registrarPrestamo(String clienteDoc, String empleadoDoc, double monto, double interes, int cuotas) {
@@ -158,10 +159,10 @@ public class PrestamoService {
             double interesDecimal = p.getInteres() / 100;
             double deudaTotal = p.getMonto() + (p.getMonto() * interesDecimal);
 
-            List<Pago> historial = pagoRepository.ListarPagosPorPrestamo(p.getId());
+            List<PagoExamen> historial = pagoRepository.ListarPagosPorPrestamo(p.getId());
             double sumaPagos = 0;
             if (historial != null) {
-                for (Pago unPago : historial) {
+                for (PagoExamen unPago : historial) {
                     sumaPagos += unPago.getMonto();
                 }
             }
@@ -194,7 +195,7 @@ public class PrestamoService {
         if (p == null)
             return null;
 
-        List<Pago> historial = pagoRepository.ListarPagosPorPrestamo(idPrestamo);
+        List<PagoExamen> historial = pagoRepository.ListarPagosPorPrestamo(idPrestamo);
 
         double capital = p.getMonto();
         double interesDecimal = p.getInteres() / 100;
@@ -203,7 +204,7 @@ public class PrestamoService {
 
         double totalPagado = 0;
         if (historial != null) {
-            for (Pago pago : historial) {
+            for (PagoExamen pago : historial) {
                 totalPagado += pago.getMonto();
             }
         }

@@ -2,7 +2,7 @@ package com.crediya.model;
 
 import java.time.LocalDate;
 
-public class Pago {
+public class PagoExamen {
     private int id;
     private int prestamoId;
     private String nombreCliente;

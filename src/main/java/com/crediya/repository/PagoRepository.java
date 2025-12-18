@@ -1,18 +1,18 @@
 package com.crediya.repository;
 
 import java.util.List;
-import com.crediya.model.Pago;
+import com.crediya.model.PagoExamen;
 
 public interface PagoRepository {
-    void registrarPago(Pago pago);
+    void registrarPago(PagoExamen pago);
 
-    List<Pago> ListarPagosPorPrestamo(int prestamoId);
+    List<PagoExamen> ListarPagosPorPrestamo(int prestamoId);
 
-    List<Pago> HistoricoDePagos();
+    List<PagoExamen> HistoricoDePagos();
 
-    boolean modificarPago(Pago pago);
+    boolean modificarPago(PagoExamen pago);
 
     boolean eliminarPago(int idPago);
 
-    List<Pago> listarPorDocumento(String documentoCliente);
+    List<PagoExamen> listarPorDocumento(String documentoCliente);
 }
