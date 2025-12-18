@@ -9,17 +9,17 @@ public class PagoExamen {
     private LocalDate fechaPago;
     private double monto;
 
-    public Pago() {
+    public PagoExamen() {
         
     }
 
-    public Pago(int prestamoId, LocalDate fechaPago, double monto) {
+    public PagoExamen(int prestamoId, LocalDate fechaPago, double monto) {
         this.prestamoId = prestamoId;
         this.fechaPago = fechaPago;
         this.monto = monto;
     }
 
-    public Pago(int id, int prestamoId, LocalDate fechaPago, double monto) {
+    public PagoExamen(int id, int prestamoId, LocalDate fechaPago, double monto) {
         this.id = id;
         this.prestamoId = prestamoId;
         this.fechaPago = fechaPago;

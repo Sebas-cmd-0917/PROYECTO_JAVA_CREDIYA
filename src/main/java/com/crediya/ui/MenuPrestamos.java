@@ -12,7 +12,7 @@ import com.crediya.repository.ClienteRepository;
 import com.crediya.repository.EmpleadoRepository;
 import com.crediya.model.Prestamo;
 import com.crediya.service.CalculadoraPrestamosService;
-import com.crediya.service.GestorPagosService;
+import com.crediya.service.GestorPagosServiceEXamen;
 import com.crediya.service.PrestamoService;
 
 public class MenuPrestamos {
@@ -25,7 +25,7 @@ public class MenuPrestamos {
     private ClienteRepository clienteRepository = new ClienteDAOImpl();
     private EmpleadoRepository empleadoRepository = new EmpleadoDAOImpl();
 
-    GestorPagosService gestorPagosService = new GestorPagosService();
+    GestorPagosServiceEXamen gestorPagosService = new GestorPagosServiceEXamen();
     PrestamoService prestamoService = new PrestamoService();
 
     CalculadoraPrestamosService calculadoraPrestamosService = new CalculadoraPrestamosService();
