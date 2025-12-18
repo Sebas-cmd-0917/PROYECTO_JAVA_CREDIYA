@@ -1,0 +1,28 @@
+================================
+        CREDIYA S.A.S.          
+     Nit: 900.123.456-7         
+   Calle Falsa 123, Ciudad      
+================================
+FECHA: 2025-12-18 11:44:09
+TICKET REF: 20251218_114409
+--------------------------------
+DATOS DEL CLIENTE
+NOMBRE: Matias mejia
+DOC:    1095556319
+--------------------------------
+ATENDIDO POR:
+ASESOR: Marcela
+================================
+      DETALLE DEL CREDITO       
+--------------------------------
+MONTO PRESTADO:   $10.000.000,00
+TASA INTERES:           8,00%
+PLAZO (MESES):            24
+--------------------------------
+VALOR CUOTA:      $450.000,00
+--------------------------------
+TOTAL A PAGAR:    $10.800.000,00
+================================
+   GRACIAS POR SU CONFIANZA     
+     CONSERVE ESTE TICKET       
+================================

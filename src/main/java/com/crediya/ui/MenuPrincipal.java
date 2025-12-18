@@ -35,7 +35,8 @@ public class MenuPrincipal {
             System.out.println("3. 💰 Gestionar Préstamos");
             System.out.println("4. 💸 Gestionar Pagos");
             System.out.println("5. 📊 Reportes e Indicadores");
-            System.out.println("6. 🚪 Salir del Sistema");
+            System.out.println("6. 📊 Gestor prestamos para examen");
+            System.out.println("7. 🚪 Salir del Sistema");
             System.out.println("---------------------------------------");
             System.out.print("👉 Seleccione una opción: ");
 
@@ -87,7 +88,13 @@ public class MenuPrincipal {
                         MenuReportes menuRep = new MenuReportes();
                         menuRep.mostrarMenu();
                         break;
+
                     case 6:
+                        System.out.println("Modulo gestor Prestamos para el examen");
+                        MenuExamen menuEx = new MenuExamen();
+                        menuEx.mostrarMenuPrestamo();
+                        break;
+                    case 7:
                         System.out.println("Saliendo del sistema. ¡Hasta luego!");
                         scanner.close();
                         return;

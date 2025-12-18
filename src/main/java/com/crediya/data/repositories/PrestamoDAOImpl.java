@@ -91,6 +91,51 @@ public class PrestamoDAOImpl implements PrestamoRepository {
         return listaModelos;
     }
 
+     ///Para el examen
+    
+    @Override
+    public List<Prestamo> listarPrestamosExamen() {
+        List<Prestamo> listaPrestamo = new ArrayList<>();
+        String sqlzo = "SELECT p.id, p.cliente_id, p.empleado_id, p.monto, p.interes, p.cuotas, p.fecha_inicio, p.estado, "
+                +
+                "c.nombre AS nombre_cliente, c.documento AS doc_cliente, " +
+                "e.nombre AS nombre_empleado " +
+                "FROM prestamos p " +
+                "INNER JOIN clientes c ON p.cliente_id = c.id " +
+                "INNER JOIN empleados e ON p.empleado_id = e.id";
+
+        try (Connection db = ConexionDB.getConnection();
+                PreparedStatement stmt = db.prepareStatement(sqlzo)) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                PrestamoEntity entity = new PrestamoEntity();
+                entity.setId(result.getInt("id"));
+                entity.setClienteId(result.getInt("cliente_id"));
+                entity.setEmpleadoId(result.getInt("empleado_id"));
+                entity.setMonto(result.getDouble("monto"));
+                entity.setInteres(result.getDouble("interes"));
+                entity.setCuotas(result.getInt("cuotas"));
+                entity.setFechaInicio(result.getDate("fecha_inicio").toLocalDate());
+                entity.setEstado(result.getString("estado"));
+                // Convertir la ENTIDAD a MODELO DE NEGOCIO
+                // El resto del programa solo entenderá 'Prestamo', no 'PrestamoEntity'
+                Prestamo model = mapper.toDomain(entity);
+
+                model.setNombreCliente(result.getString("nombre_cliente"));
+                model.setNumDocumento(result.getString("doc_cliente"));
+                model.setNombreEmpleado(result.getString("nombre_empleado"));
+
+                listaPrestamo.add(model);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaPrestamo;
+    }
+   
     @Override
     public List<Prestamo> obtenerPrestamoPorDocumento(String documento) {
         List<Prestamo> listaPreDoc = new ArrayList<>();

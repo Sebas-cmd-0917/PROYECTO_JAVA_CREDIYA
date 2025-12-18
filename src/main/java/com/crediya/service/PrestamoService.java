@@ -309,4 +309,5 @@ public class PrestamoService {
     public List<Prestamo> obtenerTodos() {
         return prestamoRepository.listarPrestamos();
     }
+
 }

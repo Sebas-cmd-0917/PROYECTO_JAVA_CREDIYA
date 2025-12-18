@@ -1,0 +1,28 @@
+================================
+        CREDIYA S.A.S.          
+     Nit: 900.123.456-7         
+   Calle Falsa 123, Ciudad      
+================================
+FECHA: 2025-12-18 11:43:37
+TICKET REF: 20251218_114337
+--------------------------------
+DATOS DEL CLIENTE
+NOMBRE: Liney Serrano
+DOC:    63481600
+--------------------------------
+ATENDIDO POR:
+ASESOR: Marcela
+================================
+      DETALLE DEL CREDITO       
+--------------------------------
+MONTO PRESTADO:   $15.000.000,00
+TASA INTERES:           5,00%
+PLAZO (MESES):            12
+--------------------------------
+VALOR CUOTA:      $1.312.500,00
+--------------------------------
+TOTAL A PAGAR:    $15.750.000,00
+================================
+   GRACIAS POR SU CONFIANZA     
+     CONSERVE ESTE TICKET       
+================================

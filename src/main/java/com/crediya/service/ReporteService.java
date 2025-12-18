@@ -16,13 +16,7 @@ public class ReporteService {
      * REQUERIMIENTO: Consultar préstamos activos (PENDIENTE)
      * Uso de Stream API: .filter()
      */
-    public List<Prestamo> obtenerPrestamosActivos() {
-        List<Prestamo> todos = prestamoRepo.listarPrestamos();
-        
-        return todos.stream()
-                .filter(p -> p.getEstado() == EstadoPrestamo.PENDIENTE)
-                .collect(Collectors.toList());
-    }
+  
 
     /**
      * REQUERIMIENTO: Consultar préstamos vencidos/mora
@@ -62,5 +56,13 @@ public class ReporteService {
         return prestamoRepo.listarPrestamos().stream()
                 .mapToDouble(p -> p.getMonto() * (p.getInteres() / 100))
                 .sum();
+    }
+
+    public List<Prestamo> obtenerPrestamosActivos() {
+        List<Prestamo> todos = prestamoRepo.listarPrestamos();
+        
+        return todos.stream()
+                .filter(p -> p.getEstado() == EstadoPrestamo.PENDIENTE)
+                .collect(Collectors.toList());
     }
 }
